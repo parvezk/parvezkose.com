@@ -351,9 +351,3 @@ p.secondary{
         line-height: 48px
     }
 }
-@media only screen and (min-width: 1824px) {
-    body {
-        font-size: 32px;
-        line-height: 60px
-    }
-}
