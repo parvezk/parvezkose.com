@@ -20,52 +20,7 @@ input:focus {
     text-decoration: none!important;
     outline: 0
 }
-::-webkit-input-placeholder {
-    color: rgba(255, 255, 255, 0.1)
-}
-:-moz-placeholder {
-    color: rgba(255, 255, 255, 0.1)
-}
-::-moz-placeholder {
-    color: rgba(255, 255, 255, 0.1)
-}
-:-ms-input-placeholder {
-    color: rgba(255, 255, 255, 0.1)
-}
-input {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    -webkit-border-radius: 0!important;
-    -moz-border-radius: 0!important;
-    border-radius: 0!important
-}
-.gpu-hack {
-    -webkit-perspective: 1000px;
-    -moz-perspective: 1000px;
-    perspective: 1000px;
-    -webkit-transform: translateZ(0);
-    -moz-transform: translateZ(0);
-    transform: translateZ(0);
-    -webkit-backface-visibility: hidden;
-    -moz-backface-visibility: hidden;
-    backface-visibility: hidden
-}
-.bg-cover {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-    z-index: 0;
-    visibility: hidden
-}
+
 .bg-cover::after {
     content: "";
     position: absolute;
@@ -225,16 +180,6 @@ p.secondary{
     margin-right: 7em;
 }
 
-#drifter,
-#particles-js {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    overflow: hidden
-}
 .sven-badge {
     position: fixed;
     left: 0;
@@ -349,5 +294,11 @@ p.secondary{
     body {
         font-size: 26px;
         line-height: 48px
+    }
+}
+@media only screen and (min-width: 1824px) {
+    body {
+        font-size: 32px;
+        line-height: 60px
     }
 }
