@@ -32,16 +32,6 @@ input:focus {
 	outline: 0;
 }
 
-div[class^="sven-char"] {
-	-webkit-backface-visibility: hidden;
-	-moz-backface-visibility: hidden;
-	backface-visibility: hidden;
-	-webkit-perspective: 1000px;
-	-moz-perspective: 1000px;
-	perspective: 1000px;
-	outline: 1px solid transparent;
-}
-
 body {
 	padding: 0;
 	margin: 0;
