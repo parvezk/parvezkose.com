@@ -253,10 +253,6 @@ p.secondary {
 	color: #fff;
 }
 
-#cafe2 .bg-image {
-	background-image: url(../images/cafe2-bg.jpg);
-}
-
 #cafe1 .spinner::after,
 #cafe2 .spinner::after {
 	background: transparent;
