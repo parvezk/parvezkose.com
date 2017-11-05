@@ -253,11 +253,6 @@ p.secondary {
 	color: #fff;
 }
 
-#cafe1 .spinner::after,
-#cafe2 .spinner::after {
-	background: transparent;
-}
-
 .layout-center .v-center,
 .layout-center .sven-badge {
 	text-align: center;
