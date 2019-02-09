@@ -41,6 +41,44 @@ body {
 	line-height: 30px;
 }
 
+#minimos-1 {
+	font-family: "Raleway", sans-serif;
+	background: #151515;
+}
+
+.layout-center .v-center,
+.layout-center .sven-badge {
+	text-align: center;
+}
+
+.layout-center .main-content {
+	margin: 0 auto;
+}
+
+@media only screen and (min-width: 768px) {
+	body {
+		font-size: 22px;
+		line-height: 48px;
+	}
+	.main-content {
+		width: 80%;
+	}
+}
+
+@media only screen and (min-width: 1200px) {
+	body {
+		font-size: 26px;
+		line-height: 48px;
+	}
+}
+
+@media only screen and (min-width: 1824px) {
+	body {
+		font-size: 32px;
+		line-height: 60px;
+	}
+}
+
 .content-wrapper {
 	position: relative;
 	overflow: visible;
@@ -96,14 +134,14 @@ ul {
 	font-size: 0.75em;
 }
 
-ul li {
+ul.nav li {
 	position: relative;
 	display: inline;
 	padding-bottom: 0.1875em;
 	margin-right: 0.75em;
 }
 
-li a {
+.nav li a {
 	color: #a3a3a3;
 	-webkit-transition: color 0.5s;
 	-moz-transition: color 0.5s;
@@ -113,7 +151,7 @@ li a {
 	cursor: pointer;
 }
 
-li a:after {
+.nav li a:after {
 	content: "";
 	position: absolute;
 	bottom: 0;
@@ -129,16 +167,16 @@ li a:after {
 	transition: opacity 0.5s;
 }
 
-li a:hover {
+.nav li a:hover {
 	color: #fff;
 }
 
-li a:hover:after {
+.nav li a:hover:after {
 	opacity: 1;
 }
 
-a.btn-fill,
-a.btn-bordered {
+.nav a.btn-fill,
+.nav a.btn-bordered {
 	padding: 0.5em 1em;
 	border: 0.063em solid transparent;
 	border-radius: 0.125em;
@@ -146,22 +184,22 @@ a.btn-bordered {
 	text-transform: uppercase;
 }
 
-a.btn-fill:after,
-a.btn-bordered:after {
+.nav a.btn-fill:after,
+.nav a.btn-bordered:after {
 	display: none;
 }
 
-a.btn-fill {
+.nav a.btn-fill {
 	color: #00a1e0;
 	background: #ffd61f;
 }
 
-a.btn-fill:hover {
+.nav a.btn-fill:hover {
 	background: #fff;
 	color: #00a1e0;
 }
 
-a.btn-bordered {
+.nav a.btn-bordered {
 	color: #fff;
 	border-color: #fff;
 }
@@ -171,6 +209,10 @@ p.secondary {
 	font-size: 0.65em;
 	line-height: 1.875em;
 	margin-right: 7em;
+}
+
+.preloader {
+	z-index: 100;
 }
 
 .sven-badge {
@@ -200,88 +242,4 @@ p.secondary {
 .sven-badge:hover span {
 	color: #ddc225;
 	border-bottom: 1px dotted transparent;
-}
-
-.preloader {
-	z-index: 100;
-}
-
-#minimos-1 {
-	font-family: "Raleway", sans-serif;
-	background: #151515;
-}
-
-#minimos-2,
-#minimos-2 .spinner:after {
-	font-family: "Abel", sans-serif;
-	background: #280b29;
-}
-
-#minimos-3,
-#minimos-3 .spinner:after {
-	font-family: "Nunito", sans-serif;
-	background: #00a1e0;
-}
-
-#minimos-3 .sven-badge a {
-	color: #ccc;
-}
-
-#minimos-3 .sven-badge:hover span {
-	color: #ffd61f;
-}
-
-#minimos-4,
-#minimos-4 .spinner:after {
-	font-family: "Josefin Sans", sans-serif;
-	background: #f85e25;
-}
-
-#minimos-4 .sven-badge a {
-	color: #ccc;
-}
-
-#minimos-4 .sven-badge:hover span {
-	color: #f8eb31;
-}
-
-#minimos-4 li a {
-	color: #e0e0e0;
-}
-
-#minimos-4 li a:hover {
-	color: #fff;
-}
-
-.layout-center .v-center,
-.layout-center .sven-badge {
-	text-align: center;
-}
-
-.layout-center .main-content {
-	margin: 0 auto;
-}
-
-@media only screen and (min-width: 768px) {
-	body {
-		font-size: 22px;
-		line-height: 48px;
-	}
-	.main-content {
-		width: 80%;
-	}
-}
-
-@media only screen and (min-width: 1200px) {
-	body {
-		font-size: 26px;
-		line-height: 48px;
-	}
-}
-
-@media only screen and (min-width: 1824px) {
-	body {
-		font-size: 32px;
-		line-height: 60px;
-	}
 }
