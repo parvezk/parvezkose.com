@@ -12,7 +12,7 @@ function ArrowIcon() {
         fill="currentColor"
       />
     </svg>
-  )
+  );
 }
 
 export default function Footer() {
@@ -24,10 +24,10 @@ export default function Footer() {
             className="flex items-center transition-all hover:text-neutral-800 dark:hover:text-neutral-100"
             rel="noopener noreferrer"
             target="_blank"
-            href="/rss"
+            href="https://frontendeng.substack.com/"
           >
             <ArrowIcon />
-            <p className="ml-2 h-7">rss</p>
+            <p className="ml-2 h-7">substack</p>
           </a>
         </li>
         <li>
@@ -35,21 +35,34 @@ export default function Footer() {
             className="flex items-center transition-all hover:text-neutral-800 dark:hover:text-neutral-100"
             rel="noopener noreferrer"
             target="_blank"
-            href="https://github.com/vercel/next.js"
+            href="https://medium.com/@parvez__"
+          >
+            <ArrowIcon />
+            <p className="ml-2 h-7">medium</p>
+          </a>
+        </li>
+
+        <li>
+          <a
+            className="flex items-center transition-all hover:text-neutral-800 dark:hover:text-neutral-100"
+            rel="noopener noreferrer"
+            target="_blank"
+            href="https://www.linkedin.com/in/parvezkose/"
+          >
+            <ArrowIcon />
+            <p className="ml-2 h-7">linkedin</p>
+          </a>
+        </li>
+
+        <li>
+          <a
+            className="flex items-center transition-all hover:text-neutral-800 dark:hover:text-neutral-100"
+            rel="noopener noreferrer"
+            target="_blank"
+            href="https://github.com/parvezk"
           >
             <ArrowIcon />
             <p className="ml-2 h-7">github</p>
-          </a>
-        </li>
-        <li>
-          <a
-            className="flex items-center transition-all hover:text-neutral-800 dark:hover:text-neutral-100"
-            rel="noopener noreferrer"
-            target="_blank"
-            href="https://vercel.com/templates/next.js/portfolio-starter-kit"
-          >
-            <ArrowIcon />
-            <p className="ml-2 h-7">view source</p>
           </a>
         </li>
       </ul>
@@ -57,5 +70,5 @@ export default function Footer() {
         © {new Date().getFullYear()} MIT Licensed
       </p>
     </footer>
-  )
+  );
 }
