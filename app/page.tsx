@@ -8,11 +8,13 @@ export default function Page() {
       </h1>
       <h4>{`Staff Software Engineer | Full Stack and Generative AI`}</h4>
       <br />
+      <h4>{`Staff Software Engineer | Full Stack and Generative AI`}</h4>
+      <br />
       <p className="mb-4">
-        {`I design and build AI-powered systems that automate complex workflows and optimize cost at scale.`}
+        {`I design and build AI-powered systems that automate complex workflows and optimize costs at scale.`}
       </p>
       <p className="mb-4">
-        {`I love creating product experience that push the envelope of what’s possible with user experience and add a level of craftsmanship to the work. I'm passionate about data visualization and building immersive experience for the users.`}
+        {`I love creating product experiences that push the envelope of what’s possible with user experience and add a level of craftsmanship to the work. I'm passionate about data visualization and building immersive experiences for the users.`}
       </p>
       <div className="my-8">{/* <BlogPosts /> */}</div>
     </section>
