@@ -1,6 +1,6 @@
 # Hi, I'm Parvez 👋
 
-📍 New York, NY &nbsp;|&nbsp; Staff Software Engineer &nbsp;|&nbsp; 🎓 NYU Alumni
+📍 New York, NY &nbsp;|&nbsp; Staff Software Engineer &nbsp;|&nbsp; 🎓 NYU
 
 > Building with AI. I design and build interfaces that make intelligence usable.
 > I think like a designer, but build like an engineer.
