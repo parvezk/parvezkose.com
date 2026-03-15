@@ -26,6 +26,9 @@
 ![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=flat-square&logo=openai&logoColor=white)
 ![Cursor](https://img.shields.io/badge/Cursor-000000?style=flat-square&logo=cursor&logoColor=white)
 ![Jules](https://img.shields.io/badge/Jules-4285F4?style=flat-square&logo=google&logoColor=white)
+![D3.js](https://img.shields.io/badge/D3.js-F9A03C?style=flat-square&logo=d3dotjs&logoColor=white)
+![Vertex AI](https://img.shields.io/badge/Vertex_AI_Studio-4285F4?style=flat-square&logo=googlecloud&logoColor=white)
+![Antigravity](https://img.shields.io/badge/Antigravity-0A0A0A?style=flat-square&logoColor=white)
 
 ---
 
