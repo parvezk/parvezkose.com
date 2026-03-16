@@ -79,7 +79,7 @@ export default function Blog({ params }) {
               '@type': 'Person',
               name: 'My Portfolio',
             },
-          }),
+          }).replace(/</g, '\\u003c'),
         }}
       />
       <h1 className="title font-semibold text-2xl tracking-tighter">
