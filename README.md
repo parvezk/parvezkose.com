@@ -14,6 +14,7 @@
 ![Cursor](https://img.shields.io/badge/Cursor-000000?style=flat-square&logo=cursor&logoColor=white)
 ![Jules](https://img.shields.io/badge/Jules-4285F4?style=flat-square&logo=google&logoColor=white)
 ![Antigravity](https://img.shields.io/badge/Antigravity-0A0A0A?style=flat-square&logoColor=white)
+![Vertex AI](https://img.shields.io/badge/Vertex_AI_Studio-4285F4?style=flat-square&logo=googlecloud&logoColor=white)
 
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
@@ -30,7 +31,6 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white)
 ![AWS](https://img.shields.io/badge/AWS-232F3E?style=flat-square&logo=amazonaws&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
-![Vertex AI](https://img.shields.io/badge/Vertex_AI_Studio-4285F4?style=flat-square&logo=googlecloud&logoColor=white)
 
 ---
 
