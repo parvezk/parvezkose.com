@@ -27,7 +27,19 @@ function Table({ data }) {
 }
 
 function CustomLink(props) {
-  let href = props.href
+  let href = props.href;
+
+  if (typeof href === 'string') {
+    try {
+      const url = new URL(href, 'http://dummy.com');
+      if (['javascript:', 'vbscript:', 'data:'].includes(url.protocol)) {
+        return <a {...props} href="#" />
+      }
+    } catch (e) {
+      // If URL parsing fails, it's safer to not render the link as clickable
+      return <a {...props} href="#" />
+    }
+  }
 
   if (href.startsWith('/')) {
     return (
