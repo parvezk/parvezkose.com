@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import { highlight } from 'sugar-high'
+import sanitizeHtml from 'sanitize-html'
 import React from 'react'
 
 function Table({ data }) {
@@ -62,7 +63,13 @@ function RoundedImage(props) {
 
 function Code({ children, ...props }) {
   let codeHTML = highlight(children)
-  return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />
+  let sanitizedHTML = sanitizeHtml(codeHTML, {
+    allowedTags: ['span'],
+    allowedAttributes: {
+      span: ['class', 'style']
+    }
+  })
+  return <code dangerouslySetInnerHTML={{ __html: sanitizedHTML }} {...props} />
 }
 
 function slugify(str) {
