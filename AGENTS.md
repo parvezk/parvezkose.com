@@ -13,7 +13,7 @@ This is a Next.js 14 personal portfolio/blog site (parvezkose.com). Single-packa
 
 ### Notes
 
-- There are no `lint` or `test` scripts defined in `package.json`. The project has no ESLint config and no test framework.
+- **Lint:** `pnpm lint` (runs `next lint` with `eslint-config-next/core-web-vitals`). No test framework is configured.
 - Blog content lives in `app/blog/posts/*.mdx` as local MDX files read via the filesystem at build/request time.
 - Tailwind CSS v4 alpha (`4.0.0-alpha.13`) is used via `@tailwindcss/postcss`; there is no `tailwind.config.js` — styles are configured in `app/global.css`.
 - Vercel Analytics and Speed Insights are included but silently no-op in local development.
