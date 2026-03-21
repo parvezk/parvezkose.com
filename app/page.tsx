@@ -6,10 +6,10 @@ export default function Page() {
       <h1 className="mb-8 text-2xl font-semibold tracking-tighter">
         Parvez Kose
       </h1>
-      <h4>{`Staff Software Engineer | Full Stack and Generative AI`}</h4>
+      <h4>{`Staff Software Engineer | Generative UI & AI Native Full Stack Development`}</h4>
       <br />
       <p className="mb-4">
-        {`I design and build AI-powered systems that automate complex workflows and optimize costs at scale.`}
+        {`I design and build AI-powered systems for Amazon Middle Mile that automate complex workflows and optimize costs at scale.`}
       </p>
       <p className="mb-4">
         {`I love creating product experiences that push the envelope of what’s possible with user experience and add a level of craftsmanship to the work. I'm passionate about data visualization and building immersive experiences for the users.`}
