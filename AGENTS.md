@@ -16,5 +16,5 @@ This is a Next.js 14 personal portfolio/blog site (parvezkose.com). Single-packa
 - **Lint:** `pnpm lint` (runs `next lint` with `eslint-config-next/core-web-vitals`). No test framework is configured.
 - Blog content lives in `app/blog/posts/*.mdx` as local MDX files read via the filesystem at build/request time.
 - Tailwind CSS v4 alpha (`4.0.0-alpha.13`) is used via `@tailwindcss/postcss`; there is no `tailwind.config.js` — styles are configured in `app/global.css`.
-- Vercel Analytics and Speed Insights are included but silently no-op in local development.
+- The site deploys on **AWS Amplify** (not Vercel). `@vercel/analytics` and `@vercel/speed-insights` are still in the dependency tree and rendered in `app/layout.tsx` but are effectively inactive outside Vercel-hosted environments.
 - The `next build` step also runs type-checking ("Linting and checking validity of types"), which serves as the primary correctness check for this project.
