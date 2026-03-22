@@ -12,7 +12,7 @@ export default function Page() {
         {`I design and build AI-powered systems for Amazon Middle Mile that automate complex workflows and optimize costs at scale.`}
       </p>
       <p className="mb-4">
-        {`I love creating product experiences that push the envelope of what’s possible with user experience and add a level of craftsmanship to the work. I'm passionate about data visualization and building immersive experiences for the users.`}
+        {`I love creating product experiences that push the envelope of what’s possible and add a level of craftsmanship to the work. I'm passionate about data visualization and building immersive experiences on the web.`}
       </p>
       <div className="my-8">{/* <BlogPosts /> */}</div>
     </section>
