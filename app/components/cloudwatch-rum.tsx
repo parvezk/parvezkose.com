@@ -1,45 +1,38 @@
 "use client";
 
-import { useEffect } from "react";
+import { AwsRum, type AwsRumConfig } from "aws-rum-web";
+import { useEffect, useRef } from "react";
 
-const CONFIG = {
+const APPLICATION_ID = process.env.NEXT_PUBLIC_CW_RUM_APP_ID ?? "";
+const APPLICATION_REGION = process.env.NEXT_PUBLIC_CW_RUM_APP_REGION ?? "us-east-1";
+
+const config: AwsRumConfig = {
+  sessionSampleRate: 1,
   identityPoolId: process.env.NEXT_PUBLIC_CW_RUM_IDENTITY_POOL_ID ?? "",
   endpoint: process.env.NEXT_PUBLIC_CW_RUM_ENDPOINT ?? "",
-  applicationId: process.env.NEXT_PUBLIC_CW_RUM_APP_ID ?? "",
-  applicationRegion: process.env.NEXT_PUBLIC_CW_RUM_APP_REGION ?? "us-east-1",
+  telemetries: ["performance", "errors", "http"],
+  allowCookies: true,
+  enableXRay: false,
+  signing: true,
 };
 
 export function CloudWatchRUM() {
+  const rumRef = useRef<AwsRum | null>(null);
+
   useEffect(() => {
-    if (!CONFIG.applicationId || !CONFIG.identityPoolId) return;
+    if (rumRef.current) return;
+    if (!APPLICATION_ID || !config.identityPoolId) return;
 
-    let isCancelled = false;
-
-    (async () => {
-      try {
-        const { AwsRum } = await import("aws-rum-web");
-        if (isCancelled) return;
-
-        new AwsRum(
-          CONFIG.applicationId,
-          "1.0.0",
-          CONFIG.applicationRegion,
-          {
-            allowCookies: true,
-            endpoint: CONFIG.endpoint || undefined,
-            identityPoolId: CONFIG.identityPoolId,
-            sessionSampleRate: 1,
-            telemetries: ["errors", "performance", "http"],
-          }
-        );
-      } catch {
-        // Silently ignore initialization errors so the site is never affected.
-      }
-    })();
-
-    return () => {
-      isCancelled = true;
-    };
+    try {
+      rumRef.current = new AwsRum(
+        APPLICATION_ID,
+        "1.0.0",
+        APPLICATION_REGION,
+        config
+      );
+    } catch {
+      // Ignore errors thrown during CloudWatch RUM web client initialization
+    }
   }, []);
 
   return null;
