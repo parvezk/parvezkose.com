@@ -25,20 +25,22 @@ Real-user monitoring is provided by [Amazon CloudWatch RUM](https://docs.aws.ama
 
 ### How it works
 
-`app/components/cloudwatch-rum.tsx` is a `"use client"` component that:
+`app/components/cloudwatch-rum.tsx` is a `"use client"` module that:
 
-1. Dynamically imports `aws-rum-web` (keeps it out of the server bundle).
+1. Imports `AwsRum` via a top-level ES6 import.
 2. Reads configuration from `NEXT_PUBLIC_CW_RUM_*` environment variables.
-3. Initialises the RUM client once on mount; silently no-ops when env vars are missing (e.g. local dev).
+3. Initialises the RUM client at **module-evaluation time** (the earliest point in the client bundle), so startup errors and first-paint telemetry are captured before React hydration.
+4. Silently no-ops when required env vars are missing (e.g. local dev).
+5. Exports a `<CloudWatchRUM />` component (renders nothing) that is included in `app/layout.tsx` to ensure the module is part of the client bundle.
 
 ### Required environment variables
 
-| Variable | Description |
-|---|---|
-| `NEXT_PUBLIC_CW_RUM_APP_ID` | App Monitor ID (UUID) from the CloudWatch RUM console |
-| `NEXT_PUBLIC_CW_RUM_IDENTITY_POOL_ID` | Cognito Identity Pool ID for unauthenticated access |
-| `NEXT_PUBLIC_CW_RUM_ENDPOINT` | RUM data-plane endpoint, e.g. `https://dataplane.rum.us-east-1.amazonaws.com` |
-| `NEXT_PUBLIC_CW_RUM_APP_REGION` | AWS region of the App Monitor (defaults to `us-east-1`) |
+| Variable | Required | Description |
+|---|---|---|
+| `NEXT_PUBLIC_CW_RUM_APP_ID` | Yes | App Monitor ID (UUID) from the CloudWatch RUM console |
+| `NEXT_PUBLIC_CW_RUM_IDENTITY_POOL_ID` | Yes | Cognito Identity Pool ID for unauthenticated access |
+| `NEXT_PUBLIC_CW_RUM_ENDPOINT` | Yes | RUM data-plane endpoint, e.g. `https://dataplane.rum.us-east-1.amazonaws.com` |
+| `NEXT_PUBLIC_CW_RUM_APP_REGION` | No | AWS region of the App Monitor. If omitted, derived from the endpoint URL |
 
 Set these in the **AWS Amplify Console → Environment Variables** for production, and in a local `.env` file for development. See `.env.example` for a template.
 
