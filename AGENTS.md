@@ -19,6 +19,42 @@ This is a Next.js 14 personal portfolio/blog site (parvezkose.com). Single-packa
 - The site deploys on **AWS Amplify** (not Vercel).
 - The `next build` step also runs type-checking ("Linting and checking validity of types"), which serves as the primary correctness check for this project.
 
+## Homepage — Dot-Grid Card Design
+
+The homepage (`app/page.tsx`) uses a custom card layout with a canvas-based dot-grid animation. The design is defined in `reference/dot-grid-prototype.html` (single source of truth).
+
+### Layout architecture
+
+- **`app/layout.tsx`** — Minimal root layout: just `<html>`, `<body>`, and `<CloudWatchRUM />`. No Navbar or Footer at this level.
+- **`app/page.tsx`** — Server component that loads JetBrains Mono (weights 300, 400, 500) via `next/font/google` and renders `<HomePage />`.
+- **`app/blog/layout.tsx`** — Blog-specific layout that wraps blog routes with the old `max-w-xl` constraints and `<Footer />`.
+
+### Key components
+
+| Component | Path | Description |
+|---|---|---|
+| `HomePage` | `app/components/home-page.tsx` | `"use client"` — Renders the full card: topbar, hero, bio, links, footer. Uses `styled-jsx` for hover states and responsive breakpoints. |
+| `DotGrid` | `app/components/dot-grid.tsx` | `"use client"` — Canvas dot-grid animation with cursor movement, blinking, resolve patches, and burst effects. Uses `useRef`/`useEffect`/`useCallback`. |
+
+### Design tokens (defined in `app/global.css` `:root`)
+
+| Token | Value | Usage |
+|---|---|---|
+| `--bg` | `#f1f2f2` | Page background |
+| `--fg` | `#1a1a1a` | Primary text |
+| `--fg2` | `#555` | Secondary text (bio, links, role) |
+| `--fg3` | `#999` | Tertiary text (footer, toggle) |
+| `--border` | `#d8d9d9` | Dividers, topbar/footer borders |
+
+### Constraints
+
+- Font: **JetBrains Mono** only (no other fonts on the homepage)
+- No dark mode on the homepage (light palette is fixed)
+- No framer-motion, page transitions, or scroll effects
+- The dot-grid animation logic must not be simplified or abstracted — all CFG values are intentionally tuned
+- Vertical stack order is final: topbar → hero → divider → bio → divider → links → footer
+- Mobile breakpoint at `680px`: column hero, relative canvas, reduced padding
+
 ## Analytics — Amazon CloudWatch RUM
 
 Real-user monitoring is provided by [Amazon CloudWatch RUM](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-RUM.html) via the [`aws-rum-web`](https://github.com/aws-observability/aws-rum-web) client.
