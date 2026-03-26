@@ -6,6 +6,12 @@
 }
 
 :root {
+  --bg: #f1f2f2;
+  --fg: #1a1a1a;
+  --fg2: #555;
+  --fg3: #999;
+  --border: #d8d9d9;
+
   --sh-class: #2d5e9d;
   --sh-identifier: #354150;
   --sh-sign: #8996a3;
