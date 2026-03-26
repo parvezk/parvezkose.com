@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "node --experimental-strip-types --experimental-loader ./test-loader.mjs --test app/**/*.test.ts"
+    "test": "node --experimental-strip-types --import ./test-setup.mjs --test app/**/*.test.ts"
   },
   "dependencies": {
     "@tailwindcss/postcss": "4.0.0-alpha.13",
