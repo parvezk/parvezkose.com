@@ -110,7 +110,7 @@ export function HomePage() {
             >
               Staff Software Engineer
               <br />
-              Front-End · AI Native Full Stack
+              AI Native Full Stack · Front-End
             </div>
           </div>
           <div className="hero-canvas-wrap">
