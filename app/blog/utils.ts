@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { cache } from 'react'
 
 type Metadata = {
   title: string
@@ -49,9 +50,9 @@ function getMDXData(dir) {
   })
 }
 
-export function getBlogPosts() {
+export const getBlogPosts = cache(() => {
   return getMDXData(path.join(process.cwd(), 'app', 'blog', 'posts'))
-}
+})
 
 export function formatDate(date: string, includeRelative = false) {
   let currentDate = new Date()
