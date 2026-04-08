@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { DotGrid } from "./dot-grid";
 
 export function HomePage() {
@@ -50,7 +51,8 @@ export function HomePage() {
           >
             Parvez Kose
           </span>
-          <div
+          <Link
+            href="/"
             style={{
               fontSize: "10px",
               color: "var(--fg3)",
@@ -61,6 +63,7 @@ export function HomePage() {
               display: "flex",
               alignItems: "center",
               gap: "6px",
+              textDecoration: "none",
             }}
             className="topbar-toggle"
           >
@@ -75,7 +78,7 @@ export function HomePage() {
               }}
             />
             <span>Immersive</span>
-          </div>
+          </Link>
         </div>
 
         {/* Hero */}
