@@ -19,21 +19,28 @@ This is a Next.js 14 personal portfolio/blog site (parvezkose.com). Single-packa
 - The site deploys on **AWS Amplify** (not Vercel).
 - The `next build` step also runs type-checking ("Linting and checking validity of types"), which serves as the primary correctness check for this project.
 
-## Homepage — Dot-Grid Card Design
+## Homepage — WebGL immersive landing (default `/`)
 
-The homepage (`app/page.tsx`) uses a custom card layout with a canvas-based dot-grid animation. The design is defined in `reference/dot-grid-prototype.html` (single source of truth).
+The primary landing (`app/page.tsx`) is the fullscreen WebGL hero (`ImmersiveHeroClient` + `GenerativeHeroWebGL`): JetBrains Mono + Fira Code, optional expandable “Design Philosophy” block. **`/immersive` redirects to `/`** for old bookmarks.
+
+### Legacy card layout (`/classic`)
+
+The previous dot-grid card homepage lives at **`/classic`** (`app/classic/page.tsx`), using the same `HomePage` component. The design reference remains `reference/dot-grid-prototype.html` (single source of truth for that layout).
 
 ### Layout architecture
 
 - **`app/layout.tsx`** — Minimal root layout: just `<html>`, `<body>`, and `<CloudWatchRUM />`. No Navbar or Footer at this level.
-- **`app/page.tsx`** — Server component that loads JetBrains Mono (weights 300, 400, 500) via `next/font/google` and renders `<HomePage />`.
+- **`app/page.tsx`** — Server component: loads JetBrains Mono + Fira Code and renders `<ImmersiveHeroClient />` (main landing).
+- **`app/classic/page.tsx`** — Server component: loads JetBrains Mono and renders `<HomePage />` (dot-grid card).
 - **`app/blog/layout.tsx`** — Blog-specific layout that wraps blog routes with the old `max-w-xl` constraints and `<Footer />`.
 
 ### Key components
 
 | Component | Path | Description |
 |---|---|---|
-| `HomePage` | `app/components/home-page.tsx` | `"use client"` — Renders the full card: topbar, hero, bio, links, footer. Uses `styled-jsx` for hover states and responsive breakpoints. |
+| `HomePage` | `app/components/home-page.tsx` | `"use client"` — Card layout for **`/classic`**: topbar, hero, DotGrid, bio, links, footer. Topbar “Immersive” links to **`/`**. Uses `styled-jsx` for hover states and responsive breakpoints. |
+| `ImmersiveHeroClient` | `app/components/immersive-hero-client.tsx` | `"use client"` — Main landing: WebGL hero, nav (“← Home” → `/classic`), expandable Design Philosophy. |
+| `GenerativeHeroWebGL` | `app/components/generative-hero-webgl.tsx` | `"use client"` — Fullscreen WebGL2 shader hero. |
 | `DotGrid` | `app/components/dot-grid.tsx` | `"use client"` — Canvas dot-grid animation with cursor movement, blinking, resolve patches, and burst effects. Uses `useRef`/`useEffect`/`useCallback`. |
 
 ### Design tokens (defined in `app/global.css` `:root`)
@@ -48,8 +55,9 @@ The homepage (`app/page.tsx`) uses a custom card layout with a canvas-based dot-
 
 ### Constraints
 
-- Font: **JetBrains Mono** only (no other fonts on the homepage)
-- No dark mode on the homepage (light palette is fixed)
+- **Main landing (`/`):** JetBrains Mono + Fira Code (see `immersive-hero-client.tsx`). Dark immersive palette.
+- **Classic card (`/classic`):** **JetBrains Mono** only (no other fonts on that page)
+- No dark mode on **`/classic`** (light palette is fixed)
 - No framer-motion, page transitions, or scroll effects
 - The dot-grid animation logic must not be simplified or abstracted — all CFG values are intentionally tuned
 - Vertical stack order is final: topbar → hero → divider → bio → divider → links → footer
