@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import fs from 'fs'
 import path from 'path'
 
@@ -52,6 +53,8 @@ function getMDXData(dir) {
 export function getBlogPosts() {
   return getMDXData(path.join(process.cwd(), 'app', 'blog', 'posts'))
 }
+export const getPost = cache((slug: string) => getBlogPosts().find((post) => post.slug === slug))
+
 
 export function formatDate(date: string, includeRelative = false) {
   let currentDate = new Date()
