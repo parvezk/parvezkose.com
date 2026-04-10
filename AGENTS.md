@@ -2,7 +2,7 @@
 
 ## Cursor Cloud specific instructions
 
-This is a Next.js 14 personal portfolio/blog site (parvezkose.com). Single-package, no monorepo, no databases, no Docker.
+This is a Next.js 15 personal portfolio/blog site (parvezkose.com). Single-package, no monorepo, no databases, no Docker. React 19.
 
 ### Quick reference
 
