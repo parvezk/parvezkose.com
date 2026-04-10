@@ -1,3 +1,7 @@
+'use client'
+
+import posthog from 'posthog-js'
+
 function ArrowIcon() {
   return (
     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -19,6 +23,7 @@ export default function Footer() {
             rel="noopener noreferrer"
             target="_blank"
             href="https://designlogic.substack.com/"
+            onClick={() => posthog.capture('footer_social_link_clicked', { platform: 'Substack' })}
           >
             <ArrowIcon />
             <p className="ml-2 h-7">substack</p>
@@ -30,6 +35,7 @@ export default function Footer() {
             rel="noopener noreferrer"
             target="_blank"
             href="https://medium.com/@parvez__"
+            onClick={() => posthog.capture('footer_social_link_clicked', { platform: 'Medium' })}
           >
             <ArrowIcon />
             <p className="ml-2 h-7">medium</p>
@@ -42,6 +48,7 @@ export default function Footer() {
             rel="noopener noreferrer"
             target="_blank"
             href="https://www.linkedin.com/in/parvezkose/"
+            onClick={() => posthog.capture('footer_social_link_clicked', { platform: 'LinkedIn' })}
           >
             <ArrowIcon />
             <p className="ml-2 h-7">linkedin</p>
@@ -54,6 +61,7 @@ export default function Footer() {
             rel="noopener noreferrer"
             target="_blank"
             href="https://github.com/parvezk"
+            onClick={() => posthog.capture('footer_social_link_clicked', { platform: 'GitHub' })}
           >
             <ArrowIcon />
             <p className="ml-2 h-7">github</p>

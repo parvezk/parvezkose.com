@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useId, useState } from "react";
+import posthog from "posthog-js";
 import { GenerativeHeroWebGL } from "./generative-hero-webgl";
 
 type ImmersiveHeroClientProps = Readonly<{
@@ -46,6 +47,7 @@ export function ImmersiveHeroClient({
       >
         <Link
           href="/classic"
+          onClick={() => posthog.capture("layout_switched", { to: "classic", from: "immersive" })}
           className="tracking-[0.12em] text-white/55 transition-[letter-spacing,color] duration-300 ease-out hover:tracking-[0.2em] hover:text-white/90"
         >
           ← Home
@@ -54,6 +56,7 @@ export function ImmersiveHeroClient({
           href="https://github.com/parvezk"
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => posthog.capture("social_link_clicked", { platform: "GitHub", location: "immersive_nav" })}
           className="tracking-[0.12em] text-white/55 transition-[letter-spacing,color] duration-300 ease-out hover:tracking-[0.2em] hover:text-white/90"
         >
           GitHub
@@ -62,6 +65,7 @@ export function ImmersiveHeroClient({
           href="https://linkedin.com/in/parvezkose"
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => posthog.capture("social_link_clicked", { platform: "LinkedIn", location: "immersive_nav" })}
           className="tracking-[0.12em] text-white/55 transition-[letter-spacing,color] duration-300 ease-out hover:tracking-[0.2em] hover:text-white/90"
         >
           LinkedIn
@@ -70,6 +74,7 @@ export function ImmersiveHeroClient({
           href="https://designlogic.substack.com"
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => posthog.capture("social_link_clicked", { platform: "Substack", location: "immersive_nav" })}
           className="tracking-[0.12em] text-white/55 transition-[letter-spacing,color] duration-300 ease-out hover:tracking-[0.2em] hover:text-white/90"
         >
           Substack
@@ -78,6 +83,7 @@ export function ImmersiveHeroClient({
           href="https://medium.com/@parvez__"
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => posthog.capture("social_link_clicked", { platform: "Medium", location: "immersive_nav" })}
           className="tracking-[0.12em] text-white/55 transition-[letter-spacing,color] duration-300 ease-out hover:tracking-[0.2em] hover:text-white/90"
         >
           Medium
@@ -110,7 +116,13 @@ export function ImmersiveHeroClient({
               id={philosophyToggleId}
               aria-expanded={philosophyOpen}
               aria-controls={philosophyPanelId}
-              onClick={() => setPhilosophyOpen((o) => !o)}
+              onClick={() => {
+                const next = !philosophyOpen;
+                setPhilosophyOpen(next);
+                posthog.capture("design_philosophy_toggled", {
+                  action: next ? "opened" : "closed",
+                });
+              }}
               className={`${firaClassName} mt-5 cursor-pointer text-sm font-normal tracking-normal text-white/75 transition-[color,text-shadow,letter-spacing] duration-300 ease-out [text-shadow:0_1px_2px_rgba(0,0,0,0.85)] hover:tracking-[0.14em] hover:text-white/95 sm:text-base sm:hover:tracking-[0.18em]`}
             >
               {philosophyOpen ? "[−]" : "[+]"} Design Philosophy
