@@ -3,6 +3,7 @@ import { CustomMDX } from 'app/components/mdx'
 import { formatDate, getBlogPosts } from 'app/blog/utils'
 import { baseUrl } from 'app/sitemap'
 import { cache } from 'react'
+import { getPostHogClient } from 'app/lib/posthog-server'
 
 const getPost = cache((slug: string) => getBlogPosts().find((post) => post.slug === slug))
 
@@ -64,6 +65,18 @@ export default async function Blog({ params }: BlogPageProps) {
   if (!post) {
     notFound()
   }
+
+  const posthog = getPostHogClient()
+  posthog.capture({
+    distinctId: 'anonymous',
+    event: 'blog_post_viewed',
+    properties: {
+      slug: post!.slug,
+      title: post!.metadata.title,
+      published_at: post!.metadata.publishedAt,
+    },
+  })
+  await posthog.shutdown()
 
   return (
     <section>
