@@ -1,4 +1,4 @@
-import { formatDate, getBlogPosts } from 'app/blog/utils'
+import { getBlogPosts } from 'app/blog/utils'
 import { BlogPostLink } from './blog-post-link'
 
 export function BlogPosts() {

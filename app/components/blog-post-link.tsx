@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import posthog from 'posthog-js'
-import { formatDate } from 'app/blog/utils'
+import { formatDate } from 'app/blog/date-format'
 
 type BlogPostLinkProps = {
   slug: string
