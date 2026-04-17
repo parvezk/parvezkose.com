@@ -8,6 +8,9 @@ type Metadata = {
   image?: string
 }
 
+/**
+ * Parses the frontmatter and content from a Markdown file.
+ */
 function parseFrontmatter(fileContent: string) {
   const frontmatterRegex = /---\s*([\s\S]*?)\s*---/
   const match = frontmatterRegex.exec(fileContent)
@@ -25,15 +28,24 @@ function parseFrontmatter(fileContent: string) {
   return { metadata: metadata as Metadata, content }
 }
 
+/**
+ * Retrieves all MDX files from a directory.
+ */
 function getMDXFiles(dir) {
   return fs.readdirSync(dir).filter((file) => path.extname(file) === '.mdx')
 }
 
+/**
+ * Reads and parses an MDX file.
+ */
 function readMDXFile(filePath) {
   const rawContent = fs.readFileSync(filePath, 'utf-8')
   return parseFrontmatter(rawContent)
 }
 
+/**
+ * Retrieves and parses all MDX files from a directory.
+ */
 function getMDXData(dir) {
   const mdxFiles = getMDXFiles(dir)
   return mdxFiles.map((file) => {
@@ -48,6 +60,9 @@ function getMDXData(dir) {
   })
 }
 
+/**
+ * Fetches all blog posts from the predefined posts directory.
+ */
 export function getBlogPosts() {
   return getMDXData(path.join(process.cwd(), 'app', 'blog', 'posts'))
 }
