@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import posthog from "posthog-js";
 import { DotGrid } from "./dot-grid";
 
 export function HomePage() {
@@ -50,7 +52,9 @@ export function HomePage() {
           >
             Parvez Kose
           </span>
-          <div
+          <Link
+            href="/"
+            onClick={() => posthog.capture("layout_switched", { to: "immersive", from: "classic" })}
             style={{
               fontSize: "10px",
               color: "var(--fg3)",
@@ -61,6 +65,7 @@ export function HomePage() {
               display: "flex",
               alignItems: "center",
               gap: "6px",
+              textDecoration: "none",
             }}
             className="topbar-toggle"
           >
@@ -75,7 +80,7 @@ export function HomePage() {
               }}
             />
             <span>Immersive</span>
-          </div>
+          </Link>
         </div>
 
         {/* Hero */}
@@ -176,6 +181,7 @@ export function HomePage() {
               target="_blank"
               rel="noopener noreferrer"
               className="homepage-link"
+              onClick={() => posthog.capture("classic_homepage_social_link_clicked", { platform: link.label })}
               style={{
                 fontSize: "13px",
                 fontWeight: 500,

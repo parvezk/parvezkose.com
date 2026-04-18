@@ -9,14 +9,16 @@
   "dependencies": {
     "@tailwindcss/postcss": "4.0.0-alpha.13",
     "@types/node": "20.11.17",
-    "@types/react": "18.2.55",
-    "@types/react-dom": "18.2.19",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "aws-rum-web": "^1.19.0",
-    "next": "14.0",
-    "next-mdx-remote": "^4.4.1",
+    "next": "^15.3.0",
+    "next-mdx-remote": "^6.0.0",
     "postcss": "^8.4.35",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "posthog-js": "^1.367.0",
+    "posthog-node": "^5.29.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "sugar-high": "^0.6.0",
     "tailwindcss": "4.0.0-alpha.13",
     "typescript": "5.3.3"
@@ -24,6 +26,6 @@
   "packageManager": "pnpm@9.15.0+sha512.76e2379760a4328ec4415815bcd6628dee727af3779aaa4c914e3944156c4299921a89f976381ee107d41f12cfa4b66681ca9c718f0668fa0831ed4c6d8ba56c",
   "devDependencies": {
     "eslint": "^8.57.1",
-    "eslint-config-next": "~14.0.4"
+    "eslint-config-next": "^15.3.0"
   }
 }

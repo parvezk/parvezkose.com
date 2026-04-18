@@ -154,3 +154,26 @@ table {
 .title {
   text-wrap: balance;
 }
+
+/* /immersive — subtitle underline caret (terminal-style, step blink) */
+@keyframes immersive-caret-blink {
+  0%,
+  49.5% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.immersive-caret-blink {
+  animation: immersive-caret-blink 1.08s step-end infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .immersive-caret-blink {
+    animation: none;
+    opacity: 0.85;
+  }
+}
