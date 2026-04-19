@@ -41,3 +41,5 @@ next-env.d.ts
 /spec
 /temp
 .env.local
+
+/assets
