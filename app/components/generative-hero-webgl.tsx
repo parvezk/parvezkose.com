@@ -117,12 +117,16 @@ function createProgram(
 }
 
 export type GenerativeHeroWebGLProps = Readonly<{
+  /** Full-resolution texture (large). Loaded after the preview when both are set. */
   textureSrc?: string;
+  /** Low-res texture shown first; WebGL swaps to `textureSrc` when it finishes loading. */
+  texturePreviewSrc?: string;
   className?: string;
 }>;
 
 export function GenerativeHeroWebGL({
-  textureSrc = "/textures/volcanic-hero.png",
+  textureSrc = "/textures/volcanic-terrain-hero.png",
+  texturePreviewSrc = "/textures/volcanic-terrain-hero-low.png",
   className = "",
 }: GenerativeHeroWebGLProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -261,10 +265,45 @@ export function GenerativeHeroWebGL({
       });
     };
 
-    void loadTexture(gl, textureSrc).then((t) => {
-      tex = t;
-      markSurfaceReady();
-    });
+    const usePreviewFirst =
+      Boolean(texturePreviewSrc) && texturePreviewSrc !== textureSrc;
+
+    if (!usePreviewFirst) {
+      void loadTexture(gl, textureSrc).then((t) => {
+        if (!mountedRef.current) {
+          if (t) gl.deleteTexture(t);
+          return;
+        }
+        tex = t;
+        markSurfaceReady();
+      });
+    } else {
+      void loadTexture(gl, texturePreviewSrc).then((preview) => {
+        if (!mountedRef.current) {
+          if (preview) gl.deleteTexture(preview);
+          return;
+        }
+        if (preview) {
+          tex = preview;
+          markSurfaceReady();
+        }
+        void loadTexture(gl, textureSrc).then((full) => {
+          if (!mountedRef.current) {
+            if (full) gl.deleteTexture(full);
+            return;
+          }
+          if (full) {
+            if (tex) gl.deleteTexture(tex);
+            tex = full;
+          } else if (!preview) {
+            // Neither texture loaded; overlay stays.
+          }
+          if (!preview && full) {
+            markSurfaceReady();
+          }
+        });
+      });
+    }
 
     const draw = () => {
       raf = requestAnimationFrame(draw);
@@ -319,7 +358,7 @@ export function GenerativeHeroWebGL({
       gl.deleteProgram(program);
       if (tex) gl.deleteTexture(tex);
     };
-  }, [loadTexture, textureSrc]);
+  }, [loadTexture, texturePreviewSrc, textureSrc]);
 
   return (
     <div
