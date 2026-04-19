@@ -27,14 +27,25 @@ export function ImmersiveHeroClient({
     <div
       className={`relative min-h-screen w-full bg-neutral-950 ${jetbrainsClassName}`}
     >
-      {/* Early texture fetch for WebGL (HTTP cache); raw <img> so Next does not re-encode the 11MB asset. */}
-      {/* eslint-disable-next-line @next/next/no-img-element -- intentional preload; same URL as WebGL texture */}
+      {/* Warm HTTP cache for WebGL; raw <img> so Next does not re-encode. Low-res first, full-res in parallel at lower priority. */}
+      {/* eslint-disable-next-line @next/next/no-img-element -- intentional preload URLs match WebGL textures */}
       <img
-        src="/textures/volcanic-hero.png"
+        src="/textures/volcanic-terrain-hero-low.png"
         alt=""
         width={1}
         height={1}
         fetchPriority="high"
+        decoding="async"
+        className="pointer-events-none fixed left-0 top-0 h-px w-px opacity-0"
+        aria-hidden
+      />
+      {/* eslint-disable-next-line @next/next/no-img-element -- intentional preload */}
+      <img
+        src="/textures/volcanic-terrain-hero.png"
+        alt=""
+        width={1}
+        height={1}
+        fetchPriority="low"
         decoding="async"
         className="pointer-events-none fixed left-0 top-0 h-px w-px opacity-0"
         aria-hidden
