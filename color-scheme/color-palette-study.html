@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Color Theory — Parvez Kose</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0A0A0A;--bg2:#141414;--bg3:#1A1A1A;--text:#E8E4E0;--text2:#9A9590;--text3:#5A5550;--border:#2A2520;--accent:#E2725B}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+.container{max-width:960px;margin:0 auto;padding:60px 24px 80px}
+h1{font-size:13px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);margin-bottom:4px}
+.subtitle{font-size:32px;font-weight:300;color:var(--text);margin-bottom:32px;line-height:1.3}
+.subtitle span{color:var(--accent)}
+.tabs{display:flex;gap:0;margin-bottom:40px;border-bottom:1px solid var(--border)}
+.tab{padding:10px 20px;font-size:12px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color 0.15s,border-color 0.15s;user-select:none}
+.tab:hover{color:var(--text2)}
+.tab.active{color:var(--text);border-bottom-color:var(--accent)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.group{margin-bottom:40px}
+.group-label{font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.swatches{display:flex;flex-wrap:wrap;gap:8px}
+.swatch{width:108px;border-radius:6px;overflow:hidden;background:var(--bg2);border:1px solid var(--border);cursor:pointer;transition:transform 0.15s,border-color 0.15s}
+.swatch:hover{transform:translateY(-2px);border-color:#444}
+.color{height:64px;position:relative}
+.color::after{content:attr(data-hex);position:absolute;bottom:4px;right:6px;font-size:9px;font-family:'JetBrains Mono',monospace;opacity:0.7}
+.color.light::after{color:#333}
+.color.dark::after{color:#fff}
+.info{padding:6px 8px}
+.info .name{font-size:11px;font-weight:500;color:var(--text);line-height:1.3}
+.info .hex{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text2);margin-top:1px}
+.rec-section{margin-bottom:48px}
+.rec-title{font-size:18px;font-weight:400;color:var(--text);margin-bottom:8px}
+.rec-desc{font-size:14px;color:var(--text2);margin-bottom:20px;max-width:640px;line-height:1.7}
+.accent-demo{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:32px}
+.accent-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px 20px;width:200px}
+.accent-card .role{font-size:10px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.accent-card .sample{height:3px;border-radius:2px;margin-bottom:10px}
+.accent-card .color-name{font-size:13px;font-weight:500;margin-bottom:2px}
+.accent-card .color-hex{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text2)}
+.accent-card .usage{font-size:11px;color:var(--text2);margin-top:8px;line-height:1.5}
+.combo-strip{display:flex;gap:2px;border-radius:6px;overflow:hidden;margin-bottom:24px;height:48px}
+.combo-strip div{flex:1;position:relative}
+.combo-strip div span{position:absolute;bottom:4px;left:6px;font-size:9px;font-family:'JetBrains Mono',monospace;color:#fff;opacity:0.8}
+.element-demos{display:flex;gap:16px;flex-wrap:wrap;margin-top:24px}
+.el-demo{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;padding:20px;width:280px}
+.el-demo .el-label{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:12px}
+.line-el{height:2px;border-radius:1px;margin-bottom:8px}
+.dot-el{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px}
+.tag-el{display:inline-block;padding:3px 10px;border-radius:4px;font-size:11px;font-weight:500;margin-right:6px;margin-bottom:6px}
+.wine-intro{font-size:14px;color:var(--text2);margin-bottom:28px;max-width:640px;line-height:1.7}
+.wine-spectrum{display:flex;gap:0;border-radius:8px;overflow:hidden;margin-bottom:32px;height:80px}
+.wine-spectrum div{flex:1;position:relative;transition:flex 0.2s}
+.wine-spectrum:hover div{flex:0.8}
+.wine-spectrum div:hover{flex:2}
+.wine-spectrum div span{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);font-size:9px;font-family:'JetBrains Mono',monospace;color:#fff;opacity:0;transition:opacity 0.2s;white-space:nowrap}
+.wine-spectrum div:hover span{opacity:0.9}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#222;border:1px solid #333;border-radius:6px;padding:8px 16px;font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--text);opacity:0;transition:opacity 0.2s;pointer-events:none;z-index:10}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Color theory</h1>
+<div class="subtitle">Palette for <span>parvezkose.com</span> v2</div>
+
+<div class="tabs">
+<div class="tab active" onclick="switchTab('palette')">Palette</div>
+<div class="tab" onclick="switchTab('accents')">V2 accents</div>
+<div class="tab" onclick="switchTab('wines')">Wines</div>
+</div>
+
+<div class="tab-content active" id="tab-palette">
+<div class="group">
+<div class="group-label">Reds & wines</div>
+<div class="swatches">
+<div class="swatch" onclick="cop('#65000B')"><div class="color dark" style="background:#65000B" data-hex="#65000B"></div><div class="info"><div class="name">Rosewood</div><div class="hex">#65000B</div></div></div>
+<div class="swatch" onclick="cop('#800020')"><div class="color dark" style="background:#800020" data-hex="#800020"></div><div class="info"><div class="name">Burgundy</div><div class="hex">#800020</div></div></div>
+<div class="swatch" onclick="cop('#800000')"><div class="color dark" style="background:#800000" data-hex="#800000"></div><div class="info"><div class="name">Maroon</div><div class="hex">#800000</div></div></div>
+<div class="swatch" onclick="cop('#C54B6C')"><div class="color dark" style="background:#C54B6C" data-hex="#C54B6C"></div><div class="info"><div class="name">Mulberry</div><div class="hex">#C54B6C</div></div></div>
+<div class="swatch" onclick="cop('#C04000')"><div class="color dark" style="background:#C04000" data-hex="#C04000"></div><div class="info"><div class="name">Chili</div><div class="hex">#C04000</div></div></div>
+</div>
+</div>
+<div class="group">
+<div class="group-label">Warm earth & terracotta</div>
+<div class="swatches">
+<div class="swatch" onclick="cop('#E2725B')"><div class="color dark" style="background:#E2725B" data-hex="#E2725B"></div><div class="info"><div class="name">Terracotta</div><div class="hex">#E2725B</div></div></div>
+<div class="swatch" onclick="cop('#B7410E')"><div class="color dark" style="background:#B7410E" data-hex="#B7410E"></div><div class="info"><div class="name">Rust</div><div class="hex">#B7410E</div></div></div>
+<div class="swatch" onclick="cop('#9F381D')"><div class="color dark" style="background:#9F381D" data-hex="#9F381D"></div><div class="info"><div class="name">Cognac</div><div class="hex">#9F381D</div></div></div>
+<div class="swatch" onclick="cop('#C4A000')"><div class="color dark" style="background:#C4A000" data-hex="#C4A000"></div><div class="info"><div class="name">Golden</div><div class="hex">#C4A000</div></div></div>
+</div>
+</div>
+<div class="group">
+<div class="group-label">Browns & wood tones</div>
+<div class="swatches">
+<div class="swatch" onclick="cop('#4C3024')"><div class="color dark" style="background:#4C3024" data-hex="#4C3024"></div><div class="info"><div class="name">Mahogany</div><div class="hex">#4C3024</div></div></div>
+<div class="swatch" onclick="cop('#5C4033')"><div class="color dark" style="background:#5C4033" data-hex="#5C4033"></div><div class="info"><div class="name">Walnut</div><div class="hex">#5C4033</div></div></div>
+<div class="swatch" onclick="cop('#6F4E37')"><div class="color dark" style="background:#6F4E37" data-hex="#6F4E37"></div><div class="info"><div class="name">Coffee</div><div class="hex">#6F4E37</div></div></div>
+<div class="swatch" onclick="cop('#685542')"><div class="color dark" style="background:#685542" data-hex="#685542"></div><div class="info"><div class="name">Grizzly</div><div class="hex">#685542</div></div></div>
+</div>
+</div>
+<div class="group">
+<div class="group-label">Neutrals & creams</div>
+<div class="swatches">
+<div class="swatch" onclick="cop('#FFFFF0')"><div class="color light" style="background:#FFFFF0" data-hex="#FFFFF0"></div><div class="info"><div class="name">Ivory</div><div class="hex">#FFFFF0</div></div></div>
+<div class="swatch" onclick="cop('#F5F5DC')"><div class="color light" style="background:#F5F5DC" data-hex="#F5F5DC"></div><div class="info"><div class="name">Beige</div><div class="hex">#F5F5DC</div></div></div>
+<div class="swatch" onclick="cop('#F7E7CE')"><div class="color light" style="background:#F7E7CE" data-hex="#F7E7CE"></div><div class="info"><div class="name">Champagne</div><div class="hex">#F7E7CE</div></div></div>
+<div class="swatch" onclick="cop('#FFFDD0')"><div class="color light" style="background:#FFFDD0" data-hex="#FFFDD0"></div><div class="info"><div class="name">Cream</div><div class="hex">#FFFDD0</div></div></div>
+<div class="swatch" onclick="cop('#FAF0E6')"><div class="color light" style="background:#FAF0E6" data-hex="#FAF0E6"></div><div class="info"><div class="name">Linen</div><div class="hex">#FAF0E6</div></div></div>
+<div class="swatch" onclick="cop('#FFE4C4')"><div class="color light" style="background:#FFE4C4" data-hex="#FFE4C4"></div><div class="info"><div class="name">Bisque</div><div class="hex">#FFE4C4</div></div></div>
+<div class="swatch" onclick="cop('#C3B091')"><div class="color dark" style="background:#C3B091" data-hex="#C3B091"></div><div class="info"><div class="name">Khaki</div><div class="hex">#C3B091</div></div></div>
+<div class="swatch" onclick="cop('#C8AD8F')"><div class="color dark" style="background:#C8AD8F" data-hex="#C8AD8F"></div><div class="info"><div class="name">Latte</div><div class="hex">#C8AD8F</div></div></div>
+<div class="swatch" onclick="cop('#EFDECD')"><div class="color light" style="background:#EFDECD" data-hex="#EFDECD"></div><div class="info"><div class="name">Almond</div><div class="hex">#EFDECD</div></div></div>
+</div>
+</div>
+<div class="group">
+<div class="group-label">Anchor</div>
+<div class="swatches">
+<div class="swatch" onclick="cop('#000000')"><div class="color dark" style="background:#000000" data-hex="#000000"></div><div class="info"><div class="name">Black</div><div class="hex">#000000</div></div></div>
+</div>
+</div>
+</div>
+
+<div class="tab-content" id="tab-accents">
+<div class="rec-section">
+<div class="rec-title">Accent system for V2 dark variant</div>
+<div class="rec-desc">Against the black-red WebGL hero, you need accents that read clearly without competing with the shader. White carries 70% of text. These three colors handle the remaining 30% — used sparingly on lines, tags, subtle marks, and interactive states.</div>
+<div class="combo-strip">
+<div style="background:#0A0A0A;flex:3"><span>base</span></div>
+<div style="background:#E2725B;flex:1"><span>terracotta</span></div>
+<div style="background:#C4A000;flex:0.6"><span>golden</span></div>
+<div style="background:#C8AD8F;flex:0.8"><span>latte</span></div>
+</div>
+<div class="accent-demo">
+<div class="accent-card">
+<div class="role">Primary accent</div>
+<div class="sample" style="background:#E2725B"></div>
+<div class="color-name" style="color:#E2725B">Terracotta</div>
+<div class="color-hex">#E2725B</div>
+<div class="usage">Active states, hover lines, selected nav indicators, CTA borders. Echoes the red in the shader without matching it exactly.</div>
+</div>
+<div class="accent-card">
+<div class="role">Warm highlight</div>
+<div class="sample" style="background:#C4A000"></div>
+<div class="color-name" style="color:#C4A000">Golden</div>
+<div class="color-hex">#C4A000</div>
+<div class="usage">Sparse — featured tags, skill badges, a single underline on a key phrase. Adds warmth without becoming "gold theme."</div>
+</div>
+<div class="accent-card">
+<div class="role">Muted secondary</div>
+<div class="sample" style="background:#C8AD8F"></div>
+<div class="color-name" style="color:#C8AD8F">Latte</div>
+<div class="color-hex">#C8AD8F</div>
+<div class="usage">Subdued text (dates, captions, metadata), card borders at ~20% opacity, section divider lines. Warm neutral that replaces cold gray.</div>
+</div>
+</div>
+</div>
+<div class="rec-section">
+<div class="rec-title">How these show up in practice</div>
+<div class="element-demos">
+<div class="el-demo">
+<div class="el-label">Line elements</div>
+<div class="line-el" style="background:#E2725B;width:40px;margin-bottom:12px"></div>
+<div style="font-size:13px;color:var(--text);margin-bottom:4px">Section header</div>
+<div style="font-size:12px;color:var(--text2)">A short terracotta rule above headings signals sections without needing color-heavy backgrounds.</div>
+</div>
+<div class="el-demo">
+<div class="el-label">Tags & pills</div>
+<div style="margin-bottom:8px">
+<span class="tag-el" style="background:rgba(226,114,91,0.12);color:#E2725B">React</span>
+<span class="tag-el" style="background:rgba(196,160,0,0.12);color:#C4A000">WebGL</span>
+<span class="tag-el" style="background:rgba(200,173,143,0.15);color:#C8AD8F">Design systems</span>
+</div>
+<div style="font-size:12px;color:var(--text2)">Low-opacity fills with matching text. Never solid background pills on dark.</div>
+</div>
+<div class="el-demo">
+<div class="el-label">Dot indicators</div>
+<div style="margin-bottom:8px">
+<span class="dot-el" style="background:#E2725B"></span>
+<span class="dot-el" style="background:#C4A000"></span>
+<span class="dot-el" style="background:#C8AD8F"></span>
+<span style="font-size:12px;color:var(--text2);margin-left:4px">Status / nav markers</span>
+</div>
+</div>
+<div class="el-demo">
+<div class="el-label">Card overlay on shader bg</div>
+<div style="background:rgba(10,10,10,0.75);border:1px solid rgba(200,173,143,0.15);border-radius:8px;padding:14px;backdrop-filter:blur(12px)">
+<div style="font-size:13px;font-weight:500;color:#fff;margin-bottom:4px">Project title</div>
+<div style="font-size:11px;color:#C8AD8F;margin-bottom:8px">2025 — Design engineering</div>
+<div style="height:1px;background:rgba(226,114,91,0.3);width:24px;margin-bottom:8px"></div>
+<div style="font-size:12px;color:var(--text2);line-height:1.5">Brief description in muted white. The terracotta line and latte metadata add warmth.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="tab-content" id="tab-wines">
+<div class="wine-intro">Shades of wine — the deep red-purple spectrum between burgundy and mulberry. These are the colors living inside your WebGL shader's darker valleys. Useful as reference when tuning shader uniforms or picking overlay tints.</div>
+<div class="wine-spectrum">
+<div style="background:#DC143C" onclick="cop('#DC143C')"><span>Crimson</span></div>
+<div style="background:#B21E35" onclick="cop('#B21E35')"><span>Garnet</span></div>
+<div style="background:#722F37" onclick="cop('#722F37')"><span>Wine</span></div>
+<div style="background:#800020" onclick="cop('#800020')"><span>Burgundy</span></div>
+<div style="background:#6F2232" onclick="cop('#6F2232')"><span>Claret</span></div>
+<div style="background:#5E1224" onclick="cop('#5E1224')"><span>Cabernet</span></div>
+<div style="background:#4E0707" onclick="cop('#4E0707')"><span>Oxblood</span></div>
+<div style="background:#3C0014" onclick="cop('#3C0014')"><span>Port</span></div>
+<div style="background:#2C0010" onclick="cop('#2C0010')"><span>Noir</span></div>
+</div>
+<div class="group">
+<div class="group-label">Lighter wines</div>
+<div class="swatches">
+<div class="swatch" onclick="cop('#DC143C')"><div class="color dark" style="background:#DC143C" data-hex="#DC143C"></div><div class="info"><div class="name">Crimson</div><div class="hex">#DC143C</div></div></div>
+<div class="swatch" onclick="cop('#E30B5C')"><div class="color dark" style="background:#E30B5C" data-hex="#E30B5C"></div><div class="info"><div class="name">Raspberry</div><div class="hex">#E30B5C</div></div></div>
+<div class="swatch" onclick="cop('#B21E35')"><div class="color dark" style="background:#B21E35" data-hex="#B21E35"></div><div class="info"><div class="name">Garnet</div><div class="hex">#B21E35</div></div></div>
+<div class="swatch" onclick="cop('#9B111E')"><div class="color dark" style="background:#9B111E" data-hex="#9B111E"></div><div class="info"><div class="name">Ruby</div><div class="hex">#9B111E</div></div></div>
+<div class="swatch" onclick="cop('#722F37')"><div class="color dark" style="background:#722F37" data-hex="#722F37"></div><div class="info"><div class="name">Wine</div><div class="hex">#722F37</div></div></div>
+</div>
+</div>
+<div class="group">
+<div class="group-label">Mid wines</div>
+<div class="swatches">
+<div class="swatch" onclick="cop('#800020')"><div class="color dark" style="background:#800020" data-hex="#800020"></div><div class="info"><div class="name">Burgundy</div><div class="hex">#800020</div></div></div>
+<div class="swatch" onclick="cop('#6F2232')"><div class="color dark" style="background:#6F2232" data-hex="#6F2232"></div><div class="info"><div class="name">Claret</div><div class="hex">#6F2232</div></div></div>
+<div class="swatch" onclick="cop('#5E1224')"><div class="color dark" style="background:#5E1224" data-hex="#5E1224"></div><div class="info"><div class="name">Cabernet</div><div class="hex">#5E1224</div></div></div>
+<div class="swatch" onclick="cop('#7B3F52')"><div class="color dark" style="background:#7B3F52" data-hex="#7B3F52"></div><div class="info"><div class="name">Merlot</div><div class="hex">#7B3F52</div></div></div>
+<div class="swatch" onclick="cop('#673147')"><div class="color dark" style="background:#673147" data-hex="#673147"></div><div class="info"><div class="name">Shiraz</div><div class="hex">#673147</div></div></div>
+</div>
+</div>
+<div class="group">
+<div class="group-label">Deep wines</div>
+<div class="swatches">
+<div class="swatch" onclick="cop('#4E0707')"><div class="color dark" style="background:#4E0707" data-hex="#4E0707"></div><div class="info"><div class="name">Oxblood</div><div class="hex">#4E0707</div></div></div>
+<div class="swatch" onclick="cop('#4C0027')"><div class="color dark" style="background:#4C0027" data-hex="#4C0027"></div><div class="info"><div class="name">Sangria</div><div class="hex">#4C0027</div></div></div>
+<div class="swatch" onclick="cop('#3C0014')"><div class="color dark" style="background:#3C0014" data-hex="#3C0014"></div><div class="info"><div class="name">Port</div><div class="hex">#3C0014</div></div></div>
+<div class="swatch" onclick="cop('#2C0010')"><div class="color dark" style="background:#2C0010" data-hex="#2C0010"></div><div class="info"><div class="name">Noir</div><div class="hex">#2C0010</div></div></div>
+<div class="swatch" onclick="cop('#1A0005')"><div class="color dark" style="background:#1A0005" data-hex="#1A0005"></div><div class="info"><div class="name">Abyss</div><div class="hex">#1A0005</div></div></div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="toast" id="toast"></div>
+<script>
+function switchTab(id){
+  document.querySelectorAll('.tab').forEach((t,i)=>{
+    const targets=['palette','accents','wines'];
+    if(targets[i]===id){t.classList.add('active')}else{t.classList.remove('active')}
+  });
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+}
+function cop(h){
+  navigator.clipboard.writeText(h).then(()=>{
+    const t=document.getElementById('toast');
+    t.textContent='Copied '+h;
+    t.style.opacity='1';
+    setTimeout(()=>t.style.opacity='0',1200)
+  })
+}
+</script>
+</body>
+</html>
