@@ -222,11 +222,14 @@ export function ImmersiveHeroClient({
                   {DESIGN_PHILOSOPHY.map((para) => (
                     <p
                       key={para}
-                      className="mb-2.5 last:mb-0 [text-shadow:0_1px_8px_rgba(0,0,0,0.75)]"
+                      className="mb-2.5 [text-shadow:0_1px_8px_rgba(0,0,0,0.75)]"
                     >
                       {para}
                     </p>
                   ))}
+                  <p className="mb-2 mt-1 text-white/70 [text-shadow:0_1px_8px_rgba(0,0,0,0.75)]">
+                    This site has its own design system — built for agentic terrain.
+                  </p>
                   <a
                     href="/design-system/"
                     target="_blank"
@@ -236,10 +239,10 @@ export function ImmersiveHeroClient({
                         location: "immersive_philosophy_panel",
                       })
                     }
-                    className="mt-3 inline-flex items-center gap-1.5 border-b border-white/30 pb-0.5 text-[11px] tracking-[0.04em] text-white/85 transition-[color,border-color,letter-spacing] duration-300 ease-out hover:border-[color:var(--accent-terracotta)] hover:tracking-[0.08em] hover:text-[color:var(--accent-terracotta)] sm:text-[12px] [text-shadow:0_1px_6px_rgba(0,0,0,0.65)]"
-                    aria-label="View the design system in a new tab"
+                    className="mt-1 inline-flex items-center gap-1.5 border-b border-white/30 pb-0.5 text-[11px] tracking-[0.04em] text-white/85 transition-[color,border-color,letter-spacing] duration-300 ease-out hover:border-[color:var(--accent-terracotta)] hover:tracking-[0.08em] hover:text-[color:var(--accent-terracotta)] sm:text-[12px] [text-shadow:0_1px_6px_rgba(0,0,0,0.65)]"
+                    aria-label="View the Design System in a new tab"
                   >
-                    <span>View design system</span>
+                    <span>View Design System</span>
                     <span aria-hidden>→</span>
                   </a>
                 </section>
@@ -256,9 +259,6 @@ export function ImmersiveHeroClient({
                   aria-hidden={!menuOpen}
                   className={`${firaClassName} rounded-md border border-white/12 bg-black/50 px-4 py-3 text-left text-[11px] font-normal leading-relaxed text-white/92 shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-sm transition-opacity duration-500 ease-out motion-reduce:transition-none sm:text-[12px] ${menuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
                 >
-                  <p className="mb-2.5 text-white/70 [text-shadow:0_1px_8px_rgba(0,0,0,0.75)]">
-                    This site has its own design system — built for agentic terrain.
-                  </p>
                   <ul className="flex flex-wrap items-center gap-x-5 gap-y-2 uppercase tracking-[0.12em] text-[10px] sm:text-[11px]">
                     {MENU_ITEMS.map((item) =>
                       item.external ? (
