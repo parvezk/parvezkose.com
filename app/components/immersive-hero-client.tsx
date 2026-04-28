@@ -23,54 +23,39 @@ type MenuItem = Readonly<{
   event: string;
 }>;
 
-const MENU_GROUPS: ReadonlyArray<
-  Readonly<{ label: string; items: ReadonlyArray<MenuItem> }>
-> = [
+// Single flat row. Order + labels mirror the top-left floating nav so
+// users see the same vocabulary in both surfaces. The Design System
+// entry is the new addition the menu exists to introduce.
+const MENU_ITEMS: ReadonlyArray<MenuItem> = [
   {
-    label: "Site",
-    items: [
-      { label: "Classic layout", href: "/classic", event: "classic" },
-      {
-        label: "Design system",
-        href: "/design-system/",
-        external: true,
-        event: "design_system",
-      },
-    ],
+    label: "GitHub",
+    href: "https://github.com/parvezk",
+    external: true,
+    event: "github",
   },
   {
-    label: "Writing",
-    items: [
-      {
-        label: "Substack — Design Logic",
-        href: "https://designlogic.substack.com",
-        external: true,
-        event: "substack",
-      },
-      {
-        label: "Medium — DeepViz",
-        href: "https://medium.com/@parvez__",
-        external: true,
-        event: "medium",
-      },
-    ],
+    label: "LinkedIn",
+    href: "https://linkedin.com/in/parvezkose",
+    external: true,
+    event: "linkedin",
   },
   {
-    label: "Social",
-    items: [
-      {
-        label: "GitHub",
-        href: "https://github.com/parvezk",
-        external: true,
-        event: "github",
-      },
-      {
-        label: "LinkedIn",
-        href: "https://linkedin.com/in/parvezkose",
-        external: true,
-        event: "linkedin",
-      },
-    ],
+    label: "Substack",
+    href: "https://designlogic.substack.com",
+    external: true,
+    event: "substack",
+  },
+  {
+    label: "Medium",
+    href: "https://medium.com/@parvez__",
+    external: true,
+    event: "medium",
+  },
+  {
+    label: "Design System",
+    href: "/design-system/",
+    external: true,
+    event: "design_system",
   },
 ];
 
@@ -271,51 +256,45 @@ export function ImmersiveHeroClient({
                   aria-hidden={!menuOpen}
                   className={`${firaClassName} rounded-md border border-white/12 bg-black/50 px-4 py-3 text-left text-[11px] font-normal leading-relaxed text-white/92 shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-sm transition-opacity duration-500 ease-out motion-reduce:transition-none sm:text-[12px] ${menuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
                 >
-                  <ul className="grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-3">
-                    {MENU_GROUPS.map((group) => (
-                      <li key={group.label}>
-                        <p className="mb-1.5 text-[9px] font-medium uppercase tracking-[0.16em] text-white/45 [text-shadow:0_1px_4px_rgba(0,0,0,0.65)] sm:text-[10px]">
-                          {group.label}
-                        </p>
-                        <ul className="space-y-1.5">
-                          {group.items.map((item) =>
-                            item.external ? (
-                              <li key={item.event}>
-                                <a
-                                  href={item.href}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  onClick={() =>
-                                    posthog.capture("immersive_menu_link_clicked", {
-                                      target: item.event,
-                                      external: true,
-                                    })
-                                  }
-                                  className="inline-block tracking-[0.02em] text-white/85 transition-[color,letter-spacing] duration-300 ease-out hover:tracking-[0.06em] hover:text-[color:var(--accent-terracotta)] [text-shadow:0_1px_6px_rgba(0,0,0,0.65)]"
-                                >
-                                  {item.label}
-                                </a>
-                              </li>
-                            ) : (
-                              <li key={item.event}>
-                                <Link
-                                  href={item.href}
-                                  onClick={() =>
-                                    posthog.capture("immersive_menu_link_clicked", {
-                                      target: item.event,
-                                      external: false,
-                                    })
-                                  }
-                                  className="inline-block tracking-[0.02em] text-white/85 transition-[color,letter-spacing] duration-300 ease-out hover:tracking-[0.06em] hover:text-[color:var(--accent-terracotta)] [text-shadow:0_1px_6px_rgba(0,0,0,0.65)]"
-                                >
-                                  {item.label}
-                                </Link>
-                              </li>
-                            ),
-                          )}
-                        </ul>
-                      </li>
-                    ))}
+                  <p className="mb-2.5 text-white/70 [text-shadow:0_1px_8px_rgba(0,0,0,0.75)]">
+                    This site has its own design system — built for agentic terrain.
+                  </p>
+                  <ul className="flex flex-wrap items-center gap-x-5 gap-y-2 uppercase tracking-[0.12em] text-[10px] sm:text-[11px]">
+                    {MENU_ITEMS.map((item) =>
+                      item.external ? (
+                        <li key={item.event}>
+                          <a
+                            href={item.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() =>
+                              posthog.capture("immersive_menu_link_clicked", {
+                                target: item.event,
+                                external: true,
+                              })
+                            }
+                            className="inline-block font-medium text-white/85 transition-[color,letter-spacing] duration-300 ease-out hover:tracking-[0.18em] hover:text-[color:var(--accent-terracotta)] [text-shadow:0_1px_6px_rgba(0,0,0,0.65)]"
+                          >
+                            {item.label}
+                          </a>
+                        </li>
+                      ) : (
+                        <li key={item.event}>
+                          <Link
+                            href={item.href}
+                            onClick={() =>
+                              posthog.capture("immersive_menu_link_clicked", {
+                                target: item.event,
+                                external: false,
+                              })
+                            }
+                            className="inline-block font-medium text-white/85 transition-[color,letter-spacing] duration-300 ease-out hover:tracking-[0.18em] hover:text-[color:var(--accent-terracotta)] [text-shadow:0_1px_6px_rgba(0,0,0,0.65)]"
+                          >
+                            {item.label}
+                          </Link>
+                        </li>
+                      ),
+                    )}
                   </ul>
                 </section>
               </div>
