@@ -1,17 +1,291 @@
 @import 'tailwindcss';
 
-::selection {
-  background-color: #47a3f3;
-  color: #fefefe;
+/* ============================================================
+   Parvez Kose — Design System tokens
+   ------------------------------------------------------------
+   Canonical source: claude-design/.../colors_and_type.css
+   Canonical doc:    claude-design/.../README.md + SKILL.md
+   Mirror (DTCG):    design-system/tokens.json
+   ------------------------------------------------------------
+   Two layers:
+     1. @theme  — emits Tailwind v4 utilities AND CSS custom
+                  properties under Tailwind's namespace
+                  (--color-*, --font-family-*, --font-size-*,
+                  --tracking-*, --leading-*, --shadow-*,
+                  --radius-*, --ease-*).
+     2. :root   — DS-spec aliases (--wine-*, --accent-*, --text-*,
+                  --font-mono, --bg/--fg legacy classic, --sh-*)
+                  so the original DS API and existing components
+                  keep working unchanged.
+   ============================================================ */
+
+@theme {
+  /* ---------- Type · families ---------- */
+  --font-family-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-family-serif: 'IBM Plex Serif', ui-serif, Georgia, serif;
+  --font-family-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-family-code: 'Fira Code', 'JetBrains Mono', ui-monospace, monospace;
+
+  /* ---------- Type · scale (numeric, DS-spec) ---------- */
+  --font-size-10: 0.625rem;
+  --font-size-11: 0.6875rem;
+  --font-size-12: 0.75rem;
+  --font-size-13: 0.8125rem;
+  --font-size-14: 0.875rem;
+  --font-size-16: 1rem;
+  --font-size-18: 1.125rem;
+  --font-size-20: 1.25rem;
+  --font-size-24: 1.5rem;
+  --font-size-28: 1.75rem;
+  --font-size-36: 2.25rem;
+  --font-size-48: 3rem;
+  --font-size-60: 3.75rem;
+  --font-size-72: 4.5rem;
+
+  /* ---------- Type · tracking ---------- */
+  --tracking-tight: -0.02em;
+  --tracking-snug: -0.01em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.04em;
+  --tracking-wider: 0.08em;
+  --tracking-widest: 0.12em;
+  --tracking-mono-caps: 0.14em;
+
+  /* ---------- Type · leading ---------- */
+  --leading-tight: 1.15;
+  --leading-snug: 1.3;
+  --leading-base: 1.5;
+  --leading-prose: 1.7;
+  --leading-loose: 1.8;
+
+  /* ---------- Color · wines (red spine) ---------- */
+  --color-wine-crimson: #dc143c;
+  --color-wine-raspberry: #e30b5c;
+  --color-wine-garnet: #b21e35;
+  --color-wine-ruby: #9b111e;
+  --color-wine-wine: #722f37; /* signature mid-wine */
+  --color-wine-burgundy: #800020;
+  --color-wine-claret: #6f2232;
+  --color-wine-cabernet: #5e1224;
+  --color-wine-merlot: #7b3f52;
+  --color-wine-shiraz: #673147;
+  --color-wine-oxblood: #4e0707;
+  --color-wine-sangria: #4c0027;
+  --color-wine-port: #3c0014;
+  --color-wine-noir: #2c0010;
+  --color-wine-abyss: #1a0005;
+
+  /* ---------- Color · accents (warm earth) ---------- */
+  --color-accent-terracotta: #e2725b; /* primary accent on dark */
+  --color-accent-rust: #b7410e;
+  --color-accent-cognac: #9f381d;
+  --color-accent-chili: #c04000;
+  --color-accent-golden: #c4a000; /* sparse — once per screen */
+  --color-accent-mulberry: #c54b6c;
+
+  /* ---------- Color · wood (borders, dividers, editorial) ---------- */
+  --color-wood-mahogany: #4c3024;
+  --color-wood-walnut: #5c4033;
+  --color-wood-coffee: #6f4e37;
+  --color-wood-grizzly: #685542;
+
+  /* ---------- Color · neutrals / creams (anti cool-gray) ---------- */
+  --color-neutral-ivory: #fffff0;
+  --color-neutral-cream: #fffdd0;
+  --color-neutral-linen: #faf0e6;
+  --color-neutral-beige: #f5f5dc;
+  --color-neutral-champagne: #f7e7ce;
+  --color-neutral-bisque: #ffe4c4;
+  --color-neutral-almond: #efdecd;
+  --color-neutral-khaki: #c3b091;
+  --color-neutral-latte: #c8ad8f; /* secondary muted on dark */
+
+  /* ---------- Color · surfaces (immersive / dark) ---------- */
+  --color-im-bg: #0a0a0a;
+  --color-im-bg2: #141414;
+  --color-im-bg3: #1a1a1a;
+  --color-im-text: #e8e4e0; /* warm white, NOT pure white */
+  --color-im-text2: #9a9590;
+  --color-im-text3: #5a5550;
+  --color-im-border: #2a2520; /* warm-tinted hairline */
+
+  /* ---------- Color · surfaces (classic / light) ---------- */
+  --color-classic-bg: #f1f2f2;
+  --color-classic-fg: #1a1a1a;
+  --color-classic-fg2: #555555;
+  --color-classic-fg3: #999999;
+  --color-classic-border: #d8d9d9;
+
+  /* ---------- Radii ---------- */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-pill: 999px;
+
+  /* ---------- Shadows · text-only stacks (hero over shader) ---------- */
+  --shadow-text-hero:
+    0 1px 3px rgba(0, 0, 0, 0.95), 0 0 28px rgba(0, 0, 0, 0.65),
+    0 0 56px rgba(0, 0, 0, 0.35);
+  --shadow-text-hero-hover:
+    0 2px 6px rgba(0, 0, 0, 1), 0 0 36px rgba(0, 0, 0, 0.85),
+    0 0 72px rgba(0, 0, 0, 0.5);
+  --shadow-text-sub:
+    0 1px 2px rgba(0, 0, 0, 0.95), 0 0 18px rgba(0, 0, 0, 0.8),
+    0 0 36px rgba(0, 0, 0, 0.45);
+  --shadow-card-dark: 0 8px 32px rgba(0, 0, 0, 0.45);
+  --shadow-card-light: 0 1px 2px rgba(0, 0, 0, 0.04);
+
+  /* ---------- Motion · easing ---------- */
+  --ease-out-quad: cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-out-cubic: cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
 :root {
-  --bg: #f1f2f2;
-  --fg: #1a1a1a;
-  --fg2: #555;
-  --fg3: #999;
-  --border: #d8d9d9;
+  /* ============================================================
+     DS-spec aliases
+     ------------------------------------------------------------
+     Preserve the original DS API verbatim so colors_and_type.css
+     consumers (claude-design/, future imports) and SKILL.md
+     references stay accurate. Aliases point at the @theme tokens.
+     ============================================================ */
 
+  /* Font families (DS API) */
+  --font-mono: var(--font-family-mono);
+  --font-sans: var(--font-family-sans);
+  --font-serif: var(--font-family-serif);
+  --font-code: var(--font-family-code);
+
+  /* Type scale (DS --text-* names) */
+  --text-10: var(--font-size-10);
+  --text-11: var(--font-size-11);
+  --text-12: var(--font-size-12);
+  --text-13: var(--font-size-13);
+  --text-14: var(--font-size-14);
+  --text-16: var(--font-size-16);
+  --text-18: var(--font-size-18);
+  --text-20: var(--font-size-20);
+  --text-24: var(--font-size-24);
+  --text-28: var(--font-size-28);
+  --text-36: var(--font-size-36);
+  --text-48: var(--font-size-48);
+  --text-60: var(--font-size-60);
+  --text-72: var(--font-size-72);
+
+  /* Weights (restrained — never default to 700) */
+  --weight-light: 300;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+
+  /* Wines — DS shorthand names */
+  --wine-crimson: var(--color-wine-crimson);
+  --wine-raspberry: var(--color-wine-raspberry);
+  --wine-garnet: var(--color-wine-garnet);
+  --wine-ruby: var(--color-wine-ruby);
+  --wine-wine: var(--color-wine-wine);
+  --wine-burgundy: var(--color-wine-burgundy);
+  --wine-claret: var(--color-wine-claret);
+  --wine-cabernet: var(--color-wine-cabernet);
+  --wine-merlot: var(--color-wine-merlot);
+  --wine-shiraz: var(--color-wine-shiraz);
+  --wine-oxblood: var(--color-wine-oxblood);
+  --wine-sangria: var(--color-wine-sangria);
+  --wine-port: var(--color-wine-port);
+  --wine-noir: var(--color-wine-noir);
+  --wine-abyss: var(--color-wine-abyss);
+
+  /* Accents */
+  --accent-terracotta: var(--color-accent-terracotta);
+  --accent-rust: var(--color-accent-rust);
+  --accent-cognac: var(--color-accent-cognac);
+  --accent-chili: var(--color-accent-chili);
+  --accent-golden: var(--color-accent-golden);
+  --accent-mulberry: var(--color-accent-mulberry);
+
+  /* Wood */
+  --wood-mahogany: var(--color-wood-mahogany);
+  --wood-walnut: var(--color-wood-walnut);
+  --wood-coffee: var(--color-wood-coffee);
+  --wood-grizzly: var(--color-wood-grizzly);
+
+  /* Neutrals */
+  --neutral-ivory: var(--color-neutral-ivory);
+  --neutral-cream: var(--color-neutral-cream);
+  --neutral-linen: var(--color-neutral-linen);
+  --neutral-beige: var(--color-neutral-beige);
+  --neutral-champagne: var(--color-neutral-champagne);
+  --neutral-bisque: var(--color-neutral-bisque);
+  --neutral-almond: var(--color-neutral-almond);
+  --neutral-khaki: var(--color-neutral-khaki);
+  --neutral-latte: var(--color-neutral-latte);
+  --neutral-black: #000000;
+
+  /* Immersive surfaces */
+  --im-bg: var(--color-im-bg);
+  --im-bg2: var(--color-im-bg2);
+  --im-bg3: var(--color-im-bg3);
+  --im-text: var(--color-im-text);
+  --im-text2: var(--color-im-text2);
+  --im-text3: var(--color-im-text3);
+  --im-border: var(--color-im-border);
+  --im-border2: rgba(200, 173, 143, 0.15); /* latte @ 15% — cards on shader */
+
+  /* White-on-shader overlay opacities (immersive hero copy) */
+  --im-over-hi: rgba(255, 255, 255, 0.95);
+  --im-over-md: rgba(255, 255, 255, 0.88);
+  --im-over-lo: rgba(255, 255, 255, 0.55);
+
+  /* Classic surfaces */
+  --classic-bg: var(--color-classic-bg);
+  --classic-fg: var(--color-classic-fg);
+  --classic-fg2: var(--color-classic-fg2);
+  --classic-fg3: var(--color-classic-fg3);
+  --classic-border: var(--color-classic-border);
+
+  /* Surface-agnostic semantic (default = immersive, per DS spec) */
+  --surface-bg: var(--color-im-bg);
+  --surface-bg-elev: var(--color-im-bg2);
+  --surface-fg: var(--color-im-text);
+  --surface-fg-muted: var(--color-im-text2);
+  --surface-fg-faint: var(--color-im-text3);
+  --surface-border: var(--color-im-border);
+  --accent: var(--color-accent-terracotta);
+  --highlight: var(--color-accent-golden);
+
+  /* Protection gradient (under floating labels on shader) */
+  --protect-gradient: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.78) 0%,
+    rgba(0, 0, 0, 0.42) 52%,
+    rgba(0, 0, 0, 0) 100%
+  );
+
+  /* Motion · durations */
+  --dur-fast: 150ms;
+  --dur-base: 300ms;
+  --dur-slow: 500ms;
+
+  /* Layout */
+  --card-max: 640px;
+  --prose-max: 640px;
+
+  /* ============================================================
+     Legacy aliases — preserved verbatim
+     ------------------------------------------------------------
+     These names predate the design system. home-page.tsx and the
+     sugar-high blog code blocks reference them. Keep until
+     components are migrated to surface-scoped semantics.
+     ============================================================ */
+
+  /* Classic surface, accessed by the legacy /classic page */
+  --bg: var(--color-classic-bg);
+  --fg: var(--color-classic-fg);
+  --fg2: var(--color-classic-fg2);
+  --fg3: var(--color-classic-fg3);
+  --border: var(--color-classic-border);
+
+  /* sugar-high blog code-block tokens */
   --sh-class: #2d5e9d;
   --sh-identifier: #354150;
   --sh-sign: #8996a3;
@@ -21,6 +295,37 @@
   --sh-jsxliterals: #6266d1;
   --sh-property: #e25a1c;
   --sh-entity: #e25a1c;
+
+  /* Selection — TODO(PK-XXX): replace with on-system tone */
+  --selection-bg: #47a3f3;
+  --selection-fg: #fefefe;
+}
+
+/* ============================================================
+   Surface scopes
+   ------------------------------------------------------------
+   Set [data-surface="classic"] on a tree to flip the
+   surface-agnostic vars to the light palette. Set
+   [data-surface="immersive"] to lock dark inside a section
+   (already the :root default).
+   ============================================================ */
+
+[data-surface='classic'] {
+  --surface-bg: var(--color-classic-bg);
+  --surface-bg-elev: #ffffff;
+  --surface-fg: var(--color-classic-fg);
+  --surface-fg-muted: var(--color-classic-fg2);
+  --surface-fg-faint: var(--color-classic-fg3);
+  --surface-border: var(--color-classic-border);
+}
+
+[data-surface='immersive'] {
+  --surface-bg: var(--color-im-bg);
+  --surface-bg-elev: var(--color-im-bg2);
+  --surface-fg: var(--color-im-text);
+  --surface-fg-muted: var(--color-im-text2);
+  --surface-fg-faint: var(--color-im-text3);
+  --surface-border: var(--color-im-border);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -35,9 +340,21 @@
   }
 }
 
+::selection {
+  background-color: var(--selection-bg);
+  color: var(--selection-fg);
+}
+
 html {
   min-width: 360px;
 }
+
+/* ============================================================
+   Prose / blog typography (legacy, MDX-rendered posts)
+   ------------------------------------------------------------
+   TODO: migrate to DS-tokenised utilities once /writing and
+   the blog redesign land. For now, behaviour preserved verbatim.
+   ============================================================ */
 
 .prose .anchor {
   @apply absolute invisible no-underline;
@@ -155,7 +472,10 @@ table {
   text-wrap: balance;
 }
 
-/* /immersive — subtitle underline caret (terminal-style, step blink) */
+/* ============================================================
+   Immersive subtitle caret · step-blink
+   ============================================================ */
+
 @keyframes immersive-caret-blink {
   0%,
   49.5% {
