@@ -54,7 +54,11 @@ export function ImmersiveHeroClient({
 
       <nav
         aria-label="Site and social links"
-        className="pointer-events-auto absolute left-4 top-4 z-20 flex max-w-[calc(100%-2rem)] flex-wrap items-center gap-x-5 gap-y-2 text-[11px] font-medium uppercase"
+        className="pointer-events-auto absolute left-0 top-0 z-20 flex max-w-[calc(100%-1rem)] flex-wrap items-center gap-x-5 gap-y-2 px-4 py-3 pr-8 text-[11px] font-medium uppercase sm:px-5 sm:py-3.5 sm:pr-10"
+        style={{
+          background:
+            "linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.42) 52%, rgba(0,0,0,0) 100%)",
+        }}
       >
         <Link
           href="/classic"
@@ -157,6 +161,21 @@ export function ImmersiveHeroClient({
                       {para}
                     </p>
                   ))}
+                  <a
+                    href="/design-system/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() =>
+                      posthog.capture("design_system_link_clicked", {
+                        location: "immersive_philosophy_panel",
+                      })
+                    }
+                    className="mt-3 inline-flex items-center gap-1.5 border-b border-white/30 pb-0.5 text-[11px] tracking-[0.04em] text-white/85 transition-[color,border-color,letter-spacing] duration-300 ease-out hover:border-[color:var(--accent-terracotta)] hover:tracking-[0.08em] hover:text-[color:var(--accent-terracotta)] sm:text-[12px] [text-shadow:0_1px_6px_rgba(0,0,0,0.65)]"
+                    aria-label="View the design system in a new tab"
+                  >
+                    <span>View design system</span>
+                    <span aria-hidden>→</span>
+                  </a>
                 </section>
               </div>
             </div>
