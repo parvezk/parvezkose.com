@@ -1,0 +1,84 @@
+/* ============================================================
+   Cross-page topbar for design-system specimens
+   ------------------------------------------------------------
+   Sticky 48px bar. Sibling-aware: mark the current page link
+   with class="current" in each HTML.
+   ============================================================ */
+
+.ds-page-topbar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  background: var(--im-bg);
+  border-bottom: 1px solid var(--im-border);
+  font-family: var(--font-mono);
+  margin: -64px -72px 48px;
+}
+
+.ds-page-topbar a {
+  text-decoration: none;
+}
+
+.ds-page-topbar .ds-page-name {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--im-text);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.ds-page-topbar .ds-page-name .sep {
+  color: var(--im-text3);
+}
+
+.ds-page-topbar nav {
+  display: flex;
+  gap: 18px;
+}
+
+.ds-page-topbar nav a {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--im-text3);
+  transition:
+    color 0.2s,
+    letter-spacing 0.3s var(--ease-out-quad);
+}
+
+.ds-page-topbar nav a:hover {
+  color: var(--im-text);
+  letter-spacing: 0.18em;
+}
+
+.ds-page-topbar nav a.current {
+  color: var(--accent-terracotta);
+}
+
+@media (max-width: 760px) {
+  .ds-page-topbar {
+    margin: -32px -24px 32px;
+    padding: 0 16px;
+    height: auto;
+    min-height: 48px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  .ds-page-topbar nav {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+}

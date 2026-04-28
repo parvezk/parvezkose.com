@@ -15,6 +15,50 @@ const DESIGN_PHILOSOPHY = [
   "Visual interpretability shapes how I build. I'm drawn to what lives under the surface and what the model is actually doing. And I think the people using it should too.",
 ] as const;
 
+type MenuItem = Readonly<{
+  label: string;
+  href: string;
+  external?: boolean;
+  // PostHog event payload identifier
+  event: string;
+}>;
+
+// Single flat row. Order + labels mirror the top-left floating nav so
+// users see the same vocabulary in both surfaces. The Design System
+// entry is the new addition the menu exists to introduce.
+const MENU_ITEMS: ReadonlyArray<MenuItem> = [
+  {
+    label: "GitHub",
+    href: "https://github.com/parvezk",
+    external: true,
+    event: "github",
+  },
+  {
+    label: "LinkedIn",
+    href: "https://linkedin.com/in/parvezkose",
+    external: true,
+    event: "linkedin",
+  },
+  {
+    label: "Substack",
+    href: "https://designlogic.substack.com",
+    external: true,
+    event: "substack",
+  },
+  {
+    label: "Medium",
+    href: "https://medium.com/@parvez__",
+    external: true,
+    event: "medium",
+  },
+  {
+    label: "Design System",
+    href: "/design-system/",
+    external: true,
+    event: "design_system",
+  },
+];
+
 export function ImmersiveHeroClient({
   jetbrainsClassName,
   firaClassName,
@@ -22,6 +66,9 @@ export function ImmersiveHeroClient({
   const [philosophyOpen, setPhilosophyOpen] = useState(false);
   const philosophyToggleId = useId();
   const philosophyPanelId = useId();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuToggleId = useId();
+  const menuPanelId = useId();
 
   return (
     <div
@@ -54,7 +101,11 @@ export function ImmersiveHeroClient({
 
       <nav
         aria-label="Site and social links"
-        className="pointer-events-auto absolute left-4 top-4 z-20 flex max-w-[calc(100%-2rem)] flex-wrap items-center gap-x-5 gap-y-2 text-[11px] font-medium uppercase"
+        className="pointer-events-auto absolute left-0 top-0 z-20 flex max-w-[calc(100%-1rem)] flex-wrap items-center gap-x-5 gap-y-2 px-4 py-3 pr-8 text-[11px] font-medium uppercase sm:px-5 sm:py-3.5 sm:pr-10"
+        style={{
+          background:
+            "linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.42) 52%, rgba(0,0,0,0) 100%)",
+        }}
       >
         <Link
           href="/classic"
@@ -122,22 +173,41 @@ export function ImmersiveHeroClient({
               </span>
             </p>
 
-            <button
-              type="button"
-              id={philosophyToggleId}
-              aria-expanded={philosophyOpen}
-              aria-controls={philosophyPanelId}
-              onClick={() => {
-                const next = !philosophyOpen;
-                setPhilosophyOpen(next);
-                posthog.capture("design_philosophy_toggled", {
-                  action: next ? "opened" : "closed",
-                });
-              }}
-              className={`${firaClassName} mt-5 cursor-pointer text-sm font-normal tracking-normal text-white/75 transition-[color,text-shadow,letter-spacing] duration-300 ease-out [text-shadow:0_1px_2px_rgba(0,0,0,0.85)] hover:tracking-[0.14em] hover:text-white/95 sm:text-base sm:hover:tracking-[0.18em]`}
-            >
-              {philosophyOpen ? "[−]" : "[+]"} Design Philosophy
-            </button>
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+              <button
+                type="button"
+                id={philosophyToggleId}
+                aria-expanded={philosophyOpen}
+                aria-controls={philosophyPanelId}
+                onClick={() => {
+                  const next = !philosophyOpen;
+                  setPhilosophyOpen(next);
+                  posthog.capture("design_philosophy_toggled", {
+                    action: next ? "opened" : "closed",
+                  });
+                }}
+                className={`${firaClassName} cursor-pointer text-sm font-normal tracking-normal text-white/75 transition-[color,text-shadow,letter-spacing] duration-300 ease-out [text-shadow:0_1px_2px_rgba(0,0,0,0.85)] hover:tracking-[0.14em] hover:text-white/95 sm:text-base sm:hover:tracking-[0.18em]`}
+              >
+                {philosophyOpen ? "[−]" : "[+]"} Design Philosophy
+              </button>
+              <span aria-hidden className="text-white/30 [text-shadow:0_1px_2px_rgba(0,0,0,0.85)]">·</span>
+              <button
+                type="button"
+                id={menuToggleId}
+                aria-expanded={menuOpen}
+                aria-controls={menuPanelId}
+                onClick={() => {
+                  const next = !menuOpen;
+                  setMenuOpen(next);
+                  posthog.capture("immersive_menu_toggled", {
+                    action: next ? "opened" : "closed",
+                  });
+                }}
+                className={`${firaClassName} cursor-pointer text-sm font-normal tracking-normal text-white/75 transition-[color,text-shadow,letter-spacing] duration-300 ease-out [text-shadow:0_1px_2px_rgba(0,0,0,0.85)] hover:tracking-[0.14em] hover:text-white/95 sm:text-base sm:hover:tracking-[0.18em]`}
+              >
+                {menuOpen ? "[−]" : "[+]"} Menu
+              </button>
+            </div>
 
             <div
               className={`mt-3 grid w-full max-w-xl transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.33,1,0.68,1)] motion-reduce:transition-none ${philosophyOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
@@ -152,11 +222,80 @@ export function ImmersiveHeroClient({
                   {DESIGN_PHILOSOPHY.map((para) => (
                     <p
                       key={para}
-                      className="mb-2.5 last:mb-0 [text-shadow:0_1px_8px_rgba(0,0,0,0.75)]"
+                      className="mb-2.5 [text-shadow:0_1px_8px_rgba(0,0,0,0.75)]"
                     >
                       {para}
                     </p>
                   ))}
+                  <p className="mb-2 mt-1 text-white/70 [text-shadow:0_1px_8px_rgba(0,0,0,0.75)]">
+                    This site has its own design system — built for agentic terrain.
+                  </p>
+                  <a
+                    href="/design-system/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() =>
+                      posthog.capture("design_system_link_clicked", {
+                        location: "immersive_philosophy_panel",
+                      })
+                    }
+                    className="mt-1 inline-flex items-center gap-1.5 border-b border-white/30 pb-0.5 text-[11px] tracking-[0.04em] text-white/85 transition-[color,border-color,letter-spacing] duration-300 ease-out hover:border-[color:var(--accent-terracotta)] hover:tracking-[0.08em] hover:text-[color:var(--accent-terracotta)] sm:text-[12px] [text-shadow:0_1px_6px_rgba(0,0,0,0.65)]"
+                    aria-label="View the Design System in a new tab"
+                  >
+                    <span>View Design System</span>
+                    <span aria-hidden>→</span>
+                  </a>
+                </section>
+              </div>
+            </div>
+
+            <div
+              className={`mt-3 grid w-full max-w-xl transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.33,1,0.68,1)] motion-reduce:transition-none ${menuOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
+            >
+              <div className="min-h-0 overflow-hidden">
+                <section
+                  id={menuPanelId}
+                  aria-labelledby={menuToggleId}
+                  aria-hidden={!menuOpen}
+                  className={`${firaClassName} rounded-md border border-white/12 bg-black/50 px-4 py-3 text-left text-[11px] font-normal leading-relaxed text-white/92 shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-sm transition-opacity duration-500 ease-out motion-reduce:transition-none sm:text-[12px] ${menuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
+                >
+                  <ul className="flex flex-wrap items-center gap-x-5 gap-y-2 uppercase tracking-[0.12em] text-[10px] sm:text-[11px]">
+                    {MENU_ITEMS.map((item) =>
+                      item.external ? (
+                        <li key={item.event}>
+                          <a
+                            href={item.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() =>
+                              posthog.capture("immersive_menu_link_clicked", {
+                                target: item.event,
+                                external: true,
+                              })
+                            }
+                            className="inline-block font-medium text-white/85 transition-[color,letter-spacing] duration-300 ease-out hover:tracking-[0.18em] hover:text-[color:var(--accent-terracotta)] [text-shadow:0_1px_6px_rgba(0,0,0,0.65)]"
+                          >
+                            {item.label}
+                          </a>
+                        </li>
+                      ) : (
+                        <li key={item.event}>
+                          <Link
+                            href={item.href}
+                            onClick={() =>
+                              posthog.capture("immersive_menu_link_clicked", {
+                                target: item.event,
+                                external: false,
+                              })
+                            }
+                            className="inline-block font-medium text-white/85 transition-[color,letter-spacing] duration-300 ease-out hover:tracking-[0.18em] hover:text-[color:var(--accent-terracotta)] [text-shadow:0_1px_6px_rgba(0,0,0,0.65)]"
+                          >
+                            {item.label}
+                          </Link>
+                        </li>
+                      ),
+                    )}
+                  </ul>
                 </section>
               </div>
             </div>

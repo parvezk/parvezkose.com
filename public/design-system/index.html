@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Parvez Kose — Design System</title>
+<meta name="description" content="Anti-template design system for parvezkose.com. Wines, terracotta, ivory; JetBrains Mono + Fira Code + IBM Plex; one bold signature per screen.">
+<link rel="stylesheet" href="colors_and_type.css">
+<link rel="stylesheet" href="_topbar.css">
+<style>
+  body {
+    margin: 0;
+    background: var(--im-bg);
+    color: var(--im-text);
+    font-family: var(--font-sans);
+    padding: 64px 72px;
+    min-height: 100vh;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--im-text2);
+    margin: 0 0 8px;
+  }
+
+  h1.title {
+    font-family: var(--font-mono);
+    font-weight: 300;
+    font-size: 48px;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin: 0 0 32px;
+    max-width: 780px;
+  }
+  h1.title em {
+    font-style: normal;
+    color: var(--accent-terracotta);
+  }
+
+  .lede {
+    font-family: var(--font-code);
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--im-text2);
+    max-width: 640px;
+    margin: 0 0 56px;
+  }
+  .lede strong {
+    color: var(--im-text);
+    font-weight: 500;
+  }
+
+  .pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 64px;
+  }
+  .pill {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+  .pill.terra { background: rgba(226, 114, 91, 0.12); color: var(--accent-terracotta); }
+  .pill.gold  { background: rgba(196, 160, 0, 0.14); color: var(--accent-golden); }
+  .pill.latte { background: rgba(200, 173, 143, 0.15); color: var(--neutral-latte); }
+  .pill.wine  { background: rgba(114, 47, 55, 0.3); color: #d98a94; }
+
+  .section-rule {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent-terracotta);
+    margin: 0 0 20px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--accent-terracotta);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin: 0 0 56px;
+  }
+
+  .card {
+    border: 1px solid var(--im-border);
+    background: var(--im-bg2);
+    border-radius: 6px;
+    padding: 24px;
+    text-decoration: none;
+    color: inherit;
+    transition:
+      border-color 0.25s var(--ease-out-quad),
+      transform 0.25s var(--ease-out-quad);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .card:hover {
+    border-color: var(--accent-terracotta);
+    transform: translateY(-2px);
+  }
+  .card .num {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--im-text3);
+  }
+  .card:hover .num {
+    color: var(--accent-terracotta);
+  }
+  .card h3 {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 20px;
+    letter-spacing: -0.01em;
+    color: var(--im-text);
+    margin: 0;
+  }
+  .card p {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--im-text2);
+    margin: 0;
+  }
+  .card .arrow {
+    font-family: var(--font-code);
+    font-size: 12px;
+    color: var(--im-text3);
+    margin-top: auto;
+    transition: color 0.25s, letter-spacing 0.3s var(--ease-out-quad);
+  }
+  .card:hover .arrow {
+    color: var(--accent-terracotta);
+    letter-spacing: 0.04em;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    padding: 24px 0;
+    border-top: 1px solid var(--im-border);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--im-text3);
+  }
+  .meta a {
+    color: var(--im-text2);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .meta a:hover {
+    color: var(--accent-terracotta);
+  }
+  .meta .row {
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+  }
+  .meta .lbl {
+    color: var(--im-text3);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 10px;
+  }
+
+  @media (max-width: 760px) {
+    body { padding: 32px 24px; }
+    h1.title { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+<header class="ds-page-topbar">
+  <a class="ds-page-name" href="index.html"><span>Parvez Kose</span><span class="sep">/</span><span>Design System</span></a>
+  <nav>
+    <a href="index.html" class="current">Overview</a>
+    <a href="Brand.html">Brand</a>
+    <a href="Colors.html">Colors</a>
+    <a href="Type.html">Type</a>
+    <a href="Spacing.html">Spacing</a>
+    <a href="Components.html">Components</a>
+    <a href="UIKit.html">UI Kit</a>
+  </nav>
+</header>
+
+<p class="eyebrow">Parvez Kose · Design System</p>
+
+<h1 class="title">Poetry in the shell, <em>rigor in the stack</em>.</h1>
+
+<p class="lede">
+  An <strong>anti-template</strong> design system for <strong>parvezkose.com</strong>.
+  Material and culture on the surface; A2UI / generative / agentic rigor underneath.
+  Constraints come from volcanic terrain, wine taxonomy, terminal interfaces — not
+  from the statistical average of SaaS landing pages.
+</p>
+
+<div class="pill-row">
+  <span class="pill terra">Wines + terracotta</span>
+  <span class="pill latte">Anti cool-gray</span>
+  <span class="pill wine">JetBrains Mono · Fira Code · IBM Plex</span>
+  <span class="pill gold">One signature per screen</span>
+</div>
+
+<div class="section-rule">01 · The system, in five surfaces</div>
+
+<div class="grid">
+  <a class="card" href="Brand.html">
+    <span class="num">01 · Brand</span>
+    <h3>Logo, hero imagery, voice</h3>
+    <p>The volcanic shader as primary brand image. Manifesto copy. OG lockup. Voice rules: declarative, first-person, no SaaS verbs.</p>
+    <span class="arrow">Open →</span>
+  </a>
+
+  <a class="card" href="Colors.html">
+    <span class="num">02 · Colors</span>
+    <h3>Wines · accents · neutrals</h3>
+    <p>Three families plus dual-mode surfaces. The red spine (15 wines), warm earth accents (terracotta, golden, mulberry), wood borders, ivory/linen creams.</p>
+    <span class="arrow">Open →</span>
+  </a>
+
+  <a class="card" href="Type.html">
+    <span class="num">03 · Type</span>
+    <h3>Mono-first, restrained weights</h3>
+    <p>JetBrains Mono headings; Fira Code subtitles; IBM Plex Sans prose; IBM Plex Serif for blog H1 only. Weights 300 / 400 / 500. Never default to 700.</p>
+    <span class="arrow">Open →</span>
+  </a>
+
+  <a class="card" href="Spacing.html">
+    <span class="num">04 · Spacing</span>
+    <h3>4px grid · understated radii</h3>
+    <p>Spacing 1–20 on a 4px grid (matches Tailwind v4 default exactly). Radii 4 / 6 / 8 / 12 / 999. Hairline rules over boxes. Corner brackets over rounded chrome.</p>
+    <span class="arrow">Open →</span>
+  </a>
+
+  <a class="card" href="Components.html">
+    <span class="num">05 · Components</span>
+    <h3>Nine reusable atoms</h3>
+    <p>TopBar · HeroFrame · NavCapsLink · Divider · LinkRow · Pill · Philosophy · Footer · Project Card. Three buttons (ghost, framed, terminal) — no filled primary.</p>
+    <span class="arrow">Open →</span>
+  </a>
+
+  <a class="card" href="UIKit.html">
+    <span class="num">06 · UI Kit</span>
+    <h3>The system, end-to-end</h3>
+    <p>Four surfaces composed: immersive hero, classic card, blog post, about page. The system in context, not in isolation.</p>
+    <span class="arrow">Open →</span>
+  </a>
+</div>
+
+<div class="section-rule">02 · How this works</div>
+
+<p class="lede" style="margin-bottom: 32px;">
+  The pages above are <strong>checked-in HTML specimens</strong> — no build pipeline,
+  no Storybook, no Chromatic. They render the live tokens from
+  <code style="font-family: var(--font-code); color: var(--accent-terracotta); padding: 0 4px; background: rgba(226,114,91,0.08); border-radius: 3px;">colors_and_type.css</code>.
+  The same tokens drive
+  <code style="font-family: var(--font-code); color: var(--accent-terracotta); padding: 0 4px; background: rgba(226,114,91,0.08); border-radius: 3px;">parvezkose.com</code>
+  via Tailwind v4 <code style="font-family: var(--font-code); color: var(--accent-terracotta); padding: 0 4px; background: rgba(226,114,91,0.08); border-radius: 3px;">@theme</code>
+  and a DTCG-format <code style="font-family: var(--font-code); color: var(--accent-terracotta); padding: 0 4px; background: rgba(226,114,91,0.08); border-radius: 3px;">tokens.json</code>
+  — one source, three surfaces (CSS, utilities, future Figma variables).
+</p>
+
+<div class="meta">
+  <div class="row">
+    <span class="lbl">Site</span>
+    <a href="/">parvezkose.com</a>
+  </div>
+  <div class="row">
+    <span class="lbl">Writing</span>
+    <a href="https://designlogic.substack.com" target="_blank" rel="noopener">designlogic.substack.com</a>
+  </div>
+  <div class="row">
+    <span class="lbl">Source</span>
+    <a href="https://github.com/parvezk" target="_blank" rel="noopener">github.com/parvezk</a>
+  </div>
+  <div class="row">
+    <span class="lbl">Version</span>
+    <span>1.0.0 · 2026-04</span>
+  </div>
+</div>
+
+</body>
+</html>
