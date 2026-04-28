@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Colors — Parvez Kose Design System</title>
+<style id="ds-tokens-inline">
+/* ============================================================
+   Parvez Kose — Design System: Colors & Type
+   ============================================================
+   Dual palette: Immersive (dark / volcanic) and Classic (light).
+   Material, tactile, anti-template. Rooted in the volcanic hero
+   shader: crimson peaks, black valleys, ivory/linen terrain.
+   ============================================================ */
+
+/* --- Fonts ------------------------------------------------ */
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("fonts/IBMPlexSans-Variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "IBM Plex Serif";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/IBMPlexSerif-Variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("fonts/JetBrainsMono-Variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Fira Code";
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url("fonts/FiraCode-Variable.woff2") format("woff2");
+}
+
+:root {
+  /* ---------- TYPE ---------- */
+  --font-sans:    "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif:   "IBM Plex Serif", ui-serif, Georgia, serif;
+  --font-mono:    "JetBrains Mono", "Fira Code", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-code:    "Fira Code", "JetBrains Mono", ui-monospace, monospace;
+
+  /* Type scale (rem, 16px base) */
+  --text-10:   0.625rem;     /* micro labels, eyebrows */
+  --text-11:   0.6875rem;    /* footer, small caps nav */
+  --text-12:   0.75rem;      /* bio / body on classic card */
+  --text-13:   0.8125rem;    /* links */
+  --text-14:   0.875rem;     /* prose base */
+  --text-16:   1rem;         /* base */
+  --text-18:   1.125rem;     /* intro */
+  --text-20:   1.25rem;      /* H4 */
+  --text-24:   1.5rem;       /* H3 */
+  --text-28:   1.75rem;      /* classic card hero name */
+  --text-36:   2.25rem;      /* H2 / blog title */
+  --text-48:   3rem;         /* immersive hero sm */
+  --text-60:   3.75rem;      /* immersive hero md */
+  --text-72:   4.5rem;       /* display */
+
+  /* Weights — restrained: never default to 700 */
+  --weight-light:    300;
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+
+  /* Letter-spacing: tight on display, wide on eyebrows */
+  --tracking-tight:   -0.02em;
+  --tracking-snug:    -0.01em;
+  --tracking-normal:  0;
+  --tracking-wide:    0.04em;
+  --tracking-wider:   0.08em;
+  --tracking-widest:  0.12em;
+  --tracking-mono-caps: 0.14em; /* immersive nav + tagline */
+
+  /* Line heights */
+  --lh-tight:  1.15;
+  --lh-snug:   1.3;
+  --lh-base:   1.5;
+  --lh-prose:  1.7;
+  --lh-loose:  1.8;
+
+  /* ---------- COLOR: CLASSIC (light) ---------- */
+  /* Used on /classic — bone-paper, graphite ink, mono */
+  --classic-bg:      #f1f2f2;
+  --classic-fg:      #1a1a1a;
+  --classic-fg2:     #555555;
+  --classic-fg3:     #999999;
+  --classic-border:  #d8d9d9;
+
+  /* ---------- COLOR: IMMERSIVE (dark) ---------- */
+  /* Used on / (main landing) — black over WebGL shader */
+  --im-bg:         #0a0a0a;   /* page base (behind shader) */
+  --im-bg2:        #141414;   /* elevated surfaces, cards */
+  --im-bg3:        #1a1a1a;   /* hover on bg2, inputs */
+  --im-text:       #e8e4e0;   /* warm white, NOT pure white */
+  --im-text2:      #9a9590;   /* muted — bio, metadata */
+  --im-text3:      #5a5550;   /* tertiary — footer, disabled */
+  --im-border:     #2a2520;   /* warm-tinted hairline */
+  --im-border2:    rgba(200, 173, 143, 0.15); /* latte @ 15% — cards on shader */
+
+  /* White-on-shader overlay text (immersive hero copy) */
+  --im-over-hi:    rgba(255, 255, 255, 0.95);
+  --im-over-md:    rgba(255, 255, 255, 0.88);
+  --im-over-lo:    rgba(255, 255, 255, 0.55);
+
+  /* ---------- COLOR: WINES (red / crimson / burgundy) ---------- */
+  /* The red spine of the brand. Drawn from the shader's valleys + peaks. */
+  --wine-crimson:   #dc143c;
+  --wine-raspberry: #e30b5c;
+  --wine-garnet:    #b21e35;
+  --wine-ruby:      #9b111e;
+  --wine-wine:      #722f37;   /* signature mid-wine */
+  --wine-burgundy:  #800020;
+  --wine-claret:    #6f2232;
+  --wine-cabernet:  #5e1224;
+  --wine-merlot:    #7b3f52;
+  --wine-shiraz:    #673147;
+  --wine-oxblood:   #4e0707;
+  --wine-sangria:   #4c0027;
+  --wine-port:      #3c0014;
+  --wine-noir:      #2c0010;
+  --wine-abyss:     #1a0005;
+
+  /* ---------- COLOR: WARM EARTH + ACCENTS ---------- */
+  --accent-terracotta: #e2725b;   /* PRIMARY accent (on dark) */
+  --accent-rust:       #b7410e;
+  --accent-cognac:     #9f381d;
+  --accent-chili:      #c04000;
+  --accent-golden:     #c4a000;   /* sparse — badges, one underline */
+  --accent-mulberry:   #c54b6c;
+
+  /* ---------- COLOR: BROWNS / WOOD ---------- */
+  --wood-mahogany: #4c3024;
+  --wood-walnut:   #5c4033;
+  --wood-coffee:   #6f4e37;
+  --wood-grizzly:  #685542;
+
+  /* ---------- COLOR: NEUTRALS / CREAMS ---------- */
+  /* The ivory/linen terrain. Warm, paper-like, anti-cool-gray. */
+  --neutral-ivory:     #fffff0;
+  --neutral-cream:     #fffdd0;
+  --neutral-linen:     #faf0e6;
+  --neutral-beige:     #f5f5dc;
+  --neutral-champagne: #f7e7ce;
+  --neutral-bisque:    #ffe4c4;
+  --neutral-almond:    #efdecd;
+  --neutral-khaki:     #c3b091;
+  --neutral-latte:     #c8ad8f;   /* secondary muted on dark */
+  --neutral-black:     #000000;
+
+  /* ---------- SEMANTIC (mode-agnostic; override per surface) ---------- */
+  --bg:       var(--im-bg);
+  --bg-elev:  var(--im-bg2);
+  --fg:       var(--im-text);
+  --fg-muted: var(--im-text2);
+  --fg-faint: var(--im-text3);
+  --border:   var(--im-border);
+  --accent:   var(--accent-terracotta);
+  --highlight: var(--accent-golden);
+  --selection-bg: #47a3f3;
+  --selection-fg: #fefefe;
+
+  /* ---------- SPACING (4px grid) ---------- */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;   /* card padding */
+  --space-7:  28px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;   /* topbar height */
+  --space-16: 64px;
+  --space-20: 80px;   /* page gutter top */
+
+  /* ---------- RADII ---------- */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-pill: 999px;
+
+  /* ---------- ELEVATION / SHADOWS ---------- */
+  /* Quiet. Ink-on-paper, not drop-shadow "floating card". */
+  --shadow-text-hero:
+    0 1px 3px rgba(0,0,0,0.95),
+    0 0 28px rgba(0,0,0,0.65),
+    0 0 56px rgba(0,0,0,0.35);
+  --shadow-text-hero-hover:
+    0 2px 6px rgba(0,0,0,1),
+    0 0 36px rgba(0,0,0,0.85),
+    0 0 72px rgba(0,0,0,0.5);
+  --shadow-text-sub:
+    0 1px 2px rgba(0,0,0,0.95),
+    0 0 18px rgba(0,0,0,0.8),
+    0 0 36px rgba(0,0,0,0.45);
+  --shadow-card-dark: 0 8px 32px rgba(0,0,0,0.45);
+  --shadow-card-light: 0 1px 2px rgba(0,0,0,0.04);
+
+  /* Protection gradient (under floating labels on shader) */
+  --protect-gradient:
+    linear-gradient(90deg,
+      rgba(0,0,0,0.78) 0%,
+      rgba(0,0,0,0.42) 52%,
+      rgba(0,0,0,0) 100%);
+
+  /* ---------- MOTION ---------- */
+  --ease-out-quad:   cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-out-cubic:  cubic-bezier(0.215, 0.61, 0.355, 1);
+  --ease-standard:   ease-out;
+  --dur-fast:   150ms;
+  --dur-base:   300ms;
+  --dur-slow:   500ms;
+
+  /* ---------- LAYOUT ---------- */
+  --card-max:  640px;    /* /classic */
+  --prose-max: 640px;    /* blog */
+}
+
+/* --- Selection ------------------------------------------- */
+::selection {
+  background-color: var(--selection-bg);
+  color: var(--selection-fg);
+}
+
+/* --- Semantic elements ----------------------------------- */
+.ds-display {
+  font-family: var(--font-mono);
+  font-weight: var(--weight-light);
+  font-size: var(--text-60);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--lh-tight);
+}
+
+.ds-h1 {
+  font-family: var(--font-mono);
+  font-weight: var(--weight-light);
+  font-size: var(--text-36);
+  letter-spacing: var(--tracking-snug);
+  line-height: var(--lh-snug);
+}
+.ds-h2 {
+  font-family: var(--font-sans);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-24);
+  letter-spacing: var(--tracking-snug);
+  line-height: var(--lh-snug);
+}
+.ds-h3 {
+  font-family: var(--font-sans);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-20);
+  letter-spacing: var(--tracking-snug);
+  line-height: var(--lh-snug);
+}
+
+.ds-eyebrow {
+  font-family: var(--font-mono);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-11);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+.ds-nav-link {
+  font-family: var(--font-mono);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-11);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--im-over-lo);
+  text-decoration: none;
+  transition:
+    letter-spacing var(--dur-base) var(--ease-out-quad),
+    color var(--dur-base) var(--ease-out-quad);
+}
+.ds-nav-link:hover {
+  letter-spacing: 0.2em;
+  color: var(--im-over-hi);
+}
+
+.ds-p {
+  font-family: var(--font-sans);
+  font-weight: var(--weight-regular);
+  font-size: var(--text-14);
+  line-height: var(--lh-prose);
+  color: var(--fg-muted);
+}
+.ds-small {
+  font-size: var(--text-12);
+  line-height: var(--lh-loose);
+  color: var(--fg-muted);
+}
+
+.ds-code,
+.ds-code-inline {
+  font-family: var(--font-code);
+  font-size: 0.92em;
+  font-feature-settings: "liga" 1, "calt" 1;
+}
+.ds-code-inline {
+  padding: 0.1em 0.4em;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.06);
+  color: var(--accent-terracotta);
+}
+
+/* --- Surfaces -------------------------------------------- */
+.ds-surface-immersive {
+  background: var(--im-bg);
+  color: var(--im-text);
+}
+.ds-surface-classic {
+  background: var(--classic-bg);
+  color: var(--classic-fg);
+}
+
+/* --- Caret (immersive subtitle) -------------------------- */
+@keyframes ds-caret-blink {
+  0%, 49.5% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.ds-caret {
+  display: inline-block;
+  width: 1ch;
+  min-width: 9px;
+  height: 2px;
+  background: currentColor;
+  animation: ds-caret-blink 1.08s step-end infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-caret { animation: none; opacity: 0.85; }
+}
+
+</style>
+<style>
+  body { margin: 0; background: var(--im-bg); color: var(--im-text); font-family: var(--font-sans); padding: 64px 72px; min-height: 100vh; }
+  h1.eyebrow { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--im-text2); margin: 0 0 8px; }
+  .title { font-family: var(--font-mono); font-weight: 300; font-size: 48px; letter-spacing: -.02em; line-height: 1.1; margin: 0 0 48px; }
+  .title em { font-style: normal; color: var(--accent-terracotta); }
+  .section { font-family: var(--font-mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--accent-terracotta); margin: 56px 0 20px; padding-bottom: 8px; border-bottom: 1px solid var(--accent-terracotta); }
+  .section:first-of-type { margin-top: 0; }
+  .row { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 2px; margin-bottom: 16px; background: var(--im-border); border: 1px solid var(--im-border); }
+  .sw { background: var(--im-bg); padding: 0; }
+  .sw .chip { height: 100px; position: relative; }
+  .sw .chip .hex { position: absolute; bottom: 8px; right: 10px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .04em; opacity: .75; }
+  .sw .info { padding: 10px 14px 14px; }
+  .sw .name { font-family: var(--font-mono); font-size: 12px; font-weight: 500; color: var(--im-text); letter-spacing: .02em; }
+  .sw .token { font-family: var(--font-mono); font-size: 10px; color: var(--im-text3); margin-top: 3px; }
+  .caption { font-family: var(--font-sans); font-size: 13px; line-height: 1.7; color: var(--im-text2); max-width: 70ch; margin: -8px 0 24px; }
+  .usage { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 24px; }
+  .demo { border: 1px solid var(--im-border); border-radius: 6px; padding: 20px; background: var(--im-bg2); }
+  .demo .lbl { font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--im-text3); margin-bottom: 14px; }
+  .rule-terra { width: 40px; height: 2px; background: var(--accent-terracotta); margin-bottom: 12px; }
+  .rule-gold { width: 40px; height: 2px; background: var(--accent-golden); margin-bottom: 12px; }
+  .pill { display: inline-block; padding: 4px 10px; border-radius: 4px; font-family: var(--font-mono); font-size: 11px; font-weight: 500; margin-right: 6px; margin-bottom: 6px; }
+  .pill-terra { background: rgba(226,114,91,.12); color: var(--accent-terracotta); }
+  .pill-gold { background: rgba(196,160,0,.14); color: var(--accent-golden); }
+  .pill-latte { background: rgba(200,173,143,.15); color: var(--neutral-latte); }
+  .overlay-card { background: rgba(10,10,10,.75); border: 1px solid var(--im-border2); border-radius: 8px; padding: 14px; backdrop-filter: blur(12px); }
+  .overlay-card .proj { font-family: var(--font-sans); font-size: 13px; font-weight: 500; color: #fff; margin-bottom: 4px; }
+  .overlay-card .meta { font-family: var(--font-mono); font-size: 11px; color: var(--neutral-latte); margin-bottom: 8px; letter-spacing: .02em; }
+  .overlay-card .rule { width: 24px; height: 1px; background: rgba(226,114,91,.45); margin-bottom: 8px; }
+  .overlay-card .desc { font-size: 12px; color: var(--im-text2); line-height: 1.5; }
+  .shader-bg { position: relative; background: radial-gradient(ellipse at 30% 20%, #4e0707 0%, #1a0005 40%, #0a0a0a 75%); padding: 20px; border-radius: 6px; overflow: hidden; }
+  .shader-bg::after { content:""; position:absolute; inset:0; background: radial-gradient(ellipse at 70% 80%, rgba(226,114,91,.25), transparent 60%); pointer-events:none; }
+  .anchor { display: flex; align-items: center; gap: 20px; }
+  .anchor .blk { width: 120px; height: 120px; background: #000; border: 1px solid #222; }
+  .anchor .meta { font-family: var(--font-sans); color: var(--im-text2); font-size: 13px; line-height: 1.7; max-width: 44ch; }
+  .anchor .meta .k { font-family: var(--font-mono); color: var(--accent-terracotta); font-size: 11px; letter-spacing: .08em; }
+  .rule-rules { font-family: var(--font-sans); color: var(--im-text2); font-size: 13px; line-height: 1.8; padding-left: 0; list-style: none; max-width: 72ch; margin: 16px 0 0; }
+  .rule-rules li { position: relative; padding-left: 28px; margin-bottom: 8px; }
+  .rule-rules li::before { content: attr(data-n); position: absolute; left: 0; top: 3px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .08em; color: var(--accent-terracotta); }
+  .spectrum { display: flex; height: 72px; border-radius: 6px; overflow: hidden; margin: 16px 0 8px; border: 1px solid var(--im-border); }
+  .spectrum > div { flex: 1; position: relative; }
+  .spectrum .l { position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); font-family: var(--font-mono); font-size: 9px; color: #fff; opacity: .7; letter-spacing: .02em; white-space: nowrap; }
+
+  /* === V2 ACCENT SYSTEM === */
+  .v2-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2px; margin: 16px 0 0; background: var(--im-border); border: 1px solid var(--im-border); }
+  .v2-card { background: var(--im-bg); padding: 24px 22px 22px; display: flex; flex-direction: column; gap: 12px; position: relative; }
+  .v2-card .v2-chip { height: 84px; border-radius: 4px; position: relative; border: 1px solid rgba(255,255,255,.05); }
+  .v2-card .v2-chip .v2-hex { position: absolute; bottom: 8px; right: 10px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .04em; opacity: .8; color: #fff; mix-blend-mode: difference; }
+  .v2-card .v2-head { display: flex; align-items: baseline; gap: 10px; border-bottom: 1px solid var(--im-border); padding-bottom: 10px; }
+  .v2-card .v2-name { font-family: var(--font-mono); font-size: 15px; font-weight: 500; color: var(--im-text); letter-spacing: -.005em; }
+  .v2-card .v2-role { font-family: var(--font-mono); font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-terracotta); margin-left: auto; }
+  .v2-card .v2-token { font-family: var(--font-mono); font-size: 11px; color: var(--im-text3); letter-spacing: .02em; }
+  .v2-card .v2-rules { font-family: var(--font-sans); font-size: 12.5px; color: var(--im-text2); line-height: 1.6; margin: 0; }
+  .v2-card .v2-rules .v2-lead { color: var(--im-text); font-weight: 500; }
+
+  /* Proportional strip */
+  .v2-strip-wrap { margin: 20px 0 0; }
+  .v2-strip-lbl { font-family: var(--font-mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--im-text3); margin: 0 0 8px; }
+  .v2-strip { display: flex; height: 56px; border-radius: 4px; overflow: hidden; border: 1px solid var(--im-border); }
+  .v2-strip > div { position: relative; }
+  .v2-strip > div span { position: absolute; left: 10px; bottom: 6px; font-family: var(--font-mono); font-size: 9px; letter-spacing: .06em; text-transform: uppercase; color: #fff; opacity: .85; }
+  .v2-strip .neg { color: #000; mix-blend-mode: normal; opacity: .75; }
+
+  /* Contrast ladder */
+  .v2-ladder { margin: 20px 0 0; border: 1px solid var(--im-border); border-radius: 4px; overflow: hidden; }
+  .v2-ladder-hd { display: grid; grid-template-columns: 180px 1fr 80px 110px; gap: 16px; padding: 10px 14px; background: rgba(255,255,255,.02); font-family: var(--font-mono); font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--im-text3); border-bottom: 1px solid var(--im-border); }
+  .v2-ladder-row { display: grid; grid-template-columns: 180px 1fr 80px 110px; gap: 16px; padding: 12px 14px; align-items: center; border-top: 1px solid var(--im-border); }
+  .v2-ladder-row:first-child { border-top: 0; }
+  .v2-ladder-row .v2-l-name { display: flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 12px; color: var(--im-text); }
+  .v2-ladder-row .v2-l-dot { width: 14px; height: 14px; border-radius: 50%; flex: none; }
+  .v2-ladder-row .v2-l-bar-wrap { background: #000; height: 28px; display: flex; align-items: center; padding: 0 12px; border-radius: 2px; border: 1px solid var(--im-border); }
+  .v2-ladder-row .v2-l-sample { font-family: var(--font-mono); font-size: 11px; letter-spacing: .02em; }
+  .v2-ladder-row .v2-l-ratio { font-family: var(--font-mono); font-size: 12px; color: var(--im-text2); text-align: right; }
+  .v2-ladder-row .v2-l-note { font-family: var(--font-mono); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--im-text3); text-align: right; }
+  .v2-ladder-row .v2-l-note.ok { color: var(--accent-golden); }
+  .v2-ladder-row .v2-l-note.warn { color: var(--accent-terracotta); opacity: .8; }
+
+  /* === SHADER TOKENS TABLE === */
+  .tok-table { width: 100%; border-collapse: collapse; margin: 16px 0 0; font-family: var(--font-mono); }
+  .tok-table thead th { font-family: var(--font-mono); font-size: 9px; letter-spacing: .16em; text-transform: uppercase; color: var(--im-text3); text-align: left; padding: 10px 16px; border-bottom: 1px solid var(--im-border); font-weight: 500; }
+  .tok-table thead th:first-child { width: 120px; }
+  .tok-table tbody td { padding: 14px 16px; border-bottom: 1px solid var(--im-border); vertical-align: middle; }
+  .tok-table tbody tr:last-child td { border-bottom: 0; }
+  .tok-table tbody tr:hover td { background: rgba(255,255,255,.015); }
+  .tok-swatch { width: 48px; height: 24px; border-radius: 2px; border: 1px solid rgba(255,255,255,.06); }
+  .tok-token { font-size: 12px; color: var(--im-text); letter-spacing: .01em; }
+  .tok-value { font-size: 12px; color: var(--im-text2); letter-spacing: .01em; }
+  .tok-role { font-family: var(--font-sans); font-size: 12.5px; color: var(--im-text2); letter-spacing: .01em; }
+</style>
+<link rel="stylesheet" href="_topbar.css">
+</head>
+<body>
+<header class="ds-page-topbar">
+  <a class="ds-page-name" href="index.html"><span>Parvez Kose</span><span class="sep">/</span><span>Design System</span></a>
+  <nav>
+    <a href="index.html">Overview</a>
+    <a href="Brand.html">Brand</a>
+    <a href="Colors.html" class="current">Colors</a>
+    <a href="Type.html">Type</a>
+    <a href="Spacing.html">Spacing</a>
+    <a href="Components.html">Components</a>
+    <a href="UIKit.html">UI Kit</a>
+  </nav>
+</header>
+
+<h1 class="eyebrow">Parvez Kose · Design System</h1>
+<div class="title">Palette — <em>wines, earth, ivory, black</em></div>
+
+<div class="section">01 · Accent system — V2 dark variant</div>
+<p class="caption">White / warm-white carries 70% of text on dark. These five tokens handle the remaining 30%. Each has a specific job — never swap roles.</p>
+
+<div class="v2-grid">
+  <div class="v2-card">
+    <div class="v2-chip" style="background:#E2725B"><span class="v2-hex">#E2725B</span></div>
+    <div class="v2-head"><div class="v2-name">Terracotta</div><div class="v2-role">Primary signal</div></div>
+    <div class="v2-token">--accent-primary</div>
+    <p class="v2-rules"><span class="v2-lead">Signal color.</span> Active states, hover lines, selected nav indicators, CTA borders, thin accent rules above headings. The loudest color in the system.</p>
+  </div>
+
+  <div class="v2-card">
+    <div class="v2-chip" style="background:#C4A000"><span class="v2-hex">#C4A000</span></div>
+    <div class="v2-head"><div class="v2-name">Golden</div><div class="v2-role">Highlight · 1 per view</div></div>
+    <div class="v2-token">--accent-golden</div>
+    <p class="v2-rules"><span class="v2-lead">Microscopic highlights only.</span> Terminal cursor, &ldquo;new&rdquo; badge, one underline per screen max. Reserved to avoid the red+gold &ldquo;luxury hotel&rdquo; problem.</p>
+  </div>
+
+  <div class="v2-card">
+    <div class="v2-chip" style="background:#C8AD8F"><span class="v2-hex" style="color:#222; mix-blend-mode: normal">#C8AD8F</span></div>
+    <div class="v2-head"><div class="v2-name">Latte</div><div class="v2-role">Muted · glue</div></div>
+    <div class="v2-token">--accent-muted</div>
+    <p class="v2-rules"><span class="v2-lead">The glue.</span> Metadata text (dates, captions, read times), card borders at 15% opacity, section divider lines. Warm neutral that replaces every cold gray.</p>
+  </div>
+
+  <div class="v2-card">
+    <div class="v2-chip" style="background:#A9333C"><span class="v2-hex">#A9333C</span></div>
+    <div class="v2-head"><div class="v2-name">Crimson</div><div class="v2-role">Medium wine</div></div>
+    <div class="v2-token">--accent-crimson</div>
+    <p class="v2-rules"><span class="v2-lead">Medium wine.</span> Overlay card borders, protection gradients over the shader, pullquote side-rules. Visible against dark where burgundy disappears, but not as loud as terracotta.</p>
+  </div>
+
+  <div class="v2-card">
+    <div class="v2-chip" style="background:#800020"><span class="v2-hex">#800020</span></div>
+    <div class="v2-head"><div class="v2-name">Burgundy</div><div class="v2-role">Structural only</div></div>
+    <div class="v2-token">--accent-structural</div>
+    <p class="v2-rules"><span class="v2-lead">Spatial warmth only.</span> Hover fill backgrounds, thick gradient dividers, bullet dots. Never for text or thin lines — too low contrast. Creates depth, not signal.</p>
+  </div>
+</div>
+
+<div class="v2-strip-wrap">
+  <div class="v2-strip-lbl">Proportion in a typical view</div>
+  <div class="v2-strip">
+    <div style="background:#0A0A0A; flex:3"><span>Base · 3×</span></div>
+    <div style="background:#E2725B; flex:1"><span class="neg">Terra · 1×</span></div>
+    <div style="background:#C4A000; flex:0.5"><span class="neg">Gold .5×</span></div>
+    <div style="background:#C8AD8F; flex:0.8"><span class="neg">Latte .8×</span></div>
+    <div style="background:#A9333C; flex:0.6"><span>Crimson .6×</span></div>
+    <div style="background:#800020; flex:0.7"><span>Burgundy .7×</span></div>
+  </div>
+</div>
+
+<div class="v2-strip-wrap">
+  <div class="v2-strip-lbl">Contrast ladder · against #0A0A0A</div>
+  <div class="v2-ladder">
+    <div class="v2-ladder-hd"><span>Token</span><span>Sample</span><span style="text-align:right">Ratio</span><span style="text-align:right">Status</span></div>
+    <div class="v2-ladder-row"><div class="v2-l-name"><span class="v2-l-dot" style="background:#E2725B"></span>Terracotta</div><div class="v2-l-bar-wrap"><span class="v2-l-sample" style="color:#E2725B">The quick brown fox</span></div><div class="v2-l-ratio">4.5 : 1</div><div class="v2-l-note ok">✓ Text-safe</div></div>
+    <div class="v2-ladder-row"><div class="v2-l-name"><span class="v2-l-dot" style="background:#C4A000"></span>Golden</div><div class="v2-l-bar-wrap"><span class="v2-l-sample" style="color:#C4A000">The quick brown fox</span></div><div class="v2-l-ratio">4.1 : 1</div><div class="v2-l-note ok">✓ Text-safe</div></div>
+    <div class="v2-ladder-row"><div class="v2-l-name"><span class="v2-l-dot" style="background:#C8AD8F"></span>Latte</div><div class="v2-l-bar-wrap"><span class="v2-l-sample" style="color:#C8AD8F">The quick brown fox</span></div><div class="v2-l-ratio">5.2 : 1</div><div class="v2-l-note ok">✓ Text-safe</div></div>
+    <div class="v2-ladder-row"><div class="v2-l-name"><span class="v2-l-dot" style="background:#A9333C"></span>Crimson</div><div class="v2-l-bar-wrap"><span class="v2-l-sample" style="color:#A9333C">The quick brown fox</span></div><div class="v2-l-ratio">3.2 : 1</div><div class="v2-l-note warn">Structural only</div></div>
+    <div class="v2-ladder-row"><div class="v2-l-name"><span class="v2-l-dot" style="background:#800020"></span>Burgundy</div><div class="v2-l-bar-wrap"><span class="v2-l-sample" style="color:#800020">The quick brown fox</span></div><div class="v2-l-ratio">2.1 : 1</div><div class="v2-l-note warn">Structural only</div></div>
+  </div>
+</div>
+
+<div class="section">02 · Wines · the red spine</div>
+<p class="caption">Derived from the volcanic shader's valleys and peaks. The wines drive atmosphere; they are rarely used as fills. Expect them in the shader, in the `oxblood → port → noir` gradient behind hero cards, and in editorial underlines.</p>
+<div class="spectrum">
+  <div style="background:#dc143c"><span class="l">Crimson</span></div>
+  <div style="background:#b21e35"><span class="l">Garnet</span></div>
+  <div style="background:#722f37"><span class="l">Wine</span></div>
+  <div style="background:#800020"><span class="l">Burgundy</span></div>
+  <div style="background:#6f2232"><span class="l">Claret</span></div>
+  <div style="background:#5e1224"><span class="l">Cabernet</span></div>
+  <div style="background:#4e0707"><span class="l">Oxblood</span></div>
+  <div style="background:#3c0014"><span class="l">Port</span></div>
+  <div style="background:#2c0010"><span class="l">Noir</span></div>
+  <div style="background:#1a0005"><span class="l">Abyss</span></div>
+</div>
+
+<div class="row">
+  <div class="sw"><div class="chip" style="background:#dc143c"><span class="hex">#DC143C</span></div><div class="info"><div class="name">Crimson</div><div class="token">--wine-crimson</div></div></div>
+  <div class="sw"><div class="chip" style="background:#b21e35"><span class="hex">#B21E35</span></div><div class="info"><div class="name">Garnet</div><div class="token">--wine-garnet</div></div></div>
+  <div class="sw"><div class="chip" style="background:#9b111e"><span class="hex">#9B111E</span></div><div class="info"><div class="name">Ruby</div><div class="token">--wine-ruby</div></div></div>
+  <div class="sw"><div class="chip" style="background:#722f37"><span class="hex">#722F37</span></div><div class="info"><div class="name">Wine</div><div class="token">--wine-wine</div></div></div>
+  <div class="sw"><div class="chip" style="background:#800020"><span class="hex">#800020</span></div><div class="info"><div class="name">Burgundy</div><div class="token">--wine-burgundy</div></div></div>
+  <div class="sw"><div class="chip" style="background:#6f2232"><span class="hex">#6F2232</span></div><div class="info"><div class="name">Claret</div><div class="token">--wine-claret</div></div></div>
+  <div class="sw"><div class="chip" style="background:#5e1224"><span class="hex">#5E1224</span></div><div class="info"><div class="name">Cabernet</div><div class="token">--wine-cabernet</div></div></div>
+  <div class="sw"><div class="chip" style="background:#7b3f52"><span class="hex">#7B3F52</span></div><div class="info"><div class="name">Merlot</div><div class="token">--wine-merlot</div></div></div>
+  <div class="sw"><div class="chip" style="background:#4e0707"><span class="hex">#4E0707</span></div><div class="info"><div class="name">Oxblood</div><div class="token">--wine-oxblood</div></div></div>
+  <div class="sw"><div class="chip" style="background:#3c0014"><span class="hex">#3C0014</span></div><div class="info"><div class="name">Port</div><div class="token">--wine-port</div></div></div>
+  <div class="sw"><div class="chip" style="background:#2c0010"><span class="hex">#2C0010</span></div><div class="info"><div class="name">Noir</div><div class="token">--wine-noir</div></div></div>
+  <div class="sw"><div class="chip" style="background:#1a0005"><span class="hex">#1A0005</span></div><div class="info"><div class="name">Abyss</div><div class="token">--wine-abyss</div></div></div>
+</div>
+
+<div class="section">03 · Warm earth · accent swatches</div>
+<p class="caption">White / warm-white carries 70% of text on dark. These handle the remaining 30% — tags, rules, hover states, CTA borders. Terracotta is primary. Golden is reserved (one per screen). Never fill pills solid.</p>
+<div class="row">
+  <div class="sw"><div class="chip" style="background:#e2725b"><span class="hex">#E2725B</span></div><div class="info"><div class="name">Terracotta</div><div class="token">--accent-terracotta</div></div></div>
+  <div class="sw"><div class="chip" style="background:#b7410e"><span class="hex">#B7410E</span></div><div class="info"><div class="name">Rust</div><div class="token">--accent-rust</div></div></div>
+  <div class="sw"><div class="chip" style="background:#9f381d"><span class="hex">#9F381D</span></div><div class="info"><div class="name">Cognac</div><div class="token">--accent-cognac</div></div></div>
+  <div class="sw"><div class="chip" style="background:#c04000"><span class="hex">#C04000</span></div><div class="info"><div class="name">Chili</div><div class="token">--accent-chili</div></div></div>
+  <div class="sw"><div class="chip" style="background:#c4a000"><span class="hex">#C4A000</span></div><div class="info"><div class="name">Golden</div><div class="token">--accent-golden</div></div></div>
+  <div class="sw"><div class="chip" style="background:#c54b6c"><span class="hex">#C54B6C</span></div><div class="info"><div class="name">Mulberry</div><div class="token">--accent-mulberry</div></div></div>
+</div>
+
+<div class="section">04 · Wood tones</div>
+<div class="row">
+  <div class="sw"><div class="chip" style="background:#4c3024"><span class="hex">#4C3024</span></div><div class="info"><div class="name">Mahogany</div><div class="token">--wood-mahogany</div></div></div>
+  <div class="sw"><div class="chip" style="background:#5c4033"><span class="hex">#5C4033</span></div><div class="info"><div class="name">Walnut</div><div class="token">--wood-walnut</div></div></div>
+  <div class="sw"><div class="chip" style="background:#6f4e37"><span class="hex">#6F4E37</span></div><div class="info"><div class="name">Coffee</div><div class="token">--wood-coffee</div></div></div>
+  <div class="sw"><div class="chip" style="background:#685542"><span class="hex">#685542</span></div><div class="info"><div class="name">Grizzly</div><div class="token">--wood-grizzly</div></div></div>
+</div>
+
+<div class="section">05 · Neutrals · the ivory/linen terrain</div>
+<p class="caption">Warm, paper-like. Replaces cool gray. Latte is the secondary muted color on dark (metadata, card borders at 15%). Ivory/linen/cream appear as hero-card fills and blog body tint.</p>
+<div class="row">
+  <div class="sw"><div class="chip" style="background:#fffff0"><span class="hex" style="color:#333">#FFFFF0</span></div><div class="info"><div class="name">Ivory</div><div class="token">--neutral-ivory</div></div></div>
+  <div class="sw"><div class="chip" style="background:#fffdd0"><span class="hex" style="color:#333">#FFFDD0</span></div><div class="info"><div class="name">Cream</div><div class="token">--neutral-cream</div></div></div>
+  <div class="sw"><div class="chip" style="background:#faf0e6"><span class="hex" style="color:#333">#FAF0E6</span></div><div class="info"><div class="name">Linen</div><div class="token">--neutral-linen</div></div></div>
+  <div class="sw"><div class="chip" style="background:#f5f5dc"><span class="hex" style="color:#333">#F5F5DC</span></div><div class="info"><div class="name">Beige</div><div class="token">--neutral-beige</div></div></div>
+  <div class="sw"><div class="chip" style="background:#f7e7ce"><span class="hex" style="color:#333">#F7E7CE</span></div><div class="info"><div class="name">Champagne</div><div class="token">--neutral-champagne</div></div></div>
+  <div class="sw"><div class="chip" style="background:#efdecd"><span class="hex" style="color:#333">#EFDECD</span></div><div class="info"><div class="name">Almond</div><div class="token">--neutral-almond</div></div></div>
+  <div class="sw"><div class="chip" style="background:#c3b091"><span class="hex">#C3B091</span></div><div class="info"><div class="name">Khaki</div><div class="token">--neutral-khaki</div></div></div>
+  <div class="sw"><div class="chip" style="background:#c8ad8f"><span class="hex">#C8AD8F</span></div><div class="info"><div class="name">Latte</div><div class="token">--neutral-latte</div></div></div>
+</div>
+
+<div class="section">06 · Anchor</div>
+<div class="anchor">
+  <div class="blk"></div>
+  <div class="meta">
+    <span class="k">#000000 · --neutral-black</span><br>
+    Black is the structural anchor. Immersive page body sits on <code style="color:var(--im-text); font-family:var(--font-mono); font-size:12px">--im-bg (#0a0a0a)</code> — not pure black — so the shader can dip into truer black in its valleys. Borders use <code style="color:var(--im-text); font-family:var(--font-mono); font-size:12px">--im-border (#2a2520)</code>, warm-tinted, not cool gray.
+  </div>
+</div>
+
+<div class="section">07 · Accents in use</div>
+<div class="usage">
+  <div class="demo">
+    <div class="lbl">Section header · Terracotta rule</div>
+    <div class="rule-terra"></div>
+    <div style="font-family:var(--font-sans); font-size:15px; color:var(--im-text); margin-bottom:4px; font-weight:500">Selected works</div>
+    <div style="font-family:var(--font-sans); font-size:12px; color:var(--im-text2); line-height:1.6">A short terracotta bar above a heading signals sections without needing color-heavy backgrounds.</div>
+  </div>
+
+  <div class="demo">
+    <div class="lbl">Tags — 12% fill + same-color text</div>
+    <div style="margin-bottom:10px">
+      <span class="pill pill-terra">React</span>
+      <span class="pill pill-gold">WebGL</span>
+      <span class="pill pill-latte">Design systems</span>
+    </div>
+    <div style="font-family:var(--font-sans); font-size:12px; color:var(--im-text2); line-height:1.6">Low-opacity fills. Never solid pills on dark.</div>
+  </div>
+
+  <div class="demo">
+    <div class="lbl">Overlay card on shader</div>
+    <div class="shader-bg">
+      <div class="overlay-card">
+        <div class="proj">Generative UI prototype</div>
+        <div class="meta">2025 — Design engineering</div>
+        <div class="rule"></div>
+        <div class="desc">Terracotta hairline + latte metadata add warmth. Never a solid-black pill.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="demo">
+    <div class="lbl">Single-use golden underline</div>
+    <div style="font-family:var(--font-mono); font-weight:300; font-size:22px; color:var(--im-text); line-height:1.3">
+      Poetry in the shell, <span style="background: linear-gradient(transparent 75%, rgba(196,160,0,.5) 75%)">rigor in the stack</span>.
+    </div>
+    <div style="font-family:var(--font-sans); font-size:12px; color:var(--im-text2); line-height:1.6; margin-top:10px">One golden underline per screen, max.</div>
+  </div>
+</div>
+
+<div class="section">08 · Color tokens from shader background</div>
+<p class="caption">A second, complementary naming layer — material-indexed tokens that describe the terrain itself. Used at the stylesheet layer; the Accent system above drives UI.</p>
+<table class="tok-table">
+  <thead>
+    <tr><th>Swatch</th><th>Token</th><th>Value</th><th>Role</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><div class="tok-swatch" style="background:#0A0A0A"></div></td><td class="tok-token">--bg</td><td class="tok-value">basalt-950</td><td class="tok-role">Page background</td></tr>
+    <tr><td><div class="tok-swatch" style="background:#141414"></div></td><td class="tok-token">--surface</td><td class="tok-value">obsidian-900</td><td class="tok-role">Cards, panels</td></tr>
+    <tr><td><div class="tok-swatch" style="background:#262626"></div></td><td class="tok-token">--border</td><td class="tok-value">charcoal-800</td><td class="tok-role">Dividers, card borders</td></tr>
+    <tr><td><div class="tok-swatch" style="background:#F3EEE3"></div></td><td class="tok-token">--fg-strong</td><td class="tok-value">linen-100</td><td class="tok-role">H1 / display</td></tr>
+    <tr><td><div class="tok-swatch" style="background:#E8E0D0"></div></td><td class="tok-token">--fg</td><td class="tok-value">linen-200</td><td class="tok-role">Primary prose</td></tr>
+    <tr><td><div class="tok-swatch" style="background:#D9CFB8"></div></td><td class="tok-token">--fg-muted</td><td class="tok-value">linen-300</td><td class="tok-role">Secondary</td></tr>
+    <tr><td><div class="tok-swatch" style="background:#B0A08A"></div></td><td class="tok-token">--fg-meta</td><td class="tok-value">ash-400</td><td class="tok-role">Meta, captions</td></tr>
+    <tr><td><div class="tok-swatch" style="background:#A9333C"></div></td><td class="tok-token">--accent</td><td class="tok-value">crimson-600</td><td class="tok-role">One per view</td></tr>
+    <tr><td><div class="tok-swatch" style="background:#C43847"></div></td><td class="tok-token">--focus-ring</td><td class="tok-value">crimson-500</td><td class="tok-role">Focus / hover accent</td></tr>
+  </tbody>
+</table>
+
+<div class="section">09 · Rules of engagement</div>
+<ul class="rule-rules">
+  <li data-n="01">White / warm-white carries 70% of text on dark. Accents are the remaining 30%.</li>
+  <li data-n="02">Terracotta = interaction. A 40px underline above a heading, a hover rule, a CTA border — not a fill.</li>
+  <li data-n="03">Golden is reserved. One underline or one badge per screen, maximum.</li>
+  <li data-n="04">Latte replaces cool gray. Use it for metadata, dates, captions. At 15% opacity for card borders over the shader.</li>
+  <li data-n="05">Never use solid filled accent pills on dark. Always 10–15% opacity fill with matching-color text.</li>
+  <li data-n="06">Wines are rarely fills. They live in the shader, in deep-gradient card backs, and as editorial underlines.</li>
+  <li data-n="07">No purple, indigo, teal, or neon glow. Ever.</li>
+</ul>
+
+</body>
+</html>

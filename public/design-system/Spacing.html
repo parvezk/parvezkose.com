@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Spacing — Parvez Kose Design System</title>
+<style id="ds-tokens-inline">
+/* ============================================================
+   Parvez Kose — Design System: Colors & Type
+   ============================================================
+   Dual palette: Immersive (dark / volcanic) and Classic (light).
+   Material, tactile, anti-template. Rooted in the volcanic hero
+   shader: crimson peaks, black valleys, ivory/linen terrain.
+   ============================================================ */
+
+/* --- Fonts ------------------------------------------------ */
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("fonts/IBMPlexSans-Variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "IBM Plex Serif";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/IBMPlexSerif-Variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("fonts/JetBrainsMono-Variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Fira Code";
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url("fonts/FiraCode-Variable.woff2") format("woff2");
+}
+
+:root {
+  /* ---------- TYPE ---------- */
+  --font-sans:    "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif:   "IBM Plex Serif", ui-serif, Georgia, serif;
+  --font-mono:    "JetBrains Mono", "Fira Code", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-code:    "Fira Code", "JetBrains Mono", ui-monospace, monospace;
+
+  /* Type scale (rem, 16px base) */
+  --text-10:   0.625rem;     /* micro labels, eyebrows */
+  --text-11:   0.6875rem;    /* footer, small caps nav */
+  --text-12:   0.75rem;      /* bio / body on classic card */
+  --text-13:   0.8125rem;    /* links */
+  --text-14:   0.875rem;     /* prose base */
+  --text-16:   1rem;         /* base */
+  --text-18:   1.125rem;     /* intro */
+  --text-20:   1.25rem;      /* H4 */
+  --text-24:   1.5rem;       /* H3 */
+  --text-28:   1.75rem;      /* classic card hero name */
+  --text-36:   2.25rem;      /* H2 / blog title */
+  --text-48:   3rem;         /* immersive hero sm */
+  --text-60:   3.75rem;      /* immersive hero md */
+  --text-72:   4.5rem;       /* display */
+
+  /* Weights — restrained: never default to 700 */
+  --weight-light:    300;
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+
+  /* Letter-spacing: tight on display, wide on eyebrows */
+  --tracking-tight:   -0.02em;
+  --tracking-snug:    -0.01em;
+  --tracking-normal:  0;
+  --tracking-wide:    0.04em;
+  --tracking-wider:   0.08em;
+  --tracking-widest:  0.12em;
+  --tracking-mono-caps: 0.14em; /* immersive nav + tagline */
+
+  /* Line heights */
+  --lh-tight:  1.15;
+  --lh-snug:   1.3;
+  --lh-base:   1.5;
+  --lh-prose:  1.7;
+  --lh-loose:  1.8;
+
+  /* ---------- COLOR: CLASSIC (light) ---------- */
+  /* Used on /classic — bone-paper, graphite ink, mono */
+  --classic-bg:      #f1f2f2;
+  --classic-fg:      #1a1a1a;
+  --classic-fg2:     #555555;
+  --classic-fg3:     #999999;
+  --classic-border:  #d8d9d9;
+
+  /* ---------- COLOR: IMMERSIVE (dark) ---------- */
+  /* Used on / (main landing) — black over WebGL shader */
+  --im-bg:         #0a0a0a;   /* page base (behind shader) */
+  --im-bg2:        #141414;   /* elevated surfaces, cards */
+  --im-bg3:        #1a1a1a;   /* hover on bg2, inputs */
+  --im-text:       #e8e4e0;   /* warm white, NOT pure white */
+  --im-text2:      #9a9590;   /* muted — bio, metadata */
+  --im-text3:      #5a5550;   /* tertiary — footer, disabled */
+  --im-border:     #2a2520;   /* warm-tinted hairline */
+  --im-border2:    rgba(200, 173, 143, 0.15); /* latte @ 15% — cards on shader */
+
+  /* White-on-shader overlay text (immersive hero copy) */
+  --im-over-hi:    rgba(255, 255, 255, 0.95);
+  --im-over-md:    rgba(255, 255, 255, 0.88);
+  --im-over-lo:    rgba(255, 255, 255, 0.55);
+
+  /* ---------- COLOR: WINES (red / crimson / burgundy) ---------- */
+  /* The red spine of the brand. Drawn from the shader's valleys + peaks. */
+  --wine-crimson:   #dc143c;
+  --wine-raspberry: #e30b5c;
+  --wine-garnet:    #b21e35;
+  --wine-ruby:      #9b111e;
+  --wine-wine:      #722f37;   /* signature mid-wine */
+  --wine-burgundy:  #800020;
+  --wine-claret:    #6f2232;
+  --wine-cabernet:  #5e1224;
+  --wine-merlot:    #7b3f52;
+  --wine-shiraz:    #673147;
+  --wine-oxblood:   #4e0707;
+  --wine-sangria:   #4c0027;
+  --wine-port:      #3c0014;
+  --wine-noir:      #2c0010;
+  --wine-abyss:     #1a0005;
+
+  /* ---------- COLOR: WARM EARTH + ACCENTS ---------- */
+  --accent-terracotta: #e2725b;   /* PRIMARY accent (on dark) */
+  --accent-rust:       #b7410e;
+  --accent-cognac:     #9f381d;
+  --accent-chili:      #c04000;
+  --accent-golden:     #c4a000;   /* sparse — badges, one underline */
+  --accent-mulberry:   #c54b6c;
+
+  /* ---------- COLOR: BROWNS / WOOD ---------- */
+  --wood-mahogany: #4c3024;
+  --wood-walnut:   #5c4033;
+  --wood-coffee:   #6f4e37;
+  --wood-grizzly:  #685542;
+
+  /* ---------- COLOR: NEUTRALS / CREAMS ---------- */
+  /* The ivory/linen terrain. Warm, paper-like, anti-cool-gray. */
+  --neutral-ivory:     #fffff0;
+  --neutral-cream:     #fffdd0;
+  --neutral-linen:     #faf0e6;
+  --neutral-beige:     #f5f5dc;
+  --neutral-champagne: #f7e7ce;
+  --neutral-bisque:    #ffe4c4;
+  --neutral-almond:    #efdecd;
+  --neutral-khaki:     #c3b091;
+  --neutral-latte:     #c8ad8f;   /* secondary muted on dark */
+  --neutral-black:     #000000;
+
+  /* ---------- SEMANTIC (mode-agnostic; override per surface) ---------- */
+  --bg:       var(--im-bg);
+  --bg-elev:  var(--im-bg2);
+  --fg:       var(--im-text);
+  --fg-muted: var(--im-text2);
+  --fg-faint: var(--im-text3);
+  --border:   var(--im-border);
+  --accent:   var(--accent-terracotta);
+  --highlight: var(--accent-golden);
+  --selection-bg: #47a3f3;
+  --selection-fg: #fefefe;
+
+  /* ---------- SPACING (4px grid) ---------- */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;   /* card padding */
+  --space-7:  28px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;   /* topbar height */
+  --space-16: 64px;
+  --space-20: 80px;   /* page gutter top */
+
+  /* ---------- RADII ---------- */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-pill: 999px;
+
+  /* ---------- ELEVATION / SHADOWS ---------- */
+  /* Quiet. Ink-on-paper, not drop-shadow "floating card". */
+  --shadow-text-hero:
+    0 1px 3px rgba(0,0,0,0.95),
+    0 0 28px rgba(0,0,0,0.65),
+    0 0 56px rgba(0,0,0,0.35);
+  --shadow-text-hero-hover:
+    0 2px 6px rgba(0,0,0,1),
+    0 0 36px rgba(0,0,0,0.85),
+    0 0 72px rgba(0,0,0,0.5);
+  --shadow-text-sub:
+    0 1px 2px rgba(0,0,0,0.95),
+    0 0 18px rgba(0,0,0,0.8),
+    0 0 36px rgba(0,0,0,0.45);
+  --shadow-card-dark: 0 8px 32px rgba(0,0,0,0.45);
+  --shadow-card-light: 0 1px 2px rgba(0,0,0,0.04);
+
+  /* Protection gradient (under floating labels on shader) */
+  --protect-gradient:
+    linear-gradient(90deg,
+      rgba(0,0,0,0.78) 0%,
+      rgba(0,0,0,0.42) 52%,
+      rgba(0,0,0,0) 100%);
+
+  /* ---------- MOTION ---------- */
+  --ease-out-quad:   cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-out-cubic:  cubic-bezier(0.215, 0.61, 0.355, 1);
+  --ease-standard:   ease-out;
+  --dur-fast:   150ms;
+  --dur-base:   300ms;
+  --dur-slow:   500ms;
+
+  /* ---------- LAYOUT ---------- */
+  --card-max:  640px;    /* /classic */
+  --prose-max: 640px;    /* blog */
+}
+
+/* --- Selection ------------------------------------------- */
+::selection {
+  background-color: var(--selection-bg);
+  color: var(--selection-fg);
+}
+
+/* --- Semantic elements ----------------------------------- */
+.ds-display {
+  font-family: var(--font-mono);
+  font-weight: var(--weight-light);
+  font-size: var(--text-60);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--lh-tight);
+}
+
+.ds-h1 {
+  font-family: var(--font-mono);
+  font-weight: var(--weight-light);
+  font-size: var(--text-36);
+  letter-spacing: var(--tracking-snug);
+  line-height: var(--lh-snug);
+}
+.ds-h2 {
+  font-family: var(--font-sans);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-24);
+  letter-spacing: var(--tracking-snug);
+  line-height: var(--lh-snug);
+}
+.ds-h3 {
+  font-family: var(--font-sans);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-20);
+  letter-spacing: var(--tracking-snug);
+  line-height: var(--lh-snug);
+}
+
+.ds-eyebrow {
+  font-family: var(--font-mono);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-11);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+.ds-nav-link {
+  font-family: var(--font-mono);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-11);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--im-over-lo);
+  text-decoration: none;
+  transition:
+    letter-spacing var(--dur-base) var(--ease-out-quad),
+    color var(--dur-base) var(--ease-out-quad);
+}
+.ds-nav-link:hover {
+  letter-spacing: 0.2em;
+  color: var(--im-over-hi);
+}
+
+.ds-p {
+  font-family: var(--font-sans);
+  font-weight: var(--weight-regular);
+  font-size: var(--text-14);
+  line-height: var(--lh-prose);
+  color: var(--fg-muted);
+}
+.ds-small {
+  font-size: var(--text-12);
+  line-height: var(--lh-loose);
+  color: var(--fg-muted);
+}
+
+.ds-code,
+.ds-code-inline {
+  font-family: var(--font-code);
+  font-size: 0.92em;
+  font-feature-settings: "liga" 1, "calt" 1;
+}
+.ds-code-inline {
+  padding: 0.1em 0.4em;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.06);
+  color: var(--accent-terracotta);
+}
+
+/* --- Surfaces -------------------------------------------- */
+.ds-surface-immersive {
+  background: var(--im-bg);
+  color: var(--im-text);
+}
+.ds-surface-classic {
+  background: var(--classic-bg);
+  color: var(--classic-fg);
+}
+
+/* --- Caret (immersive subtitle) -------------------------- */
+@keyframes ds-caret-blink {
+  0%, 49.5% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.ds-caret {
+  display: inline-block;
+  width: 1ch;
+  min-width: 9px;
+  height: 2px;
+  background: currentColor;
+  animation: ds-caret-blink 1.08s step-end infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-caret { animation: none; opacity: 0.85; }
+}
+
+</style>
+<style>
+  body { margin: 0; background: var(--im-bg); color: var(--im-text); font-family: var(--font-sans); padding: 64px 72px; min-height: 100vh; }
+  h1.eyebrow { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--im-text2); margin: 0 0 8px; }
+  .title { font-family: var(--font-mono); font-weight: 300; font-size: 48px; letter-spacing: -.02em; line-height: 1.1; margin: 0 0 48px; }
+  .title em { font-style: normal; color: var(--accent-terracotta); }
+  .section { font-family: var(--font-mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--accent-terracotta); margin: 56px 0 20px; padding-bottom: 8px; border-bottom: 1px solid var(--accent-terracotta); }
+  .section:first-of-type { margin-top: 0; }
+  .grid { display: grid; grid-template-columns: 140px 1fr 300px; gap: 24px; align-items: center; padding: 10px 0; border-bottom: 1px dashed var(--im-border); }
+  .token { font-family: var(--font-mono); font-size: 11px; color: var(--im-text); letter-spacing: .04em; }
+  .token .px { color: var(--im-text3); margin-left: 8px; }
+  .bar { height: 12px; background: var(--accent-terracotta); opacity: .8; border-radius: 1px; }
+  .note { font-family: var(--font-sans); font-size: 12px; color: var(--im-text2); line-height: 1.6; }
+  .radii { display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px; }
+  .radii .r { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
+  .radii .box { width: 120px; height: 80px; border: 1px solid var(--im-border); background: var(--im-bg2); }
+  .radii .lbl { font-family: var(--font-mono); font-size: 11px; color: var(--im-text); font-weight: 500; }
+  .radii .meta { font-family: var(--font-mono); font-size: 10px; color: var(--im-text3); }
+  .shadows { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .shadow-card { padding: 36px; border: 1px solid var(--im-border); border-radius: 6px; background: var(--im-bg2); }
+  .shadow-card .lbl { font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--im-text3); margin-bottom: 14px; }
+  .shadow-card .demo { font-family: var(--font-mono); font-weight: 300; font-size: 28px; color: var(--im-text); letter-spacing: -.02em; }
+  .shadow-on-shader { background: radial-gradient(ellipse at 30% 30%, #5e1224 0%, #1a0005 55%, #000 100%); padding: 48px 36px; border-radius: 6px; }
+  .shadow-on-shader .demo { color: #fff; text-shadow: var(--shadow-text-hero); }
+  .shadow-on-shader .demo.sub { font-family: var(--font-code); font-size: 13px; font-weight: 400; margin-top: 12px; text-shadow: var(--shadow-text-sub); }
+  .layout-canvas { background: var(--classic-bg); color: var(--classic-fg); border-radius: 4px; padding: 32px; font-family: var(--font-mono); position: relative; }
+  .layout-card { max-width: 640px; margin: 0 auto; border: 1px solid var(--classic-border); background: #fff; }
+  .layout-card .topbar { height: 48px; border-bottom: 1px solid var(--classic-border); display: flex; align-items: center; padding: 0 24px; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
+  .layout-card .hero-vis { height: 260px; padding: 24px; display: flex; align-items: center; position: relative; }
+  .layout-card .bio-vis { padding: 24px; font-size: 12px; color: var(--classic-fg2); line-height: 1.8; }
+  .layout-card .div-vis { height: 1px; background: var(--classic-border); margin: 0 24px; }
+  .layout-card .foot-vis { border-top: 1px solid var(--classic-border); padding: 14px 24px; font-size: 10px; color: var(--classic-fg3); letter-spacing: .04em; display: flex; justify-content: space-between; }
+  .annot { position: absolute; font-family: var(--font-mono); font-size: 10px; color: var(--accent-terracotta); letter-spacing: .04em; }
+  .ruler { display: flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 11px; color: var(--im-text2); margin-top: 14px; }
+  .ruler .tick { height: 8px; width: 1px; background: var(--accent-terracotta); }
+  .ruler .line { flex: 1; height: 1px; background: var(--im-border); }
+  .caption { font-family: var(--font-sans); font-size: 13px; line-height: 1.7; color: var(--im-text2); max-width: 72ch; margin: -8px 0 20px; }
+</style>
+<link rel="stylesheet" href="_topbar.css">
+</head>
+<body>
+<header class="ds-page-topbar">
+  <a class="ds-page-name" href="index.html"><span>Parvez Kose</span><span class="sep">/</span><span>Design System</span></a>
+  <nav>
+    <a href="index.html">Overview</a>
+    <a href="Brand.html">Brand</a>
+    <a href="Colors.html">Colors</a>
+    <a href="Type.html">Type</a>
+    <a href="Spacing.html" class="current">Spacing</a>
+    <a href="Components.html">Components</a>
+    <a href="UIKit.html">UI Kit</a>
+  </nav>
+</header>
+
+<h1 class="eyebrow">Parvez Kose · Design System</h1>
+<div class="title">Spacing, radii, <em>elevation</em></div>
+
+<div class="section">01 · 4px spacing grid</div>
+<p class="caption">Every layout metric rounds to 4px. Card padding is <code style="color:var(--im-text); font-family:var(--font-mono); font-size:12px">--space-6 (24px)</code>. Topbar height is <code style="color:var(--im-text); font-family:var(--font-mono); font-size:12px">--space-12 (48px)</code>. Page gutter on `/classic` is <code style="color:var(--im-text); font-family:var(--font-mono); font-size:12px">--space-20 (80px)</code>.</p>
+
+<div class="grid"><div class="token">--space-1<span class="px">4</span></div><div><div class="bar" style="width:4px"></div></div><div class="note">Pill / tag inner padding</div></div>
+<div class="grid"><div class="token">--space-2<span class="px">8</span></div><div><div class="bar" style="width:8px"></div></div><div class="note">Icon gap, small inline gap</div></div>
+<div class="grid"><div class="token">--space-3<span class="px">12</span></div><div><div class="bar" style="width:12px"></div></div><div class="note">Paragraph bottom, tag margin</div></div>
+<div class="grid"><div class="token">--space-4<span class="px">16</span></div><div><div class="bar" style="width:16px"></div></div><div class="note">Section-internal gap</div></div>
+<div class="grid"><div class="token">--space-5<span class="px">20</span></div><div><div class="bar" style="width:20px"></div></div><div class="note">Link row gap</div></div>
+<div class="grid"><div class="token">--space-6<span class="px">24</span></div><div><div class="bar" style="width:24px"></div></div><div class="note">Card padding · divider inset</div></div>
+<div class="grid"><div class="token">--space-8<span class="px">32</span></div><div><div class="bar" style="width:32px"></div></div><div class="note">Section spacing</div></div>
+<div class="grid"><div class="token">--space-10<span class="px">40</span></div><div><div class="bar" style="width:40px"></div></div><div class="note">Terracotta rule width (above headings)</div></div>
+<div class="grid"><div class="token">--space-12<span class="px">48</span></div><div><div class="bar" style="width:48px"></div></div><div class="note">Topbar height</div></div>
+<div class="grid"><div class="token">--space-16<span class="px">64</span></div><div><div class="bar" style="width:64px"></div></div><div class="note">Major section break</div></div>
+<div class="grid"><div class="token">--space-20<span class="px">80</span></div><div><div class="bar" style="width:80px"></div></div><div class="note">`/classic` top gutter</div></div>
+
+<div class="section">02 · Radii — understated</div>
+<p class="caption">Avoid heavy `2xl / 3xl` rounding. The immersive hero uses <strong>zero radius</strong> and corner brackets instead.</p>
+<div class="radii">
+  <div class="r"><div class="box" style="border-radius:4px"></div><div class="lbl">sm</div><div class="meta">--radius-sm · 4px</div></div>
+  <div class="r"><div class="box" style="border-radius:6px"></div><div class="lbl">md</div><div class="meta">--radius-md · 6px</div></div>
+  <div class="r"><div class="box" style="border-radius:8px"></div><div class="lbl">lg</div><div class="meta">--radius-lg · 8px</div></div>
+  <div class="r"><div class="box" style="border-radius:12px"></div><div class="lbl">xl</div><div class="meta">--radius-xl · 12px</div></div>
+  <div class="r"><div class="box" style="border-radius:999px"></div><div class="lbl">pill</div><div class="meta">--radius-pill</div></div>
+</div>
+
+<div class="section">03 · Elevation — ink on paper</div>
+<p class="caption">Most surfaces are a 1px border, no shadow. The only functional shadows are <em>text</em> shadows — stacked, to cut through the WebGL terrain without a surrounding pill.</p>
+
+<div class="shadows">
+  <div class="shadow-card">
+    <div class="lbl">--shadow-card-light</div>
+    <div style="background:var(--classic-bg); padding:20px; border:1px solid var(--classic-border); border-radius:4px; box-shadow: var(--shadow-card-light); color:var(--classic-fg);">
+      <div style="font-family:var(--font-mono); font-weight:300; font-size:22px">Hairline over bone-paper</div>
+      <div style="font-family:var(--font-sans); font-size:12px; color:var(--classic-fg2); margin-top:8px">Classic card elevation — just a 1px border, a whisper of shadow.</div>
+    </div>
+  </div>
+
+  <div class="shadow-card shadow-on-shader">
+    <div class="lbl" style="color:rgba(255,255,255,.55)">--shadow-text-hero · over shader</div>
+    <div class="demo">Parvez Kose</div>
+    <div class="demo sub">Designing interfaces for intelligence</div>
+    <div style="font-family:var(--font-mono); font-size:10px; color:rgba(255,255,255,.5); letter-spacing:.08em; margin-top:20px">
+      0 1px 3px rgba(0,0,0,.95) · 0 0 28px rgba(0,0,0,.65) · 0 0 56px rgba(0,0,0,.35)
+    </div>
+  </div>
+</div>
+
+<div class="section">04 · Layout — classic card anatomy</div>
+<p class="caption">The 640px card is the canonical light layout. Note that dividers are <strong>inset 24px</strong> from both sides — they never run edge-to-edge.</p>
+<div class="layout-canvas">
+  <div class="layout-card">
+    <div class="topbar">Parvez Kose</div>
+    <div class="hero-vis">
+      <div>
+        <div style="font-family:var(--font-mono); font-weight:300; font-size:28px; letter-spacing:-.01em">Parvez Kose</div>
+        <div style="font-family:var(--font-mono); font-size:11px; color:var(--classic-fg2); margin-top:6px">Staff Software Engineer<br>AI Native Full Stack · Front-End</div>
+      </div>
+    </div>
+    <div class="div-vis"></div>
+    <div class="bio-vis">I design and build AI-powered systems that automate complex workflows and optimize costs at scale.</div>
+    <div class="div-vis"></div>
+    <div style="padding:4px 24px 28px; display:flex; gap:20px; font-family:var(--font-mono); font-size:13px; color:var(--classic-fg2)">
+      <span>Substack</span><span>Medium</span><span>LinkedIn</span><span>GitHub</span>
+    </div>
+    <div class="foot-vis"><span>© 2026</span><span>New York, NY</span></div>
+  </div>
+
+  <div class="ruler"><span>0</span><div class="line"></div><span>640px · max</span></div>
+  <div style="font-family:var(--font-mono); font-size:10px; color:var(--accent-terracotta); letter-spacing:.06em; margin-top:8px">
+    TOPBAR 48 · HERO 260 · DIVIDER 1 · BIO ~80 · DIVIDER 1 · LINKS ~60 · FOOTER ~40
+  </div>
+</div>
+
+</body>
+</html>

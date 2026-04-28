@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Components — Parvez Kose Design System</title>
+<style id="ds-tokens-inline">
+/* ============================================================
+   Parvez Kose — Design System: Colors & Type
+   ============================================================
+   Dual palette: Immersive (dark / volcanic) and Classic (light).
+   Material, tactile, anti-template. Rooted in the volcanic hero
+   shader: crimson peaks, black valleys, ivory/linen terrain.
+   ============================================================ */
+
+/* --- Fonts ------------------------------------------------ */
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("fonts/IBMPlexSans-Variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "IBM Plex Serif";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/IBMPlexSerif-Variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("fonts/JetBrainsMono-Variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Fira Code";
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url("fonts/FiraCode-Variable.woff2") format("woff2");
+}
+
+:root {
+  /* ---------- TYPE ---------- */
+  --font-sans:    "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif:   "IBM Plex Serif", ui-serif, Georgia, serif;
+  --font-mono:    "JetBrains Mono", "Fira Code", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-code:    "Fira Code", "JetBrains Mono", ui-monospace, monospace;
+
+  /* Type scale (rem, 16px base) */
+  --text-10:   0.625rem;     /* micro labels, eyebrows */
+  --text-11:   0.6875rem;    /* footer, small caps nav */
+  --text-12:   0.75rem;      /* bio / body on classic card */
+  --text-13:   0.8125rem;    /* links */
+  --text-14:   0.875rem;     /* prose base */
+  --text-16:   1rem;         /* base */
+  --text-18:   1.125rem;     /* intro */
+  --text-20:   1.25rem;      /* H4 */
+  --text-24:   1.5rem;       /* H3 */
+  --text-28:   1.75rem;      /* classic card hero name */
+  --text-36:   2.25rem;      /* H2 / blog title */
+  --text-48:   3rem;         /* immersive hero sm */
+  --text-60:   3.75rem;      /* immersive hero md */
+  --text-72:   4.5rem;       /* display */
+
+  /* Weights — restrained: never default to 700 */
+  --weight-light:    300;
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+
+  /* Letter-spacing: tight on display, wide on eyebrows */
+  --tracking-tight:   -0.02em;
+  --tracking-snug:    -0.01em;
+  --tracking-normal:  0;
+  --tracking-wide:    0.04em;
+  --tracking-wider:   0.08em;
+  --tracking-widest:  0.12em;
+  --tracking-mono-caps: 0.14em; /* immersive nav + tagline */
+
+  /* Line heights */
+  --lh-tight:  1.15;
+  --lh-snug:   1.3;
+  --lh-base:   1.5;
+  --lh-prose:  1.7;
+  --lh-loose:  1.8;
+
+  /* ---------- COLOR: CLASSIC (light) ---------- */
+  /* Used on /classic — bone-paper, graphite ink, mono */
+  --classic-bg:      #f1f2f2;
+  --classic-fg:      #1a1a1a;
+  --classic-fg2:     #555555;
+  --classic-fg3:     #999999;
+  --classic-border:  #d8d9d9;
+
+  /* ---------- COLOR: IMMERSIVE (dark) ---------- */
+  /* Used on / (main landing) — black over WebGL shader */
+  --im-bg:         #0a0a0a;   /* page base (behind shader) */
+  --im-bg2:        #141414;   /* elevated surfaces, cards */
+  --im-bg3:        #1a1a1a;   /* hover on bg2, inputs */
+  --im-text:       #e8e4e0;   /* warm white, NOT pure white */
+  --im-text2:      #9a9590;   /* muted — bio, metadata */
+  --im-text3:      #5a5550;   /* tertiary — footer, disabled */
+  --im-border:     #2a2520;   /* warm-tinted hairline */
+  --im-border2:    rgba(200, 173, 143, 0.15); /* latte @ 15% — cards on shader */
+
+  /* White-on-shader overlay text (immersive hero copy) */
+  --im-over-hi:    rgba(255, 255, 255, 0.95);
+  --im-over-md:    rgba(255, 255, 255, 0.88);
+  --im-over-lo:    rgba(255, 255, 255, 0.55);
+
+  /* ---------- COLOR: WINES (red / crimson / burgundy) ---------- */
+  /* The red spine of the brand. Drawn from the shader's valleys + peaks. */
+  --wine-crimson:   #dc143c;
+  --wine-raspberry: #e30b5c;
+  --wine-garnet:    #b21e35;
+  --wine-ruby:      #9b111e;
+  --wine-wine:      #722f37;   /* signature mid-wine */
+  --wine-burgundy:  #800020;
+  --wine-claret:    #6f2232;
+  --wine-cabernet:  #5e1224;
+  --wine-merlot:    #7b3f52;
+  --wine-shiraz:    #673147;
+  --wine-oxblood:   #4e0707;
+  --wine-sangria:   #4c0027;
+  --wine-port:      #3c0014;
+  --wine-noir:      #2c0010;
+  --wine-abyss:     #1a0005;
+
+  /* ---------- COLOR: WARM EARTH + ACCENTS ---------- */
+  --accent-terracotta: #e2725b;   /* PRIMARY accent (on dark) */
+  --accent-rust:       #b7410e;
+  --accent-cognac:     #9f381d;
+  --accent-chili:      #c04000;
+  --accent-golden:     #c4a000;   /* sparse — badges, one underline */
+  --accent-mulberry:   #c54b6c;
+
+  /* ---------- COLOR: BROWNS / WOOD ---------- */
+  --wood-mahogany: #4c3024;
+  --wood-walnut:   #5c4033;
+  --wood-coffee:   #6f4e37;
+  --wood-grizzly:  #685542;
+
+  /* ---------- COLOR: NEUTRALS / CREAMS ---------- */
+  /* The ivory/linen terrain. Warm, paper-like, anti-cool-gray. */
+  --neutral-ivory:     #fffff0;
+  --neutral-cream:     #fffdd0;
+  --neutral-linen:     #faf0e6;
+  --neutral-beige:     #f5f5dc;
+  --neutral-champagne: #f7e7ce;
+  --neutral-bisque:    #ffe4c4;
+  --neutral-almond:    #efdecd;
+  --neutral-khaki:     #c3b091;
+  --neutral-latte:     #c8ad8f;   /* secondary muted on dark */
+  --neutral-black:     #000000;
+
+  /* ---------- SEMANTIC (mode-agnostic; override per surface) ---------- */
+  --bg:       var(--im-bg);
+  --bg-elev:  var(--im-bg2);
+  --fg:       var(--im-text);
+  --fg-muted: var(--im-text2);
+  --fg-faint: var(--im-text3);
+  --border:   var(--im-border);
+  --accent:   var(--accent-terracotta);
+  --highlight: var(--accent-golden);
+  --selection-bg: #47a3f3;
+  --selection-fg: #fefefe;
+
+  /* ---------- SPACING (4px grid) ---------- */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;   /* card padding */
+  --space-7:  28px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;   /* topbar height */
+  --space-16: 64px;
+  --space-20: 80px;   /* page gutter top */
+
+  /* ---------- RADII ---------- */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-pill: 999px;
+
+  /* ---------- ELEVATION / SHADOWS ---------- */
+  /* Quiet. Ink-on-paper, not drop-shadow "floating card". */
+  --shadow-text-hero:
+    0 1px 3px rgba(0,0,0,0.95),
+    0 0 28px rgba(0,0,0,0.65),
+    0 0 56px rgba(0,0,0,0.35);
+  --shadow-text-hero-hover:
+    0 2px 6px rgba(0,0,0,1),
+    0 0 36px rgba(0,0,0,0.85),
+    0 0 72px rgba(0,0,0,0.5);
+  --shadow-text-sub:
+    0 1px 2px rgba(0,0,0,0.95),
+    0 0 18px rgba(0,0,0,0.8),
+    0 0 36px rgba(0,0,0,0.45);
+  --shadow-card-dark: 0 8px 32px rgba(0,0,0,0.45);
+  --shadow-card-light: 0 1px 2px rgba(0,0,0,0.04);
+
+  /* Protection gradient (under floating labels on shader) */
+  --protect-gradient:
+    linear-gradient(90deg,
+      rgba(0,0,0,0.78) 0%,
+      rgba(0,0,0,0.42) 52%,
+      rgba(0,0,0,0) 100%);
+
+  /* ---------- MOTION ---------- */
+  --ease-out-quad:   cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-out-cubic:  cubic-bezier(0.215, 0.61, 0.355, 1);
+  --ease-standard:   ease-out;
+  --dur-fast:   150ms;
+  --dur-base:   300ms;
+  --dur-slow:   500ms;
+
+  /* ---------- LAYOUT ---------- */
+  --card-max:  640px;    /* /classic */
+  --prose-max: 640px;    /* blog */
+}
+
+/* --- Selection ------------------------------------------- */
+::selection {
+  background-color: var(--selection-bg);
+  color: var(--selection-fg);
+}
+
+/* --- Semantic elements ----------------------------------- */
+.ds-display {
+  font-family: var(--font-mono);
+  font-weight: var(--weight-light);
+  font-size: var(--text-60);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--lh-tight);
+}
+
+.ds-h1 {
+  font-family: var(--font-mono);
+  font-weight: var(--weight-light);
+  font-size: var(--text-36);
+  letter-spacing: var(--tracking-snug);
+  line-height: var(--lh-snug);
+}
+.ds-h2 {
+  font-family: var(--font-sans);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-24);
+  letter-spacing: var(--tracking-snug);
+  line-height: var(--lh-snug);
+}
+.ds-h3 {
+  font-family: var(--font-sans);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-20);
+  letter-spacing: var(--tracking-snug);
+  line-height: var(--lh-snug);
+}
+
+.ds-eyebrow {
+  font-family: var(--font-mono);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-11);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+.ds-nav-link {
+  font-family: var(--font-mono);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-11);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--im-over-lo);
+  text-decoration: none;
+  transition:
+    letter-spacing var(--dur-base) var(--ease-out-quad),
+    color var(--dur-base) var(--ease-out-quad);
+}
+.ds-nav-link:hover {
+  letter-spacing: 0.2em;
+  color: var(--im-over-hi);
+}
+
+.ds-p {
+  font-family: var(--font-sans);
+  font-weight: var(--weight-regular);
+  font-size: var(--text-14);
+  line-height: var(--lh-prose);
+  color: var(--fg-muted);
+}
+.ds-small {
+  font-size: var(--text-12);
+  line-height: var(--lh-loose);
+  color: var(--fg-muted);
+}
+
+.ds-code,
+.ds-code-inline {
+  font-family: var(--font-code);
+  font-size: 0.92em;
+  font-feature-settings: "liga" 1, "calt" 1;
+}
+.ds-code-inline {
+  padding: 0.1em 0.4em;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.06);
+  color: var(--accent-terracotta);
+}
+
+/* --- Surfaces -------------------------------------------- */
+.ds-surface-immersive {
+  background: var(--im-bg);
+  color: var(--im-text);
+}
+.ds-surface-classic {
+  background: var(--classic-bg);
+  color: var(--classic-fg);
+}
+
+/* --- Caret (immersive subtitle) -------------------------- */
+@keyframes ds-caret-blink {
+  0%, 49.5% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.ds-caret {
+  display: inline-block;
+  width: 1ch;
+  min-width: 9px;
+  height: 2px;
+  background: currentColor;
+  animation: ds-caret-blink 1.08s step-end infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-caret { animation: none; opacity: 0.85; }
+}
+
+</style>
+<style>
+  body { margin: 0; background: var(--im-bg); color: var(--im-text); font-family: var(--font-sans); padding: 64px 72px; min-height: 100vh; }
+  h1.eyebrow { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--im-text2); margin: 0 0 8px; }
+  .title { font-family: var(--font-mono); font-weight: 300; font-size: 48px; letter-spacing: -.02em; line-height: 1.1; margin: 0 0 48px; }
+  .title em { font-style: normal; color: var(--accent-terracotta); }
+  .section { font-family: var(--font-mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--accent-terracotta); margin: 56px 0 20px; padding-bottom: 8px; border-bottom: 1px solid var(--accent-terracotta); }
+  .section:first-of-type { margin-top: 0; }
+  .card { border: 1px solid var(--im-border); background: var(--im-bg2); border-radius: 6px; padding: 24px; margin-bottom: 24px; }
+  .card .lbl { font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--im-text3); margin-bottom: 16px; display: flex; justify-content: space-between; }
+  .card .lbl .code { color: var(--accent-terracotta); font-weight: 500; }
+
+  /* Topbar */
+  .topbar { height: 48px; border: 1px solid var(--im-border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; border-radius: 4px; background: var(--im-bg); }
+  .topbar .name { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--im-text); }
+  .topbar .toggle { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--im-text3); cursor: pointer; transition: color .3s; }
+  .topbar .toggle:hover { color: var(--im-text); }
+  .topbar .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  /* Immersive hero frame */
+  .hero-frame-demo { position: relative; background: radial-gradient(ellipse at 40% 35%, #5e1224 0%, #1a0005 45%, #000 85%); border-radius: 6px; padding: 80px 40px; overflow: hidden; }
+  .hero-frame { display: inline-flex; flex-direction: column; align-items: center; padding: 32px 44px; position: relative; }
+  .hero-frame::before, .hero-frame::after { content: ""; position: absolute; width: 28px; height: 28px; border-color: rgba(255,255,255,.8); border-style: solid; }
+  .hero-frame::before { top: 0; left: 0; border-width: 2px 0 0 2px; }
+  .hero-frame::after { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
+  .hero-frame .h1 { font-family: var(--font-mono); font-weight: 300; font-size: 60px; letter-spacing: -.02em; color: #fff; text-shadow: var(--shadow-text-hero); line-height: 1; margin-bottom: 14px; }
+  .hero-frame .sub { font-family: var(--font-code); font-size: 16px; color: rgba(255,255,255,.92); text-shadow: var(--shadow-text-sub); }
+  .hero-frame .sub .caret { display: inline-block; width: 10px; height: 2px; background: currentColor; margin-left: 2px; vertical-align: 1px; animation: ds-caret-blink 1.08s step-end infinite; }
+  .hero-frame .phi-toggle { font-family: var(--font-code); font-size: 14px; color: rgba(255,255,255,.8); margin-top: 22px; cursor: pointer; text-shadow: var(--shadow-text-sub); }
+  .hero-frame .phi-body { max-width: 440px; margin-top: 14px; padding: 14px 18px; border: 1px solid rgba(255,255,255,.12); border-radius: 6px; background: rgba(0,0,0,.5); backdrop-filter: blur(6px); font-family: var(--font-code); font-size: 12px; line-height: 1.7; color: rgba(255,255,255,.92); text-align: left; }
+
+  /* Nav */
+  .nav-demo { display: flex; gap: 24px; flex-wrap: wrap; padding: 16px 20px; background: #000; border-radius: 4px; }
+  .nav-demo a { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.55); text-decoration: none; transition: letter-spacing .3s var(--ease-out-quad), color .3s; }
+  .nav-demo a:hover { letter-spacing: .2em; color: rgba(255,255,255,.9); cursor: pointer; }
+
+  /* Dividers */
+  .divider-demo .box { background: var(--im-bg); padding: 0; border: 1px solid var(--im-border); border-radius: 4px; }
+  .divider-demo .row { padding: 14px 24px; font-family: var(--font-mono); font-size: 12px; color: var(--im-text2); letter-spacing: .04em; }
+  .divider-demo .div-inset { height: 1px; background: var(--im-border); margin: 0 24px; }
+
+  /* Link row */
+  .linkrow { display: flex; gap: 20px; flex-wrap: wrap; padding: 16px 0; }
+  .linkrow a { font-family: var(--font-mono); font-size: 13px; font-weight: 500; color: var(--im-text2); text-decoration: none; padding: 6px 0; transition: color .2s; }
+  .linkrow a:hover { color: var(--im-text); cursor: pointer; }
+
+  /* Pills */
+  .pills { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .pill { display: inline-block; padding: 4px 10px; border-radius: 4px; font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: .02em; }
+  .pill.terra { background: rgba(226,114,91,.12); color: var(--accent-terracotta); }
+  .pill.gold { background: rgba(196,160,0,.14); color: var(--accent-golden); }
+  .pill.latte { background: rgba(200,173,143,.15); color: var(--neutral-latte); }
+  .pill.wine { background: rgba(114,47,55,.3); color: #d98a94; }
+  .pill.framed { background: transparent; border: 1px solid var(--accent-terracotta); color: var(--accent-terracotta); }
+
+  /* Buttons */
+  .btns { display: flex; flex-wrap: wrap; gap: 14px; }
+  .btn-ghost { font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--im-text); background: transparent; border: 0; border-bottom: 1px solid var(--im-text3); padding: 6px 2px; cursor: pointer; transition: border-color .2s, letter-spacing .3s var(--ease-out-quad), color .2s; }
+  .btn-ghost:hover { border-color: var(--accent-terracotta); color: var(--accent-terracotta); letter-spacing: .12em; }
+  .btn-framed { font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--im-text); background: transparent; border: 1px solid var(--im-border); padding: 10px 20px; cursor: pointer; border-radius: 4px; transition: all .25s; }
+  .btn-framed:hover { border-color: var(--accent-terracotta); color: var(--accent-terracotta); }
+  .btn-terminal { font-family: var(--font-code); font-size: 13px; color: var(--accent-terracotta); background: transparent; border: 0; padding: 6px 0; cursor: pointer; letter-spacing: .02em; }
+  .btn-terminal:hover { color: var(--accent-golden); }
+
+  /* Footer */
+  .footer-demo { border-top: 1px solid var(--im-border); padding: 14px 24px; display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 10px; color: var(--im-text3); letter-spacing: .04em; background: var(--im-bg); border-radius: 0 0 4px 4px; }
+
+  /* Overlay card (project) */
+  .proj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+  .proj-bg { background: radial-gradient(ellipse at 30% 40%, #A9333C 0%, #4a0f18 55%, #1a0005 100%); padding: 40px 28px; border-radius: 6px; }
+  .proj-card { background: rgba(10,10,10,.75); border: 1px solid rgba(200,173,143,.15); border-radius: 8px; padding: 20px; backdrop-filter: blur(12px); }
+  .proj-card .t { font-family: var(--font-sans); font-size: 15px; font-weight: 500; color: #fff; margin-bottom: 4px; }
+  .proj-card .m { font-family: var(--font-mono); font-size: 11px; color: var(--neutral-latte); margin-bottom: 12px; letter-spacing: .02em; }
+  .proj-card .r { width: 28px; height: 1px; background: rgba(226,114,91,.5); margin-bottom: 12px; }
+  .proj-card .d { font-family: var(--font-sans); font-size: 12px; color: var(--im-text2); line-height: 1.6; }
+
+  /* DotGrid placeholder */
+  .dotgrid-mini { width: 100%; height: 140px; background: var(--classic-bg); border: 1px solid var(--classic-border); border-radius: 4px; padding: 12px; position: relative; }
+  .dotgrid-mini canvas { width: 100%; height: 100%; display: block; }
+
+  /* Classic card */
+  .classic-demo { background: var(--classic-bg); color: var(--classic-fg); padding: 32px; border-radius: 4px; font-family: var(--font-mono); }
+  .classic-demo .card2 { max-width: 560px; margin: 0 auto; border: 1px solid var(--classic-border); background: #fff; }
+  .classic-demo .tb { height: 48px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; border-bottom: 1px solid var(--classic-border); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
+  .classic-demo .tb .tg { font-size: 10px; color: var(--classic-fg3); letter-spacing: .08em; display: flex; align-items: center; gap: 6px; }
+  .classic-demo .tb .tg::before { content:""; width:6px; height:6px; border-radius:50%; background: var(--classic-fg3); }
+  .classic-demo .hero { height: 200px; display: flex; align-items: center; padding: 0 24px; gap: 24px; }
+  .classic-demo .hero .l { flex: 1; }
+  .classic-demo .hero .l .nm { font-size: 26px; font-weight: 300; letter-spacing: -.01em; }
+  .classic-demo .hero .l .rl { font-size: 11px; color: var(--classic-fg2); margin-top: 6px; line-height: 1.6; }
+  .classic-demo .hero .r { width: 180px; height: 140px; }
+  .classic-demo .div { height: 1px; background: var(--classic-border); margin: 0 24px; }
+  .classic-demo .bio { padding: 20px 24px; font-size: 12px; color: var(--classic-fg2); line-height: 1.8; }
+  .classic-demo .lr { padding: 4px 24px 24px; display: flex; gap: 20px; font-size: 13px; font-weight: 500; color: var(--classic-fg2); }
+  .classic-demo .ft { border-top: 1px solid var(--classic-border); padding: 14px 24px; display: flex; justify-content: space-between; font-size: 10px; color: var(--classic-fg3); letter-spacing: .04em; }
+
+  /* Protection gradient */
+  .prot-demo { background: radial-gradient(circle at 40% 50%, #A9333C 0%, #4a0f18 60%, #1a0005 100%); padding: 40px; border-radius: 6px; display: flex; justify-content: center; }
+  .prot-label { padding: 12px 28px; background: linear-gradient(90deg, rgba(0,0,0,.78) 0%, rgba(0,0,0,.42) 52%, rgba(0,0,0,0) 100%); border-radius: 4px; display: flex; flex-direction: column; gap: 4px; font-family: var(--font-code); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.88); text-shadow: 0 1px 12px rgba(0,0,0,.85); }
+  .prot-label .row2 { letter-spacing: .16em; }
+</style>
+<link rel="stylesheet" href="_topbar.css">
+</head>
+<body>
+<header class="ds-page-topbar">
+  <a class="ds-page-name" href="index.html"><span>Parvez Kose</span><span class="sep">/</span><span>Design System</span></a>
+  <nav>
+    <a href="index.html">Overview</a>
+    <a href="Brand.html">Brand</a>
+    <a href="Colors.html">Colors</a>
+    <a href="Type.html">Type</a>
+    <a href="Spacing.html">Spacing</a>
+    <a href="Components.html" class="current">Components</a>
+    <a href="UIKit.html">UI Kit</a>
+  </nav>
+</header>
+
+<h1 class="eyebrow">Parvez Kose · Design System</h1>
+<div class="title">Components — <em>small kit, tuned</em></div>
+
+<div class="section">01 · TopBar</div>
+<div class="card">
+  <div class="lbl">TopBar · 48px · 1px bottom border <span class="code">.ds-topbar</span></div>
+  <div class="topbar">
+    <span class="name">Parvez Kose</span>
+    <span class="toggle"><span class="dot"></span><span>Immersive</span></span>
+  </div>
+</div>
+
+<div class="section">02 · Immersive HeroFrame</div>
+<div class="card">
+  <div class="lbl">Bracket-cornered frame · hero copy over shader</div>
+  <div class="hero-frame-demo" style="display:flex; justify-content:center">
+    <div class="hero-frame">
+      <div class="h1">Parvez Kose</div>
+      <div class="sub">Designing interfaces for intelligence<span class="caret"></span></div>
+      <div class="phi-toggle">[+] Design Philosophy</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">03 · Nav · caps mono with tracking hover</div>
+<div class="card">
+  <div class="lbl">Hover expands letter-spacing from 0.12em → 0.2em</div>
+  <div class="nav-demo">
+    <a>← Home</a><a>GitHub</a><a>LinkedIn</a><a>Substack</a><a>Medium</a>
+  </div>
+</div>
+
+<div class="section">04 · Divider — inset 24px</div>
+<div class="card">
+  <div class="lbl">Dividers never run edge-to-edge</div>
+  <div class="divider-demo">
+    <div class="box">
+      <div class="row">First row</div>
+      <div class="div-inset"></div>
+      <div class="row">Second row</div>
+      <div class="div-inset"></div>
+      <div class="row">Third row</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">05 · LinkRow</div>
+<div class="card">
+  <div class="lbl">Horizontal inline, gap 20px, mono 13/500</div>
+  <div class="linkrow">
+    <a>Substack</a><a>Medium</a><a>LinkedIn</a><a>GitHub</a>
+  </div>
+</div>
+
+<div class="section">06 · Pills — 12% fill + matching text</div>
+<div class="card">
+  <div class="lbl">Never solid. Accent = text color = border.</div>
+  <div class="pills">
+    <span class="pill terra">React</span>
+    <span class="pill gold">WebGL</span>
+    <span class="pill latte">Design systems</span>
+    <span class="pill wine">A2UI</span>
+    <span class="pill framed">Featured</span>
+  </div>
+</div>
+
+<div class="section">07 · Philosophy panel</div>
+<div class="card">
+  <div class="lbl">Terminal-style disclosure · [+] toggled to [−]</div>
+  <div class="hero-frame-demo" style="padding: 40px; display:flex; justify-content:center">
+    <div class="hero-frame" style="padding: 20px 24px">
+      <div style="font-family:var(--font-code); font-size:14px; color:rgba(255,255,255,.85); margin-bottom: 12px; cursor:pointer; text-shadow: var(--shadow-text-sub)">[−] Design Philosophy</div>
+      <div class="phi-body">
+        <p style="margin:0 0 10px">I build AI-augmented interfaces and agentic systems with a deliberate break from generic SaaS design: craft rooted in culture and material honesty.</p>
+        <p style="margin:0">Visual interpretability shapes how I build. I'm drawn to what lives under the surface and what the model is actually doing. And I think the people using it should too.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">08 · Buttons</div>
+<div class="card">
+  <div class="lbl">Three kinds · no filled primary</div>
+  <div class="btns">
+    <button class="btn-ghost">View work</button>
+    <button class="btn-framed">Read essay</button>
+    <button class="btn-terminal">[+] Open details</button>
+  </div>
+</div>
+
+<div class="section">09 · Overlay project cards (on shader)</div>
+<div class="card">
+  <div class="lbl">Latte border @ 15% · terracotta hairline · never black pill</div>
+  <div class="proj-bg">
+    <div class="proj-grid">
+      <div class="proj-card">
+        <div class="t">Generative UI prototype</div>
+        <div class="m">2025 — Design engineering</div>
+        <div class="r"></div>
+        <div class="d">Declarative component generation grounded in the A2UI protocol. Focus on render safety and cost awareness.</div>
+      </div>
+      <div class="proj-card">
+        <div class="t">Visual interpretability kit</div>
+        <div class="m">2024 — Research</div>
+        <div class="r"></div>
+        <div class="d">A small set of probes that surface what the model is looking at, down to the attention head.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">10 · Protection gradient (over shader)</div>
+<div class="card">
+  <div class="lbl">Left→transparent under floating labels · avoids solid pills</div>
+  <div class="prot-demo">
+    <div class="prot-label">
+      <span>Agentic systems.</span>
+      <span class="row2">Generative UI.</span>
+      <span class="row2">Visual interpretability.</span>
+    </div>
+  </div>
+</div>
+
+<div class="section">11 · Footer strip</div>
+<div class="card">
+  <div class="lbl">Top-bordered · © year left · location right</div>
+  <div class="footer-demo"><span>© 2026</span><span>New York, NY</span></div>
+</div>
+
+<div class="section">12 · Classic card — full composition</div>
+<div class="card">
+  <div class="lbl">`/classic` — 640px single-column · JetBrains Mono only</div>
+  <div class="classic-demo">
+    <div class="card2">
+      <div class="tb"><span>Parvez Kose</span><span class="tg">Immersive</span></div>
+      <div class="hero">
+        <div class="l"><div class="nm">Parvez Kose</div><div class="rl">Staff Software Engineer<br>AI Native Full Stack · Front-End</div></div>
+        <div class="r"><div class="dotgrid-mini"><canvas id="dotmini"></canvas></div></div>
+      </div>
+      <div class="div"></div>
+      <div class="bio">I design and build AI-powered systems that automate complex workflows and optimize costs at scale. I bring a designer's eye to engineering problems, with deep roots in data visualization, motion design, and generative interfaces.</div>
+      <div class="div"></div>
+      <div class="lr"><span>Substack</span><span>Medium</span><span>LinkedIn</span><span>GitHub</span></div>
+      <div class="ft"><span>© 2026</span><span>New York, NY</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // DotGrid — simplified version of the tuned signature animation on /classic
+  const cv = document.getElementById('dotmini');
+  if (cv) {
+    const ctx = cv.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    function size() {
+      const r = cv.parentElement.getBoundingClientRect();
+      cv.width = r.width * dpr; cv.height = r.height * dpr;
+      cv.style.width = r.width + 'px'; cv.style.height = r.height + 'px';
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+    }
+    size(); window.addEventListener('resize', size);
+    const GAP = 9, SZ = 3;
+    let cur = { c: 10, r: 5, vis: true }, blink = 0, move = 0, resolves = [];
+    function rand(a,b){return a+Math.random()*(b-a);}
+    for (let i = 0; i < 3; i++) resolves.push({c: Math.floor(rand(0, 20)), r: Math.floor(rand(0, 12)), sz: Math.floor(rand(2,5)), el: 0, dur: rand(800,1600)});
+    let last = 0;
+    function draw(t) {
+      requestAnimationFrame(draw);
+      const dt = last ? Math.min(t - last, 50) : 16; last = t;
+      blink += dt; if (blink > 500) { cur.vis = !cur.vis; blink = 0; }
+      move += dt; if (move > 2000) {
+        cur.c = Math.floor(rand(2, 18)); cur.r = Math.floor(rand(1, 10)); move = 0;
+      }
+      const rect = cv.parentElement.getBoundingClientRect();
+      ctx.clearRect(0,0,rect.width, rect.height);
+      const cols = Math.floor((rect.width - 24) / GAP), rows = Math.floor((rect.height - 24) / GAP);
+      const ox = (rect.width - (cols-1)*GAP)/2, oy = (rect.height - (rows-1)*GAP)/2;
+      resolves.forEach(res => { res.el += dt; if (res.el >= res.dur) { res.c = Math.floor(rand(0, cols-res.sz)); res.r = Math.floor(rand(0, rows-res.sz)); res.el = 0; res.dur = rand(800,1600); } });
+      for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+        let a = 0.1;
+        resolves.forEach(res => { if (c>=res.c && c<res.c+res.sz && r>=res.r && r<res.r+res.sz) a = Math.max(a, 0.1 + Math.sin((res.el/res.dur)*Math.PI)*0.25); });
+        const dist = Math.hypot(c-cur.c, r-cur.r); if (dist<3) a = Math.max(a, 0.1 + (1-dist/3)*0.2);
+        ctx.fillStyle = `rgba(140,140,140,${a})`;
+        ctx.beginPath(); ctx.roundRect(ox + c*GAP - SZ/2, oy + r*GAP - SZ/2, SZ, SZ, 1); ctx.fill();
+      }
+      if (cur.vis) {
+        ctx.fillStyle = 'rgba(60,60,60,0.15)'; ctx.beginPath(); ctx.roundRect(ox + cur.c*GAP - 5, oy + cur.r*GAP - 5, 10, 10, 2); ctx.fill();
+        ctx.fillStyle = 'rgba(60,60,60,0.8)'; ctx.beginPath(); ctx.roundRect(ox + cur.c*GAP - SZ/2, oy + cur.r*GAP - SZ/2, SZ, SZ, 1); ctx.fill();
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+</script>
+</body>
+</html>
