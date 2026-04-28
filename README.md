@@ -1,10 +1,9 @@
 # parvezkose.com
 
+→ [parvezkose.com](https://parvezkose.com) — A portfolio site for AI-powered interfaces,  
+agentic systems, generative UI, and design–engineering.
+
 [![parvezkose.com — immersive WebGL landing](.github/cover.jpg)](https://parvezkose.com)
-
-Agentic interfaces, generative UI, design–engineering.
-
-→ [parvezkose.com](https://parvezkose.com)
 
 ---
 
