@@ -15,6 +15,34 @@ const DESIGN_PHILOSOPHY = [
   "Visual interpretability shapes how I build. I'm drawn to what lives under the surface and what the model is actually doing. And I think the people using it should too.",
 ] as const;
 
+// Terminal index — rendered inside the [+] Design Philosophy panel as
+// the navigation surface into the design system. Replaces the single
+// "View Design System →" link so users see this is multi-page, not
+// a one-link footnote. Concept D from the v2.1 gallery exploration.
+type SpecRow = Readonly<{
+  slug: string;          // numbered folder label, e.g. "01-overview"
+  href: string;          // destination URL (relative for /design-system pages)
+  event: string;         // PostHog event payload identifier
+  badge?: "LIVE";        // optional pin (atoms only)
+}>;
+
+const SPEC_INDEX: ReadonlyArray<SpecRow> = [
+  { slug: "01-overview",   href: "/design-system/",            event: "overview" },
+  { slug: "02-brand",      href: "/design-system/Brand.html",  event: "brand" },
+  { slug: "03-colors",     href: "/design-system/Colors.html", event: "colors" },
+  { slug: "04-type",       href: "/design-system/Type.html",   event: "type" },
+  { slug: "05-spacing",    href: "/design-system/Spacing.html",event: "spacing" },
+  { slug: "06-components", href: "/design-system/Components.html", event: "components" },
+  { slug: "07-ui-kit",     href: "/design-system/UIKit.html",  event: "ui_kit" },
+];
+
+const ATOMS_ROW: SpecRow = {
+  slug: "atoms",
+  href: "/lab/atoms",
+  event: "atoms_live",
+  badge: "LIVE",
+};
+
 type MenuItem = Readonly<{
   label: string;
   href: string;
@@ -227,24 +255,78 @@ export function ImmersiveHeroClient({
                       {para}
                     </p>
                   ))}
-                  <p className="mb-2 mt-1 text-white/70 [text-shadow:0_1px_8px_rgba(0,0,0,0.75)]">
+                  <p className="mb-3 mt-1 text-white/70 [text-shadow:0_1px_8px_rgba(0,0,0,0.75)]">
                     This site has its own design system — built for agentic terrain.
                   </p>
-                  <a
-                    href="/design-system/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() =>
-                      posthog.capture("design_system_link_clicked", {
-                        location: "immersive_philosophy_panel",
-                      })
-                    }
-                    className="mt-1 inline-flex items-center gap-1.5 border-b border-white/30 pb-0.5 text-[11px] tracking-[0.04em] text-white/85 transition-[color,border-color,letter-spacing] duration-300 ease-out hover:border-[color:var(--accent-terracotta)] hover:tracking-[0.08em] hover:text-[color:var(--accent-terracotta)] sm:text-[12px] [text-shadow:0_1px_6px_rgba(0,0,0,0.65)]"
-                    aria-label="View the Design System in a new tab"
+
+                  {/* Terminal index · ls -lh design-system/ */}
+                  <div
+                    className="mt-2 rounded border border-white/8 bg-black/35 px-3 py-2.5 font-mono text-[10.5px] leading-[1.7] sm:text-[11px]"
+                    aria-label="Design system pages"
                   >
-                    <span>View Design System</span>
-                    <span aria-hidden>→</span>
-                  </a>
+                    <p className="mb-1.5 text-white/55 [text-shadow:0_1px_6px_rgba(0,0,0,0.65)]">
+                      <span className="text-[color:var(--accent-terracotta)]">$</span>{" "}
+                      ls -lh design-system/
+                    </p>
+                    <ul className="m-0 list-none p-0">
+                      {SPEC_INDEX.map((row) => (
+                        <li key={row.event}>
+                          <a
+                            href={row.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() =>
+                              posthog.capture("design_system_link_clicked", {
+                                location: "immersive_philosophy_terminal",
+                                target: row.event,
+                              })
+                            }
+                            className="group flex items-center justify-between gap-3 py-0.5 text-white/80 transition-[color] duration-200 ease-out hover:text-[color:var(--accent-terracotta)] [text-shadow:0_1px_6px_rgba(0,0,0,0.65)]"
+                          >
+                            <span className="truncate">
+                              <span className="text-white/35">·</span>{" "}
+                              <span>{row.slug}/</span>
+                            </span>
+                            <span
+                              aria-hidden
+                              className="shrink-0 text-white/30 transition-[color,transform] duration-200 ease-out group-hover:translate-x-0.5 group-hover:text-[color:var(--accent-terracotta)]"
+                            >
+                              ↗
+                            </span>
+                          </a>
+                        </li>
+                      ))}
+                      {/* atoms — set apart with continuation glyph + LIVE pill */}
+                      <li className="mt-1.5">
+                        <a
+                          href={ATOMS_ROW.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={() =>
+                            posthog.capture("design_system_link_clicked", {
+                              location: "immersive_philosophy_terminal",
+                              target: ATOMS_ROW.event,
+                            })
+                          }
+                          className="group flex items-center justify-between gap-3 py-0.5 text-white/80 transition-[color] duration-200 ease-out hover:text-[color:var(--accent-terracotta)] [text-shadow:0_1px_6px_rgba(0,0,0,0.65)]"
+                        >
+                          <span className="flex min-w-0 items-center gap-2">
+                            <span className="text-white/35">⤷</span>
+                            <span>{ATOMS_ROW.slug}/</span>
+                            <span className="rounded-full border border-[color:var(--accent-terracotta)]/70 px-1.5 py-px text-[8.5px] font-medium tracking-[0.18em] uppercase text-[color:var(--accent-terracotta)]">
+                              {ATOMS_ROW.badge}
+                            </span>
+                          </span>
+                          <span
+                            aria-hidden
+                            className="shrink-0 text-white/30 transition-[color,transform] duration-200 ease-out group-hover:translate-x-0.5 group-hover:text-[color:var(--accent-terracotta)]"
+                          >
+                            ↗
+                          </span>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
                 </section>
               </div>
             </div>

@@ -147,6 +147,33 @@
     letter-spacing: 0.04em;
   }
 
+  /* Live-React variant — 7th card, sibling-but-distinct */
+  .card.live {
+    border-color: var(--accent-terracotta);
+    background: rgba(226, 114, 91, 0.04);
+  }
+  .card.live .num {
+    color: var(--accent-terracotta);
+  }
+  .card.live .badge {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 1px 7px 2px;
+    border: 1px solid var(--accent-terracotta);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-terracotta);
+    vertical-align: 1px;
+  }
+  .card.live:hover {
+    border-color: var(--accent-terracotta);
+    background: rgba(226, 114, 91, 0.07);
+  }
+
   .meta {
     display: flex;
     flex-wrap: wrap;
@@ -186,7 +213,9 @@
 </head>
 <body>
 <header class="ds-page-topbar">
-  <a class="ds-page-name" href="index.html"><span>Parvez Kose</span><span class="sep">/</span><span>Design System</span></a>
+  <div class="ds-page-name">
+    <a href="index.html"><span>Parvez Kose</span><span class="sep">/</span><span>Design System</span></a>
+  </div>
   <nav>
     <a href="index.html" class="current">Overview</a>
     <a href="Brand.html">Brand</a>
@@ -195,6 +224,8 @@
     <a href="Spacing.html">Spacing</a>
     <a href="Components.html">Components</a>
     <a href="UIKit.html">UI Kit</a>
+    <span class="ds-pin-sep" aria-hidden="true"></span>
+    <a href="/lab/atoms" target="_blank" rel="noopener" class="live-pin" aria-label="Live atoms — opens in new tab">Live<span class="arrow" aria-hidden="true">↗</span></a>
   </nav>
 </header>
 
@@ -216,7 +247,7 @@
   <span class="pill gold">One signature per screen</span>
 </div>
 
-<div class="section-rule">01 · The system, in five surfaces</div>
+<div class="section-rule">01 · The system, in seven views</div>
 
 <div class="grid">
   <a class="card" href="Brand.html">
@@ -259,6 +290,13 @@
     <h3>The system, end-to-end</h3>
     <p>Four surfaces composed: immersive hero, classic card, blog post, about page. The system in context, not in isolation.</p>
     <span class="arrow">Open →</span>
+  </a>
+
+  <a class="card live" href="/lab/atoms" target="_blank" rel="noopener">
+    <span class="num">07 · Atoms<span class="badge">Live</span></span>
+    <h3>Live React render</h3>
+    <p>The atoms above, running as server-rendered React on the same Next.js stack as the site. Same tokens, executable. Read-only preview.</p>
+    <span class="arrow">Open ↗</span>
   </a>
 </div>
 
