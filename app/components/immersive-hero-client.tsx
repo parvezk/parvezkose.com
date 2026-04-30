@@ -390,15 +390,6 @@ export function ImmersiveHeroClient({
 
                   <RailGap />
 
-                  {/* intro line · slightly dimmer to read as a tagline */}
-                  <RailRow glyph="│" tone="rail">
-                    <p className="text-white/70">
-                      This site has its own design system — built for agentic terrain.
-                    </p>
-                  </RailRow>
-
-                  <RailGap />
-
                   {/* ◇  design-system */}
                   <RailRow glyph="◇" tone="marker">
                     <span className="text-white/90">design-system</span>
@@ -461,16 +452,14 @@ export function ImmersiveHeroClient({
 
                   <RailGap />
 
-                  {/* └  $ █ */}
+                  {/* └  $ │ thin vertical caret (█ reads too heavy at mono widths) */}
                   <RailRow glyph="└" tone="marker">
                     <span className="flex items-baseline gap-1.5">
                       <span className="text-white/70">$</span>
                       <span
                         aria-hidden
-                        className="immersive-caret-blink inline-block text-[color:var(--accent-terracotta)]"
-                      >
-                        █
-                      </span>
+                        className="immersive-caret-blink inline-block h-[0.85em] w-px shrink-0 bg-[color:var(--accent-terracotta)] align-text-bottom"
+                      />
                     </span>
                   </RailRow>
                 </section>
