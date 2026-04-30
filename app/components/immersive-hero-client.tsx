@@ -452,13 +452,13 @@ export function ImmersiveHeroClient({
 
                   <RailGap />
 
-                  {/* └  $ │ thin vertical caret (█ reads too heavy at mono widths) */}
+                  {/* └  $ │ caret ~½ monospace cell wide — between hairline (w-px) and full █ */}
                   <RailRow glyph="└" tone="marker">
                     <span className="flex items-baseline gap-1.5">
                       <span className="text-white/70">$</span>
                       <span
                         aria-hidden
-                        className="immersive-caret-blink inline-block h-[0.85em] w-px shrink-0 bg-[color:var(--accent-terracotta)] align-text-bottom"
+                        className="immersive-caret-blink inline-block h-[0.85em] w-[0.5ch] min-w-[2px] max-w-[5px] shrink-0 bg-[color:var(--accent-terracotta)] align-text-bottom"
                       />
                     </span>
                   </RailRow>
