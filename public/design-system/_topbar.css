@@ -1,8 +1,20 @@
 /* ============================================================
    Cross-page topbar for design-system specimens
    ------------------------------------------------------------
-   Sticky 48px bar. Sibling-aware: mark the current page link
-   with class="current" in each HTML.
+   Sticky 48px bar.
+
+   Lockup (left)
+     <div class="ds-page-name">
+       <a href="index.html">Parvez Kose / Design System</a>
+       <span class="sep">/</span>
+       <span class="active-page">UI Kit</span>
+     </div>
+   Index page omits the trailing breadcrumb segment.
+
+   Nav (right)
+     <a class="current"> for the current page.
+     <span class="ds-pin-sep" aria-hidden></span> visually separates
+     the spec links from the LIVE atoms pin (which links to /lab/atoms).
    ============================================================ */
 
 .ds-page-topbar {
@@ -26,44 +38,118 @@
   text-decoration: none;
 }
 
+/* ── Lockup (left) ─────────────────────────────────────────── */
+
 .ds-page-topbar .ds-page-name {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--im-text);
+}
+
+.ds-page-topbar .ds-page-name a {
   display: inline-flex;
   align-items: baseline;
   gap: 8px;
+  color: var(--im-text);
+  transition: color 0.2s var(--ease-out-quad);
+}
+
+.ds-page-topbar .ds-page-name a:hover {
+  color: var(--im-text);
+  opacity: 0.85;
 }
 
 .ds-page-topbar .ds-page-name .sep {
   color: var(--im-text3);
+  font-weight: 400;
 }
+
+.ds-page-topbar .ds-page-name .active-page {
+  color: var(--im-text);
+  font-weight: 500;
+}
+
+/* ── Right-side nav ────────────────────────────────────────── */
 
 .ds-page-topbar nav {
   display: flex;
-  gap: 18px;
+  align-items: center;
+  gap: 16px;
 }
 
 .ds-page-topbar nav a {
-  font-size: 10px;
+  position: relative;
+  padding: 4px 0;
+  font-size: 12px;
+  font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--im-text3);
+  color: var(--im-text);
   transition:
-    color 0.2s,
+    color 0.2s var(--ease-out-quad),
     letter-spacing 0.3s var(--ease-out-quad);
 }
 
-.ds-page-topbar nav a:hover {
-  color: var(--im-text);
-  letter-spacing: 0.18em;
+.ds-page-topbar nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: var(--im-border);
+  opacity: 0;
+  transition: opacity 0.2s var(--ease-out-quad), background 0.2s var(--ease-out-quad);
+}
+
+.ds-page-topbar nav a:hover::after {
+  opacity: 1;
 }
 
 .ds-page-topbar nav a.current {
   color: var(--accent-terracotta);
 }
+
+.ds-page-topbar nav a.current::after {
+  opacity: 1;
+  background: var(--accent-terracotta);
+}
+
+/* ── LIVE pin separator + the pin itself ───────────────────── */
+
+.ds-page-topbar .ds-pin-sep {
+  width: 1px;
+  height: 14px;
+  background: var(--im-border);
+}
+
+.ds-page-topbar nav a.live-pin {
+  color: var(--im-text);
+}
+
+.ds-page-topbar nav a.live-pin::after {
+  display: none;
+}
+
+.ds-page-topbar nav a.live-pin .arrow {
+  display: inline-block;
+  margin-left: 4px;
+  transition: transform 0.25s var(--ease-out-quad);
+}
+
+.ds-page-topbar nav a.live-pin:hover {
+  color: var(--accent-terracotta);
+}
+
+.ds-page-topbar nav a.live-pin:hover .arrow {
+  transform: translate(2px, -2px);
+}
+
+/* ── Mobile ────────────────────────────────────────────────── */
 
 @media (max-width: 760px) {
   .ds-page-topbar {
@@ -77,8 +163,14 @@
     padding-top: 12px;
     padding-bottom: 12px;
   }
+  .ds-page-topbar .ds-page-name {
+    flex-wrap: wrap;
+  }
   .ds-page-topbar nav {
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 12px 14px;
+  }
+  .ds-page-topbar .ds-pin-sep {
+    display: none;
   }
 }

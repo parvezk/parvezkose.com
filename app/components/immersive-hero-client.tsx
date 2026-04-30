@@ -15,6 +15,34 @@ const DESIGN_PHILOSOPHY = [
   "Visual interpretability shapes how I build. I'm drawn to what lives under the surface and what the model is actually doing. And I think the people using it should too.",
 ] as const;
 
+// Terminal index — rendered inside the [+] Design Philosophy panel as
+// the navigation surface into the design system. Replaces the single
+// "View Design System →" link so users see this is multi-page, not
+// a one-link footnote. Concept D from the v2.1 gallery exploration.
+type SpecRow = Readonly<{
+  slug: string;          // numbered folder label, e.g. "01-overview"
+  href: string;          // destination URL (relative for /design-system pages)
+  event: string;         // PostHog event payload identifier
+  badge?: "LIVE";        // optional pin (atoms only)
+}>;
+
+const SPEC_INDEX: ReadonlyArray<SpecRow> = [
+  { slug: "01-overview",   href: "/design-system/",            event: "overview" },
+  { slug: "02-brand",      href: "/design-system/Brand.html",  event: "brand" },
+  { slug: "03-colors",     href: "/design-system/Colors.html", event: "colors" },
+  { slug: "04-type",       href: "/design-system/Type.html",   event: "type" },
+  { slug: "05-spacing",    href: "/design-system/Spacing.html",event: "spacing" },
+  { slug: "06-components", href: "/design-system/Components.html", event: "components" },
+  { slug: "07-ui-kit",     href: "/design-system/UIKit.html",  event: "ui_kit" },
+];
+
+const ATOMS_ROW: SpecRow = {
+  slug: "atoms",
+  href: "/lab/atoms",
+  event: "atoms_live",
+  badge: "LIVE",
+};
+
 type MenuItem = Readonly<{
   label: string;
   href: string;
@@ -227,24 +255,123 @@ export function ImmersiveHeroClient({
                       {para}
                     </p>
                   ))}
-                  <p className="mb-2 mt-1 text-white/70 [text-shadow:0_1px_8px_rgba(0,0,0,0.75)]">
+                  <p className="mb-3 mt-1 text-white/70 [text-shadow:0_1px_8px_rgba(0,0,0,0.75)]">
                     This site has its own design system — built for agentic terrain.
                   </p>
-                  <a
-                    href="/design-system/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() =>
-                      posthog.capture("design_system_link_clicked", {
-                        location: "immersive_philosophy_panel",
-                      })
-                    }
-                    className="mt-1 inline-flex items-center gap-1.5 border-b border-white/30 pb-0.5 text-[11px] tracking-[0.04em] text-white/85 transition-[color,border-color,letter-spacing] duration-300 ease-out hover:border-[color:var(--accent-terracotta)] hover:tracking-[0.08em] hover:text-[color:var(--accent-terracotta)] sm:text-[12px] [text-shadow:0_1px_6px_rgba(0,0,0,0.65)]"
-                    aria-label="View the Design System in a new tab"
+
+                  {/*
+                    Terminal index · ls -lh design-system/
+                    --------------------------------------
+                    Visual vocabulary borrowed from CLI installers (clack-style):
+                    diamond section markers, continuous left rail, terracotta
+                    prompt, latte path arg, golden comment, blinking cursor at
+                    the close. JetBrains Mono on the inner block (overrides
+                    the panel's Fira Code) so the listing reads as terminal
+                    output, distinct from the prose above.
+                  */}
+                  <div
+                    className={`${jetbrainsClassName} mt-3 text-[12px] leading-[1.6] [text-shadow:0_1px_6px_rgba(0,0,0,0.65)] sm:text-[13px]`}
+                    aria-label="Design system pages"
                   >
-                    <span>View Design System</span>
-                    <span aria-hidden>→</span>
-                  </a>
+                    {/* ── Top marker · session header ─────────────── */}
+                    <div className="flex items-baseline gap-2">
+                      <span aria-hidden className="inline-block w-3 text-center text-[color:var(--accent-terracotta)]">
+                        ◇
+                      </span>
+                      <span className="text-white/90">
+                        ~/design-system
+                      </span>
+                    </div>
+
+                    {/* ── Rail body · prompt + listing + comment ──── */}
+                    <div className="ml-[5px] border-l border-white/15 pl-3.5 py-2.5">
+                      <p className="text-white/65">
+                        <span className="text-[color:var(--accent-terracotta)]">$</span>{" "}
+                        <span className="text-white">ls -lh</span>{" "}
+                        <span className="text-[color:var(--neutral-latte)]">design-system/</span>
+                      </p>
+
+                      <ul className="m-0 mt-2.5 list-none p-0">
+                        {SPEC_INDEX.map((row) => (
+                          <li key={row.event}>
+                            <a
+                              href={row.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={() =>
+                                posthog.capture("design_system_link_clicked", {
+                                  location: "immersive_philosophy_terminal",
+                                  target: row.event,
+                                })
+                              }
+                              className="group -mx-2 flex items-center justify-between gap-3 rounded px-2 py-1 transition-[background-color] duration-200 ease-out hover:bg-white/[0.04]"
+                            >
+                              <span className="flex min-w-0 items-center gap-2.5">
+                                <span className="text-white/35">·</span>
+                                <span className="truncate text-[color:var(--neutral-latte)] underline decoration-white/12 decoration-1 underline-offset-[3px] transition-[color,text-decoration-color] duration-200 ease-out group-hover:text-[color:var(--accent-terracotta)] group-hover:decoration-[color:var(--accent-terracotta)]/60">
+                                  {row.slug}/
+                                </span>
+                              </span>
+                              <span
+                                aria-hidden
+                                className="shrink-0 text-white/55 transition-[color,transform] duration-200 ease-out group-hover:translate-x-0.5 group-hover:text-[color:var(--accent-terracotta)]"
+                              >
+                                ↗
+                              </span>
+                            </a>
+                          </li>
+                        ))}
+                        {/* atoms — set apart with continuation glyph + LIVE pill */}
+                        <li className="mt-2">
+                          <a
+                            href={ATOMS_ROW.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() =>
+                              posthog.capture("design_system_link_clicked", {
+                                location: "immersive_philosophy_terminal",
+                                target: ATOMS_ROW.event,
+                              })
+                            }
+                            className="group -mx-2 flex items-center justify-between gap-3 rounded px-2 py-1 transition-[background-color] duration-200 ease-out hover:bg-white/[0.04]"
+                          >
+                            <span className="flex min-w-0 items-center gap-2.5">
+                              <span className="text-white/35">⤷</span>
+                              <span className="truncate text-[color:var(--neutral-latte)] underline decoration-white/12 decoration-1 underline-offset-[3px] transition-[color,text-decoration-color] duration-200 ease-out group-hover:text-[color:var(--accent-terracotta)] group-hover:decoration-[color:var(--accent-terracotta)]/60">
+                                {ATOMS_ROW.slug}/
+                              </span>
+                              <span className="rounded-full border border-[color:var(--accent-terracotta)]/70 px-1.5 py-px text-[10px] font-medium uppercase tracking-[0.18em] text-[color:var(--accent-terracotta)]">
+                                {ATOMS_ROW.badge}
+                              </span>
+                            </span>
+                            <span
+                              aria-hidden
+                              className="shrink-0 text-white/55 transition-[color,transform] duration-200 ease-out group-hover:translate-x-0.5 group-hover:text-[color:var(--accent-terracotta)]"
+                            >
+                              ↗
+                            </span>
+                          </a>
+                        </li>
+                      </ul>
+
+                      {/* Status comment — golden # is the one-signature accent */}
+                      <p className="mt-3 text-white/55">
+                        <span className="text-[color:var(--accent-golden)]">#</span>{" "}
+                        7 specs · 1 live preview
+                      </p>
+                    </div>
+
+                    {/* ── Bottom marker · live prompt + cursor ────── */}
+                    <div className="flex items-baseline gap-2">
+                      <span aria-hidden className="inline-block w-3 text-center text-[color:var(--accent-terracotta)]">
+                        ◇
+                      </span>
+                      <span className="text-white/70">$</span>
+                      <span aria-hidden className="immersive-caret-blink inline-block text-[color:var(--accent-terracotta)]">
+                        █
+                      </span>
+                    </div>
+                  </div>
                 </section>
               </div>
             </div>
