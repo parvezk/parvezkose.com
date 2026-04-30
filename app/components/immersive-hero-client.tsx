@@ -265,11 +265,12 @@ export function ImmersiveHeroClient({
                     Visual vocabulary borrowed from CLI installers (clack-style):
                     diamond section markers, continuous left rail, terracotta
                     prompt, latte path arg, golden comment, blinking cursor at
-                    the close. Reinforces the 'agentic terrain' framing — the
-                    panel reads as an instrument, not just a list of links.
+                    the close. JetBrains Mono on the inner block (overrides
+                    the panel's Fira Code) so the listing reads as terminal
+                    output, distinct from the prose above.
                   */}
                   <div
-                    className="mt-2 text-[10.5px] leading-[1.7] [text-shadow:0_1px_6px_rgba(0,0,0,0.65)] sm:text-[11px]"
+                    className={`${jetbrainsClassName} mt-3 text-[12px] leading-[1.6] [text-shadow:0_1px_6px_rgba(0,0,0,0.65)] sm:text-[13px]`}
                     aria-label="Design system pages"
                   >
                     {/* ── Top marker · session header ─────────────── */}
@@ -277,20 +278,20 @@ export function ImmersiveHeroClient({
                       <span aria-hidden className="inline-block w-3 text-center text-[color:var(--accent-terracotta)]">
                         ◇
                       </span>
-                      <span className="text-white/85">
+                      <span className="text-white/90">
                         ~/design-system
                       </span>
                     </div>
 
                     {/* ── Rail body · prompt + listing + comment ──── */}
-                    <div className="ml-[5px] border-l border-white/15 pl-3 py-2">
-                      <p className="text-white/60">
+                    <div className="ml-[5px] border-l border-white/15 pl-3.5 py-2.5">
+                      <p className="text-white/65">
                         <span className="text-[color:var(--accent-terracotta)]">$</span>{" "}
-                        <span className="text-white/95">ls -lh</span>{" "}
+                        <span className="text-white">ls -lh</span>{" "}
                         <span className="text-[color:var(--neutral-latte)]">design-system/</span>
                       </p>
 
-                      <ul className="m-0 mt-2 list-none p-0">
+                      <ul className="m-0 mt-2.5 list-none p-0">
                         {SPEC_INDEX.map((row) => (
                           <li key={row.event}>
                             <a
@@ -303,15 +304,17 @@ export function ImmersiveHeroClient({
                                   target: row.event,
                                 })
                               }
-                              className="group flex items-center justify-between gap-3 py-0.5 text-white/85 transition-[color] duration-200 ease-out hover:text-[color:var(--accent-terracotta)]"
+                              className="group -mx-2 flex items-center justify-between gap-3 rounded px-2 py-1 transition-[background-color] duration-200 ease-out hover:bg-white/[0.04]"
                             >
-                              <span className="flex min-w-0 items-center gap-2">
+                              <span className="flex min-w-0 items-center gap-2.5">
                                 <span className="text-white/35">·</span>
-                                <span className="truncate">{row.slug}/</span>
+                                <span className="truncate text-[color:var(--neutral-latte)] underline decoration-white/12 decoration-1 underline-offset-[3px] transition-[color,text-decoration-color] duration-200 ease-out group-hover:text-[color:var(--accent-terracotta)] group-hover:decoration-[color:var(--accent-terracotta)]/60">
+                                  {row.slug}/
+                                </span>
                               </span>
                               <span
                                 aria-hidden
-                                className="shrink-0 text-white/30 transition-[color,transform] duration-200 ease-out group-hover:translate-x-0.5 group-hover:text-[color:var(--accent-terracotta)]"
+                                className="shrink-0 text-white/55 transition-[color,transform] duration-200 ease-out group-hover:translate-x-0.5 group-hover:text-[color:var(--accent-terracotta)]"
                               >
                                 ↗
                               </span>
@@ -319,7 +322,7 @@ export function ImmersiveHeroClient({
                           </li>
                         ))}
                         {/* atoms — set apart with continuation glyph + LIVE pill */}
-                        <li className="mt-1.5">
+                        <li className="mt-2">
                           <a
                             href={ATOMS_ROW.href}
                             target="_blank"
@@ -330,18 +333,20 @@ export function ImmersiveHeroClient({
                                 target: ATOMS_ROW.event,
                               })
                             }
-                            className="group flex items-center justify-between gap-3 py-0.5 text-white/85 transition-[color] duration-200 ease-out hover:text-[color:var(--accent-terracotta)]"
+                            className="group -mx-2 flex items-center justify-between gap-3 rounded px-2 py-1 transition-[background-color] duration-200 ease-out hover:bg-white/[0.04]"
                           >
-                            <span className="flex min-w-0 items-center gap-2">
+                            <span className="flex min-w-0 items-center gap-2.5">
                               <span className="text-white/35">⤷</span>
-                              <span className="truncate">{ATOMS_ROW.slug}/</span>
-                              <span className="rounded-full border border-[color:var(--accent-terracotta)]/70 px-1.5 py-px text-[8.5px] font-medium uppercase tracking-[0.18em] text-[color:var(--accent-terracotta)]">
+                              <span className="truncate text-[color:var(--neutral-latte)] underline decoration-white/12 decoration-1 underline-offset-[3px] transition-[color,text-decoration-color] duration-200 ease-out group-hover:text-[color:var(--accent-terracotta)] group-hover:decoration-[color:var(--accent-terracotta)]/60">
+                                {ATOMS_ROW.slug}/
+                              </span>
+                              <span className="rounded-full border border-[color:var(--accent-terracotta)]/70 px-1.5 py-px text-[10px] font-medium uppercase tracking-[0.18em] text-[color:var(--accent-terracotta)]">
                                 {ATOMS_ROW.badge}
                               </span>
                             </span>
                             <span
                               aria-hidden
-                              className="shrink-0 text-white/30 transition-[color,transform] duration-200 ease-out group-hover:translate-x-0.5 group-hover:text-[color:var(--accent-terracotta)]"
+                              className="shrink-0 text-white/55 transition-[color,transform] duration-200 ease-out group-hover:translate-x-0.5 group-hover:text-[color:var(--accent-terracotta)]"
                             >
                               ↗
                             </span>
@@ -350,7 +355,7 @@ export function ImmersiveHeroClient({
                       </ul>
 
                       {/* Status comment — golden # is the one-signature accent */}
-                      <p className="mt-2.5 text-white/45">
+                      <p className="mt-3 text-white/55">
                         <span className="text-[color:var(--accent-golden)]">#</span>{" "}
                         7 specs · 1 live preview
                       </p>
@@ -361,7 +366,7 @@ export function ImmersiveHeroClient({
                       <span aria-hidden className="inline-block w-3 text-center text-[color:var(--accent-terracotta)]">
                         ◇
                       </span>
-                      <span className="text-white/65">$</span>
+                      <span className="text-white/70">$</span>
                       <span aria-hidden className="immersive-caret-blink inline-block text-[color:var(--accent-terracotta)]">
                         █
                       </span>
