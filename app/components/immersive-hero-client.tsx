@@ -87,6 +87,100 @@ const MENU_ITEMS: ReadonlyArray<MenuItem> = [
   },
 ];
 
+/* ─── Rail helpers · used by the [+] Design Philosophy CLI panel ─────────────
+   Two-column grid: glyph cell (12px, fixed) + content cell (1fr). Each row is
+   a self-contained line; the visual rail is achieved by repeating │ on body
+   rows and swapping in ┌ / ◇ / └ at section transitions. RailGap renders an
+   empty │ line to mirror authentic CLI installer output. RailLink wraps a
+   row in an <a> so the entire line — rail glyph included — is clickable.
+*/
+type RailTone = "marker" | "rail" | "muted";
+
+const RAIL_TONE_CLASS: Record<RailTone, string> = {
+  marker: "text-[color:var(--accent-terracotta)]",
+  rail: "text-white/15",
+  muted: "text-white/35",
+};
+
+function RailRow({
+  glyph,
+  tone = "rail",
+  children,
+}: Readonly<{
+  glyph: "┌" | "◇" | "│" | "└";
+  tone?: RailTone;
+  children?: React.ReactNode;
+}>) {
+  return (
+    <div className="grid grid-cols-[12px_1fr] items-baseline gap-2.5">
+      <span aria-hidden className={RAIL_TONE_CLASS[tone]}>
+        {glyph}
+      </span>
+      <div className="min-w-0">{children}</div>
+    </div>
+  );
+}
+
+function RailGap() {
+  return (
+    <div className="grid grid-cols-[12px_1fr] items-baseline gap-2.5 h-[0.6em]">
+      <span aria-hidden className={RAIL_TONE_CLASS.rail}>
+        │
+      </span>
+      <span />
+    </div>
+  );
+}
+
+function RailLink({
+  href,
+  prefix,
+  slug,
+  badge,
+  onClick,
+}: Readonly<{
+  href: string;
+  prefix: "·" | "⤷";
+  slug: string;
+  badge?: "LIVE";
+  onClick?: () => void;
+}>) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={onClick}
+      className="group -mx-2 block rounded px-2 py-0.5 transition-[background-color] duration-200 ease-out hover:bg-white/[0.04]"
+    >
+      <div className="grid grid-cols-[12px_12px_1fr_auto] items-baseline gap-2.5">
+        <span aria-hidden className={RAIL_TONE_CLASS.rail}>
+          │
+        </span>
+        <span aria-hidden className={RAIL_TONE_CLASS.muted}>
+          {prefix}
+        </span>
+        <span className="flex min-w-0 items-baseline gap-2">
+          <span className="truncate text-[color:var(--neutral-latte)] underline decoration-white/12 decoration-1 underline-offset-[3px] transition-[color,text-decoration-color] duration-200 ease-out group-hover:text-[color:var(--accent-terracotta)] group-hover:decoration-[color:var(--accent-terracotta)]/60">
+            {slug}/
+          </span>
+          {badge && (
+            <span className="shrink-0 rounded-full border border-[color:var(--accent-terracotta)]/70 px-1.5 py-px text-[10px] font-medium uppercase tracking-[0.18em] text-[color:var(--accent-terracotta)]">
+              {badge}
+            </span>
+          )}
+        </span>
+        <span
+          aria-hidden
+          className="shrink-0 text-white/55 transition-[color,transform] duration-200 ease-out group-hover:translate-x-0.5 group-hover:text-[color:var(--accent-terracotta)]"
+        >
+          ↗
+        </span>
+      </div>
+    </a>
+  );
+}
+
 export function ImmersiveHeroClient({
   jetbrainsClassName,
   firaClassName,
@@ -241,137 +335,143 @@ export function ImmersiveHeroClient({
               className={`mt-3 grid w-full max-w-xl transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.33,1,0.68,1)] motion-reduce:transition-none ${philosophyOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
             >
               <div className="min-h-0 overflow-hidden">
+                {/*
+                  ─── [+] Design Philosophy panel · CLI installer view (Option A) ───────
+                  The whole panel is now a single clack-style rail: ┌ (top), ◇ (section
+                  markers), │ (rail body), └ (bottom). JetBrains Mono throughout so prose
+                  and listing share one mechanical voice. Two diamond sections:
+                    1. ◇  philosophy       — $ cat philosophy.md  → 3 prose lines
+                    2. ◇  design-system    — $ ls -lh             → 7 specs + atoms LIVE
+                  Color hierarchy: terracotta = markers/prompt char, white = command,
+                  latte = path arg, golden = `#` comment, white/85 prose, white/55 meta.
+                  Borders/background reuse the existing panel chrome (rounded-md
+                  border-white/12 bg-black/50) so the open/close transition is
+                  unchanged from main.
+                */}
                 <section
                   id={philosophyPanelId}
                   aria-labelledby={philosophyToggleId}
                   aria-hidden={!philosophyOpen}
-                  className={`${firaClassName} rounded-md border border-white/12 bg-black/50 px-4 py-3 text-left text-[11px] font-normal leading-relaxed text-white/92 shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-sm transition-opacity duration-500 ease-out motion-reduce:transition-none sm:text-[12px] sm:leading-relaxed ${philosophyOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
+                  className={`${jetbrainsClassName} rounded-md border border-white/12 bg-black/50 px-4 py-3.5 text-left text-[12px] font-normal leading-[1.7] text-white/85 shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-sm transition-opacity duration-500 ease-out [text-shadow:0_1px_6px_rgba(0,0,0,0.65)] motion-reduce:transition-none sm:text-[13px] ${philosophyOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
                 >
-                  {DESIGN_PHILOSOPHY.map((para) => (
-                    <p
-                      key={para}
-                      className="mb-2.5 [text-shadow:0_1px_8px_rgba(0,0,0,0.75)]"
-                    >
-                      {para}
+                  {/* ┌  ~/parvezkose */}
+                  <RailRow glyph="┌" tone="marker">
+                    <span className="text-white/90">~/parvezkose</span>
+                  </RailRow>
+
+                  <RailGap />
+
+                  {/* ◇  philosophy */}
+                  <RailRow glyph="◇" tone="marker">
+                    <span className="text-white/90">philosophy</span>
+                  </RailRow>
+
+                  {/* │  $ cat philosophy.md */}
+                  <RailRow glyph="│" tone="rail">
+                    <p className="text-white/65">
+                      <span className="text-[color:var(--accent-terracotta)]">$</span>{" "}
+                      <span className="text-white">cat</span>{" "}
+                      <span className="text-[color:var(--neutral-latte)]">philosophy.md</span>
                     </p>
+                  </RailRow>
+
+                  <RailGap />
+
+                  {/* prose paragraphs (rendered as cat output) */}
+                  {DESIGN_PHILOSOPHY.map((para, idx) => (
+                    <div key={para}>
+                      <RailRow glyph="│" tone="rail">
+                        <p className="text-white/85">{para}</p>
+                      </RailRow>
+                      {idx < DESIGN_PHILOSOPHY.length - 1 && <RailGap />}
+                    </div>
                   ))}
-                  <p className="mb-3 mt-1 text-white/70 [text-shadow:0_1px_8px_rgba(0,0,0,0.75)]">
-                    This site has its own design system — built for agentic terrain.
-                  </p>
 
-                  {/*
-                    Terminal index · ls -lh design-system/
-                    --------------------------------------
-                    Visual vocabulary borrowed from CLI installers (clack-style):
-                    diamond section markers, continuous left rail, terracotta
-                    prompt, latte path arg, golden comment, blinking cursor at
-                    the close. JetBrains Mono on the inner block (overrides
-                    the panel's Fira Code) so the listing reads as terminal
-                    output, distinct from the prose above.
-                  */}
-                  <div
-                    className={`${jetbrainsClassName} mt-3 text-[12px] leading-[1.6] [text-shadow:0_1px_6px_rgba(0,0,0,0.65)] sm:text-[13px]`}
-                    aria-label="Design system pages"
-                  >
-                    {/* ── Top marker · session header ─────────────── */}
-                    <div className="flex items-baseline gap-2">
-                      <span aria-hidden className="inline-block w-3 text-center text-[color:var(--accent-terracotta)]">
-                        ◇
-                      </span>
-                      <span className="text-white/90">
-                        ~/design-system
-                      </span>
-                    </div>
+                  <RailGap />
 
-                    {/* ── Rail body · prompt + listing + comment ──── */}
-                    <div className="ml-[5px] border-l border-white/15 pl-3.5 py-2.5">
-                      <p className="text-white/65">
-                        <span className="text-[color:var(--accent-terracotta)]">$</span>{" "}
-                        <span className="text-white">ls -lh</span>{" "}
-                        <span className="text-[color:var(--neutral-latte)]">design-system/</span>
-                      </p>
+                  {/* intro line · slightly dimmer to read as a tagline */}
+                  <RailRow glyph="│" tone="rail">
+                    <p className="text-white/70">
+                      This site has its own design system — built for agentic terrain.
+                    </p>
+                  </RailRow>
 
-                      <ul className="m-0 mt-2.5 list-none p-0">
-                        {SPEC_INDEX.map((row) => (
-                          <li key={row.event}>
-                            <a
-                              href={row.href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={() =>
-                                posthog.capture("design_system_link_clicked", {
-                                  location: "immersive_philosophy_terminal",
-                                  target: row.event,
-                                })
-                              }
-                              className="group -mx-2 flex items-center justify-between gap-3 rounded px-2 py-1 transition-[background-color] duration-200 ease-out hover:bg-white/[0.04]"
-                            >
-                              <span className="flex min-w-0 items-center gap-2.5">
-                                <span className="text-white/35">·</span>
-                                <span className="truncate text-[color:var(--neutral-latte)] underline decoration-white/12 decoration-1 underline-offset-[3px] transition-[color,text-decoration-color] duration-200 ease-out group-hover:text-[color:var(--accent-terracotta)] group-hover:decoration-[color:var(--accent-terracotta)]/60">
-                                  {row.slug}/
-                                </span>
-                              </span>
-                              <span
-                                aria-hidden
-                                className="shrink-0 text-white/55 transition-[color,transform] duration-200 ease-out group-hover:translate-x-0.5 group-hover:text-[color:var(--accent-terracotta)]"
-                              >
-                                ↗
-                              </span>
-                            </a>
-                          </li>
-                        ))}
-                        {/* atoms — set apart with continuation glyph + LIVE pill */}
-                        <li className="mt-2">
-                          <a
-                            href={ATOMS_ROW.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={() =>
-                              posthog.capture("design_system_link_clicked", {
-                                location: "immersive_philosophy_terminal",
-                                target: ATOMS_ROW.event,
-                              })
-                            }
-                            className="group -mx-2 flex items-center justify-between gap-3 rounded px-2 py-1 transition-[background-color] duration-200 ease-out hover:bg-white/[0.04]"
-                          >
-                            <span className="flex min-w-0 items-center gap-2.5">
-                              <span className="text-white/35">⤷</span>
-                              <span className="truncate text-[color:var(--neutral-latte)] underline decoration-white/12 decoration-1 underline-offset-[3px] transition-[color,text-decoration-color] duration-200 ease-out group-hover:text-[color:var(--accent-terracotta)] group-hover:decoration-[color:var(--accent-terracotta)]/60">
-                                {ATOMS_ROW.slug}/
-                              </span>
-                              <span className="rounded-full border border-[color:var(--accent-terracotta)]/70 px-1.5 py-px text-[10px] font-medium uppercase tracking-[0.18em] text-[color:var(--accent-terracotta)]">
-                                {ATOMS_ROW.badge}
-                              </span>
-                            </span>
-                            <span
-                              aria-hidden
-                              className="shrink-0 text-white/55 transition-[color,transform] duration-200 ease-out group-hover:translate-x-0.5 group-hover:text-[color:var(--accent-terracotta)]"
-                            >
-                              ↗
-                            </span>
-                          </a>
-                        </li>
-                      </ul>
+                  <RailGap />
 
-                      {/* Status comment — golden # is the one-signature accent */}
-                      <p className="mt-3 text-white/55">
-                        <span className="text-[color:var(--accent-golden)]">#</span>{" "}
-                        7 specs · 1 live preview
-                      </p>
-                    </div>
+                  {/* ◇  design-system */}
+                  <RailRow glyph="◇" tone="marker">
+                    <span className="text-white/90">design-system</span>
+                  </RailRow>
 
-                    {/* ── Bottom marker · live prompt + cursor ────── */}
-                    <div className="flex items-baseline gap-2">
-                      <span aria-hidden className="inline-block w-3 text-center text-[color:var(--accent-terracotta)]">
-                        ◇
-                      </span>
+                  {/* │  $ ls -lh design-system/ */}
+                  <RailRow glyph="│" tone="rail">
+                    <p className="text-white/65">
+                      <span className="text-[color:var(--accent-terracotta)]">$</span>{" "}
+                      <span className="text-white">ls -lh</span>{" "}
+                      <span className="text-[color:var(--neutral-latte)]">design-system/</span>
+                    </p>
+                  </RailRow>
+
+                  <RailGap />
+
+                  {/* spec listing — 7 specimen pages */}
+                  <ul className="m-0 list-none p-0" aria-label="Design system pages">
+                    {SPEC_INDEX.map((row) => (
+                      <li key={row.event}>
+                        <RailLink
+                          href={row.href}
+                          prefix="·"
+                          slug={row.slug}
+                          onClick={() =>
+                            posthog.capture("design_system_link_clicked", {
+                              location: "immersive_philosophy_terminal",
+                              target: row.event,
+                            })
+                          }
+                        />
+                      </li>
+                    ))}
+                    {/* atoms — continuation glyph + LIVE pill */}
+                    <li>
+                      <RailLink
+                        href={ATOMS_ROW.href}
+                        prefix="⤷"
+                        slug={ATOMS_ROW.slug}
+                        badge={ATOMS_ROW.badge}
+                        onClick={() =>
+                          posthog.capture("design_system_link_clicked", {
+                            location: "immersive_philosophy_terminal",
+                            target: ATOMS_ROW.event,
+                          })
+                        }
+                      />
+                    </li>
+                  </ul>
+
+                  <RailGap />
+
+                  {/* │  # 7 specs · 1 live preview */}
+                  <RailRow glyph="│" tone="rail">
+                    <p className="text-white/55">
+                      <span className="text-[color:var(--accent-golden)]">#</span>{" "}
+                      7 specs · 1 live preview
+                    </p>
+                  </RailRow>
+
+                  <RailGap />
+
+                  {/* └  $ █ */}
+                  <RailRow glyph="└" tone="marker">
+                    <span className="flex items-baseline gap-1.5">
                       <span className="text-white/70">$</span>
-                      <span aria-hidden className="immersive-caret-blink inline-block text-[color:var(--accent-terracotta)]">
+                      <span
+                        aria-hidden
+                        className="immersive-caret-blink inline-block text-[color:var(--accent-terracotta)]"
+                      >
                         █
                       </span>
-                    </div>
-                  </div>
+                    </span>
+                  </RailRow>
                 </section>
               </div>
             </div>
