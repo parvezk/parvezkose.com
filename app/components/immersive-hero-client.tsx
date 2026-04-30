@@ -123,7 +123,7 @@ function RailRow({
 
 function RailGap() {
   return (
-    <div className="grid grid-cols-[12px_1fr] items-baseline gap-2.5 h-[0.6em]">
+    <div className="grid grid-cols-[12px_1fr] items-baseline gap-2.5 h-[0.4em]">
       <span aria-hidden className={RAIL_TONE_CLASS.rail}>
         │
       </span>
@@ -352,19 +352,20 @@ export function ImmersiveHeroClient({
                   id={philosophyPanelId}
                   aria-labelledby={philosophyToggleId}
                   aria-hidden={!philosophyOpen}
-                  className={`${jetbrainsClassName} rounded-md border border-white/12 bg-black/50 px-4 py-3.5 text-left text-[12px] font-normal leading-[1.7] text-white/85 shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-sm transition-opacity duration-500 ease-out [text-shadow:0_1px_6px_rgba(0,0,0,0.65)] motion-reduce:transition-none sm:text-[13px] ${philosophyOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
+                  className={`${jetbrainsClassName} rounded-md border border-white/12 bg-black/50 px-4 py-3 text-left text-[12px] font-normal leading-[1.65] text-white/85 shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-sm transition-opacity duration-500 ease-out [text-shadow:0_1px_6px_rgba(0,0,0,0.65)] motion-reduce:transition-none sm:text-[13px] ${philosophyOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
                 >
-                  {/* ┌  ~/parvezkose */}
+                  {/* ┌  ~/.claude/agentic-stack/parvezkose.com
+                     The path label doubles as the section header — no
+                     separate ◇ philosophy marker needed. The cat command
+                     follows immediately and reads as "this is what's in
+                     this directory." */}
                   <RailRow glyph="┌" tone="marker">
-                    <span className="text-white/90">~/parvezkose</span>
+                    <span className="break-all text-white/90">
+                      ~/.claude/agentic-stack/parvezkose.com
+                    </span>
                   </RailRow>
 
                   <RailGap />
-
-                  {/* ◇  philosophy */}
-                  <RailRow glyph="◇" tone="marker">
-                    <span className="text-white/90">philosophy</span>
-                  </RailRow>
 
                   {/* │  $ cat philosophy.md */}
                   <RailRow glyph="│" tone="rail">
