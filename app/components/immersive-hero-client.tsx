@@ -219,7 +219,11 @@ export function ImmersiveHeroClient({
         className="pointer-events-none fixed left-0 top-0 h-px w-px opacity-0"
         aria-hidden
       />
-      <GenerativeHeroWebGL />
+      {/* Viewport-fixed: Design Philosophy changes document height but must not resize the
+          GL surface (that caused black flashes, smear, or load-overlay pops). */}
+      <div className="fixed inset-0 z-0" aria-hidden>
+        <GenerativeHeroWebGL />
+      </div>
 
       <nav
         aria-label="Site and social links"

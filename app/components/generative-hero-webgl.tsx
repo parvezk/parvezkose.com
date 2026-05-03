@@ -133,8 +133,6 @@ export function GenerativeHeroWebGL({
   const containerRef = useRef<HTMLDivElement>(null);
   const mountedRef = useRef(true);
   const [surfaceReady, setSurfaceReady] = useState(false);
-  /** True while CSS box size ≠ canvas backing-store (debounced sync); hides GPU upscale smear. */
-  const [layoutCoverVisible, setLayoutCoverVisible] = useState(false);
 
   const loadTexture = useCallback(
     (gl: WebGL2RenderingContext, url: string): Promise<WebGLTexture | null> => {
@@ -177,7 +175,6 @@ export function GenerativeHeroWebGL({
   useEffect(() => {
     mountedRef.current = true;
     setSurfaceReady(false);
-    setLayoutCoverVisible(false);
 
     const canvas = canvasRef.current;
     const container = containerRef.current;
@@ -224,66 +221,26 @@ export function GenerativeHeroWebGL({
     let mouseY = 0.5;
     let wasHidden = document.hidden;
 
-    /** Setting canvas.width/height clears the bitmap (black flash if done every frame).
-     * During CSS height animations we debounce backing-store commits; until then the
-     * browser upscales the old bitmap (vertical smear). Cover with the same gradient
-     * shell used during texture load whenever CSS size ≠ backing-store. */
-    let bitmapDebounce: ReturnType<typeof setTimeout> | null = null;
-
-    const desiredBitmapSize = () => {
+    /** Canvas size tracks this container. Immersive hero mounts the component inside a
+     * viewport-fixed shell so accordion/document height does not trigger resizes here. */
+    const resize = () => {
       const w = container.clientWidth;
       const h = container.clientHeight;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      return {
-        bw: Math.max(1, Math.floor(w * dpr)),
-        bh: Math.max(1, Math.floor(h * dpr)),
-      };
-    };
-
-    const syncCssSize = () => {
-      const w = container.clientWidth;
-      const h = container.clientHeight;
-      canvas.style.width = `${w}px`;
-      canvas.style.height = `${h}px`;
-    };
-
-    const syncBitmapSize = () => {
-      const { bw, bh } = desiredBitmapSize();
+      const bw = Math.max(1, Math.floor(w * dpr));
+      const bh = Math.max(1, Math.floor(h * dpr));
       if (canvas.width !== bw || canvas.height !== bh) {
         canvas.width = bw;
         canvas.height = bh;
       }
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
       gl.viewport(0, 0, bw, bh);
     };
 
-    const scheduleBitmapResize = () => {
-      if (bitmapDebounce !== null) clearTimeout(bitmapDebounce);
-      bitmapDebounce = setTimeout(() => {
-        bitmapDebounce = null;
-        syncBitmapSize();
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            if (mountedRef.current) setLayoutCoverVisible(false);
-          });
-        });
-      }, 120);
-    };
-
-    const onContainerResize = () => {
-      syncCssSize();
-      const { bw, bh } = desiredBitmapSize();
-      if (canvas.width === bw && canvas.height === bh) {
-        return;
-      }
-      setLayoutCoverVisible(true);
-      scheduleBitmapResize();
-    };
-
-    syncCssSize();
-    syncBitmapSize();
-
-    const ro = new ResizeObserver(onContainerResize);
+    const ro = new ResizeObserver(resize);
     ro.observe(container);
+    resize();
 
     const onPointer = (e: PointerEvent) => {
       const r = canvas.getBoundingClientRect();
@@ -395,7 +352,6 @@ export function GenerativeHeroWebGL({
 
     return () => {
       mountedRef.current = false;
-      if (bitmapDebounce !== null) clearTimeout(bitmapDebounce);
       cancelAnimationFrame(raf);
       ro.disconnect();
       canvas.removeEventListener("pointermove", onPointer);
@@ -405,8 +361,6 @@ export function GenerativeHeroWebGL({
       if (tex) gl.deleteTexture(tex);
     };
   }, [loadTexture, texturePreviewSrc, textureSrc]);
-
-  const showHeroCover = !surfaceReady || layoutCoverVisible;
 
   return (
     <div
@@ -418,10 +372,8 @@ export function GenerativeHeroWebGL({
         className="absolute inset-0 z-0 block h-full w-full touch-none"
       />
       <div
-        className={`pointer-events-none absolute inset-0 z-[1] ${
-          showHeroCover
-            ? "opacity-100"
-            : "opacity-0 transition-opacity duration-200 ease-out motion-reduce:transition-none"
+        className={`pointer-events-none absolute inset-0 z-[1] transition-opacity duration-500 ease-out motion-reduce:duration-0 ${
+          surfaceReady ? "opacity-0" : "opacity-100"
         }`}
         aria-hidden
       >
