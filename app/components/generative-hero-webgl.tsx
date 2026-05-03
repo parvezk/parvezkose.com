@@ -369,7 +369,7 @@ export function GenerativeHeroWebGL({
     >
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 z-0 block h-full w-full touch-none"
+        className="absolute inset-0 z-0 block h-full w-full touch-pan-y"
       />
       <div
         className={`pointer-events-none absolute inset-0 z-[1] transition-opacity duration-500 ease-out motion-reduce:duration-0 ${
