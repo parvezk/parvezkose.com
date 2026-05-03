@@ -221,6 +221,8 @@ export function GenerativeHeroWebGL({
     let mouseY = 0.5;
     let wasHidden = document.hidden;
 
+    /** Canvas size tracks this container. Immersive hero mounts the component inside a
+     * viewport-fixed shell so accordion/document height does not trigger resizes here. */
     const resize = () => {
       const w = container.clientWidth;
       const h = container.clientHeight;
