@@ -151,9 +151,9 @@ function RailLink({
       target="_blank"
       rel="noopener noreferrer"
       onClick={onClick}
-      className="group -mx-2 flex min-h-[2rem] items-center rounded px-2 py-[3px] transition-[background-color] duration-200 ease-out hover:bg-white/[0.04]"
+      className="group -mx-2 block rounded px-2 py-px leading-snug transition-[background-color] duration-200 ease-out hover:bg-white/[0.04]"
     >
-      <div className="grid grid-cols-[12px_12px_1fr_auto] items-baseline gap-2.5">
+      <div className="grid grid-cols-[12px_12px_1fr_auto] items-baseline gap-x-2.5 gap-y-0">
         <span aria-hidden className={RAIL_TONE_CLASS.rail}>
           │
         </span>
