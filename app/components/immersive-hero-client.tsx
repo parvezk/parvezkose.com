@@ -151,7 +151,7 @@ function RailLink({
       target="_blank"
       rel="noopener noreferrer"
       onClick={onClick}
-      className="group -mx-2 block rounded px-2 py-0.5 transition-[background-color] duration-200 ease-out hover:bg-white/[0.04]"
+      className="group -mx-2 flex min-h-[2rem] items-center rounded px-2 py-[3px] transition-[background-color] duration-200 ease-out hover:bg-white/[0.04]"
     >
       <div className="grid grid-cols-[12px_12px_1fr_auto] items-baseline gap-2.5">
         <span aria-hidden className={RAIL_TONE_CLASS.rail}>
@@ -274,7 +274,12 @@ export function ImmersiveHeroClient({
         </a>
       </nav>
 
-      <div className="pointer-events-none absolute inset-0 z-10 flex min-h-screen flex-col">
+      {/*
+        In-flow column (not position:absolute) so the hero root grows with accordion
+        content. Previously absolute inset-0 kept the shell at min-h-screen while the
+        panel overflowed, so WebGL stopped at ~100vh and the body background showed.
+      */}
+      <div className="pointer-events-none relative z-10 flex min-h-screen w-full flex-col">
         <div className="flex flex-1 flex-col items-center justify-center px-6 pb-8 pt-20 text-center">
           <div className="group pointer-events-auto relative inline-flex max-w-3xl flex-col items-center px-7 py-6 before:pointer-events-none before:absolute before:left-0 before:top-0 before:h-6 before:w-6 before:border-l-2 before:border-t-2 before:border-white/80 before:content-[''] after:pointer-events-none after:absolute after:bottom-0 after:right-0 after:h-6 after:w-6 after:border-b-2 after:border-r-2 after:border-white/80 after:content-[''] sm:px-9 sm:py-8 sm:before:h-7 sm:before:w-7 sm:after:h-7 sm:after:w-7 md:px-11 md:py-9 md:before:h-8 md:before:w-8 md:after:h-8 md:after:w-8">
             <h1
@@ -332,7 +337,7 @@ export function ImmersiveHeroClient({
             </div>
 
             <div
-              className={`mt-3 grid w-full max-w-xl transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.33,1,0.68,1)] motion-reduce:transition-none ${philosophyOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
+              className={`mt-3 grid w-full max-w-xl transition-[grid-template-rows] duration-[780ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${philosophyOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
             >
               <div className="min-h-0 overflow-hidden">
                 {/*
@@ -352,7 +357,7 @@ export function ImmersiveHeroClient({
                   id={philosophyPanelId}
                   aria-labelledby={philosophyToggleId}
                   aria-hidden={!philosophyOpen}
-                  className={`${jetbrainsClassName} rounded-md border border-white/12 bg-black/50 px-4 py-3 text-left text-[12px] font-normal leading-[1.65] text-white/85 shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-sm transition-opacity duration-500 ease-out [text-shadow:0_1px_6px_rgba(0,0,0,0.65)] motion-reduce:transition-none sm:text-[13px] ${philosophyOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
+                  className={`${jetbrainsClassName} rounded-md border border-white/12 bg-black/50 px-4 py-3 text-left text-[12px] font-normal leading-[1.65] text-white/85 shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-sm transition-opacity duration-[780ms] ease-out [text-shadow:0_1px_6px_rgba(0,0,0,0.65)] motion-reduce:transition-none sm:text-[13px] ${philosophyOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
                 >
                   {/* ┌  ~/.claude/agentic-stack/parvezkose.com
                      The path label doubles as the section header — no
@@ -407,7 +412,10 @@ export function ImmersiveHeroClient({
                   <RailGap />
 
                   {/* spec listing — 7 specimen pages */}
-                  <ul className="m-0 list-none p-0" aria-label="Design system pages">
+                  <ul
+                    className="m-0 flex list-none flex-col gap-px p-0"
+                    aria-label="Design system pages"
+                  >
                     {SPEC_INDEX.map((row) => (
                       <li key={row.event}>
                         <RailLink
@@ -467,14 +475,14 @@ export function ImmersiveHeroClient({
             </div>
 
             <div
-              className={`mt-3 grid w-full max-w-xl transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.33,1,0.68,1)] motion-reduce:transition-none ${menuOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
+              className={`mt-3 grid w-full max-w-xl transition-[grid-template-rows] duration-[780ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${menuOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
             >
               <div className="min-h-0 overflow-hidden">
                 <section
                   id={menuPanelId}
                   aria-labelledby={menuToggleId}
                   aria-hidden={!menuOpen}
-                  className={`${firaClassName} rounded-md border border-white/12 bg-black/50 px-4 py-3 text-left text-[11px] font-normal leading-relaxed text-white/92 shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-sm transition-opacity duration-500 ease-out motion-reduce:transition-none sm:text-[12px] ${menuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
+                  className={`${firaClassName} rounded-md border border-white/12 bg-black/50 px-4 py-3 text-left text-[11px] font-normal leading-relaxed text-white/92 shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-sm transition-opacity duration-[780ms] ease-out motion-reduce:transition-none sm:text-[12px] ${menuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
                 >
                   <ul className="flex flex-wrap items-center gap-x-5 gap-y-2 uppercase tracking-[0.12em] text-[10px] sm:text-[11px]">
                     {MENU_ITEMS.map((item) =>
