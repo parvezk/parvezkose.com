@@ -36,7 +36,9 @@ function initRum(): AwsRum | null {
 
 // Runs at module-evaluation time — the earliest point in the client bundle —
 // so startup errors and first-paint telemetry are captured.
-export const rum = typeof window !== "undefined" ? initRum() : null;
+if (typeof window !== "undefined") {
+  initRum();
+}
 
 export function CloudWatchRUM() {
   return null;
