@@ -194,7 +194,7 @@ export function ImmersiveHeroClient({
 
   return (
     <div
-      className={`relative min-h-screen w-full bg-neutral-950 ${jetbrainsClassName}`}
+      className={`relative min-h-screen w-full overflow-x-hidden bg-neutral-950 [overflow-anchor:none] ${jetbrainsClassName}`}
     >
       {/* Warm HTTP cache for WebGL; raw <img> so Next does not re-encode. Low-res first, full-res in parallel at lower priority. */}
       {/* eslint-disable-next-line @next/next/no-img-element -- intentional preload URLs match WebGL textures */}
@@ -280,7 +280,11 @@ export function ImmersiveHeroClient({
         panel overflowed, so WebGL stopped at ~100vh and the body background showed.
       */}
       <div className="pointer-events-none relative z-10 flex min-h-screen w-full flex-col">
-        <div className="flex flex-1 flex-col items-center justify-center px-6 pb-8 pt-20 text-center">
+        {/*
+          justify-start (not justify-center) keeps the hero anchored when the accordion
+          grows — otherwise flex recenters the whole block and the headline visibly jumps.
+        */}
+        <div className="flex flex-1 flex-col items-center justify-start px-6 pb-8 pt-[clamp(4.75rem,18vh,10rem)] text-center sm:pt-[clamp(5rem,20vh,11rem)]">
           <div className="group pointer-events-auto relative inline-flex max-w-3xl flex-col items-center px-7 py-6 before:pointer-events-none before:absolute before:left-0 before:top-0 before:h-6 before:w-6 before:border-l-2 before:border-t-2 before:border-white/80 before:content-[''] after:pointer-events-none after:absolute after:bottom-0 after:right-0 after:h-6 after:w-6 after:border-b-2 after:border-r-2 after:border-white/80 after:content-[''] sm:px-9 sm:py-8 sm:before:h-7 sm:before:w-7 sm:after:h-7 sm:after:w-7 md:px-11 md:py-9 md:before:h-8 md:before:w-8 md:after:h-8 md:after:w-8">
             <h1
               className="mb-3 max-w-3xl text-4xl font-light tracking-[-0.02em] text-white transition-[text-shadow,filter] duration-300 sm:text-5xl md:text-6xl [text-shadow:0_1px_3px_rgba(0,0,0,0.95),0_0_28px_rgba(0,0,0,0.65),0_0_56px_rgba(0,0,0,0.35)] drop-shadow-[0_4px_20px_rgba(0,0,0,0.55)] group-hover:[text-shadow:0_2px_6px_rgba(0,0,0,1),0_0_36px_rgba(0,0,0,0.85),0_0_72px_rgba(0,0,0,0.5)] group-hover:drop-shadow-[0_6px_28px_rgba(0,0,0,0.75)]"
@@ -357,7 +361,7 @@ export function ImmersiveHeroClient({
                   id={philosophyPanelId}
                   aria-labelledby={philosophyToggleId}
                   aria-hidden={!philosophyOpen}
-                  className={`${jetbrainsClassName} rounded-md border border-white/12 bg-black/50 px-4 py-3 text-left text-[12px] font-normal leading-[1.65] text-white/85 shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-sm transition-opacity duration-[780ms] ease-out [text-shadow:0_1px_6px_rgba(0,0,0,0.65)] motion-reduce:transition-none sm:text-[13px] ${philosophyOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
+                  className={`${jetbrainsClassName} rounded-md border border-white/12 bg-black/50 px-4 py-3 text-left text-[12px] font-normal leading-[1.65] text-white/85 opacity-100 shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-sm [text-shadow:0_1px_6px_rgba(0,0,0,0.65)] sm:text-[13px] ${philosophyOpen ? "pointer-events-auto" : "pointer-events-none"}`}
                 >
                   {/* ┌  ~/.claude/agentic-stack/parvezkose.com
                      The path label doubles as the section header — no
@@ -482,7 +486,7 @@ export function ImmersiveHeroClient({
                   id={menuPanelId}
                   aria-labelledby={menuToggleId}
                   aria-hidden={!menuOpen}
-                  className={`${firaClassName} rounded-md border border-white/12 bg-black/50 px-4 py-3 text-left text-[11px] font-normal leading-relaxed text-white/92 shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-sm transition-opacity duration-[780ms] ease-out motion-reduce:transition-none sm:text-[12px] ${menuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
+                  className={`${firaClassName} rounded-md border border-white/12 bg-black/50 px-4 py-3 text-left text-[11px] font-normal leading-relaxed text-white/92 opacity-100 shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-sm sm:text-[12px] ${menuOpen ? "pointer-events-auto" : "pointer-events-none"}`}
                 >
                   <ul className="flex flex-wrap items-center gap-x-5 gap-y-2 uppercase tracking-[0.12em] text-[10px] sm:text-[11px]">
                     {MENU_ITEMS.map((item) =>

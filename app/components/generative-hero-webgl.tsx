@@ -221,7 +221,20 @@ export function GenerativeHeroWebGL({
     let mouseY = 0.5;
     let wasHidden = document.hidden;
 
-    const resize = () => {
+    /** Setting canvas.width/height clears the bitmap (often reads as a black flash).
+     * During CSS height animations the hero fires many ResizeObserver callbacks;
+     * keep CSS size in sync immediately so the drawing scales, and commit backing-store
+     * dimensions only after layout settles (debounced). */
+    let bitmapDebounce: ReturnType<typeof setTimeout> | null = null;
+
+    const syncCssSize = () => {
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
+    };
+
+    const syncBitmapSize = () => {
       const w = container.clientWidth;
       const h = container.clientHeight;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -231,14 +244,27 @@ export function GenerativeHeroWebGL({
         canvas.width = bw;
         canvas.height = bh;
       }
-      canvas.style.width = `${w}px`;
-      canvas.style.height = `${h}px`;
       gl.viewport(0, 0, bw, bh);
     };
 
-    const ro = new ResizeObserver(resize);
+    const scheduleBitmapResize = () => {
+      if (bitmapDebounce !== null) clearTimeout(bitmapDebounce);
+      bitmapDebounce = setTimeout(() => {
+        bitmapDebounce = null;
+        syncBitmapSize();
+      }, 120);
+    };
+
+    const onContainerResize = () => {
+      syncCssSize();
+      scheduleBitmapResize();
+    };
+
+    syncCssSize();
+    syncBitmapSize();
+
+    const ro = new ResizeObserver(onContainerResize);
     ro.observe(container);
-    resize();
 
     const onPointer = (e: PointerEvent) => {
       const r = canvas.getBoundingClientRect();
@@ -350,6 +376,7 @@ export function GenerativeHeroWebGL({
 
     return () => {
       mountedRef.current = false;
+      if (bitmapDebounce !== null) clearTimeout(bitmapDebounce);
       cancelAnimationFrame(raf);
       ro.disconnect();
       canvas.removeEventListener("pointermove", onPointer);
