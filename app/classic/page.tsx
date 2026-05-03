@@ -1,11 +1,6 @@
-import { JetBrains_Mono } from "next/font/google";
 import type { Metadata } from "next";
 import { HomePage } from "../components/home-page";
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["300", "400", "500"],
-});
+import { jetbrainsMono } from "../fonts";
 
 export const metadata: Metadata = {
   title: "Classic layout — Parvez Kose",
