@@ -3,7 +3,16 @@
 import Link from "next/link";
 import { useId, useState } from "react";
 import posthog from "posthog-js";
-import { GenerativeHeroWebGL } from "./generative-hero-webgl";
+import { TerrainCanvas } from "./terrain/terrain-canvas";
+import {
+  CameraProvider,
+  CameraScrollTrack,
+} from "../lib/camera/scroll-controller";
+import { AnchorNav } from "./nav/anchor-nav";
+import { HowIThinkSection } from "./sections/how-i-think";
+import { HowIBuildSection } from "./sections/how-i-build";
+import { ThinkingAheadSection } from "./sections/thinking-ahead";
+import { ProgressBar } from "./hud/progress-bar";
 
 type ImmersiveHeroClientProps = Readonly<{
   jetbrainsClassName: string;
@@ -193,6 +202,7 @@ export function ImmersiveHeroClient({
   const menuPanelId = useId();
 
   return (
+    <CameraProvider>
     <div
       className={`relative min-h-screen w-full overflow-x-hidden bg-neutral-950 [overflow-anchor:none] ${jetbrainsClassName}`}
     >
@@ -219,10 +229,11 @@ export function ImmersiveHeroClient({
         className="pointer-events-none fixed left-0 top-0 h-px w-px opacity-0"
         aria-hidden
       />
-      {/* Viewport-fixed: Design Philosophy changes document height but must not resize the
-          GL surface (that caused black flashes, smear, or load-overlay pops). */}
+      {/* Viewport-fixed terrain backdrop. The aerial-camera transform lives
+          inside <TerrainCanvas/>; the shader itself is unchanged from the
+          standalone hero (cursor diffusion + ambient loop only). */}
       <div className="fixed inset-0 z-0" aria-hidden>
-        <GenerativeHeroWebGL />
+        <TerrainCanvas />
       </div>
 
       <nav
@@ -277,6 +288,11 @@ export function ImmersiveHeroClient({
           Medium
         </a>
       </nav>
+
+      {/* Aerial-camera anchor nav. Lives only in the camera world — its
+          buttons fire GSAP-eased flights to anchor coords, mirroring the
+          camera/aircraft metaphor. */}
+      <AnchorNav jetbrainsClassName={jetbrainsClassName} />
 
       {/*
         In-flow column (not position:absolute) so the hero root grows with accordion
@@ -557,6 +573,20 @@ export function ImmersiveHeroClient({
           </div>
         </div>
       </div>
+
+      {/* Aerial-camera section territory. In camera mode the three section
+          cards are fixed-positioned and drift with the terrain transform;
+          the scroll track below provides the vertical scroll range that
+          drives ScrollTrigger. In simple mode (mobile / reduced-motion)
+          the cards render as in-flow stacked sections and the track
+          collapses to zero height. */}
+      <HowIThinkSection />
+      <HowIBuildSection />
+      <ThinkingAheadSection />
+      <CameraScrollTrack />
     </div>
+
+    <ProgressBar />
+    </CameraProvider>
   );
 }
