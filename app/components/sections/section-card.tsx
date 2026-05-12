@@ -20,12 +20,19 @@ type SectionCardProps = Readonly<{
   /** Section title. */
   title: string;
   /** Slot for body — kept short; signature motion lives below. */
-  children: ReactNode;
+  children?: ReactNode;
   /** Extra slot below body (placeholder area for future signature motion). */
   signatureMotion?: ReactNode;
   /** Anchor link href, optional (e.g. "How I think" → /design-system/). */
   ctaHref?: string | null;
   ctaLabel?: string;
+  /**
+   * Replace the default article chrome (corners, eyebrow, title, body)
+   * with arbitrary content. The camera-aware wrapper / opacity / drift
+   * mechanics still apply. Used by `How I think` to mount the design
+   * system gallery in place of the small placeholder card.
+   */
+  customLayout?: ReactNode;
 }>;
 
 /**
@@ -41,6 +48,7 @@ export function SectionCard({
   signatureMotion,
   ctaHref,
   ctaLabel = "Open →",
+  customLayout,
 }: SectionCardProps) {
   const { cameraMode, mounted } = useCamera();
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -68,6 +76,18 @@ export function SectionCard({
   // camera-mode fixed positioning on desktop.
   if (!mounted) return null;
 
+  const body = customLayout ?? (
+    <CardBody
+      ordinal={ordinal}
+      title={title}
+      ctaHref={ctaHref}
+      ctaLabel={ctaLabel}
+      signatureMotion={signatureMotion}
+    >
+      {children}
+    </CardBody>
+  );
+
   if (!cameraMode) {
     // Simple mode: vertical stack, full opacity, no transforms.
     return (
@@ -75,15 +95,7 @@ export function SectionCard({
         id={`anchor-${anchor.slug}`}
         className="relative z-10 flex min-h-[80vh] w-full items-center justify-center px-6 py-16"
       >
-        <CardBody
-          ordinal={ordinal}
-          title={title}
-          ctaHref={ctaHref}
-          ctaLabel={ctaLabel}
-          signatureMotion={signatureMotion}
-        >
-          {children}
-        </CardBody>
+        {body}
       </section>
     );
   }
@@ -93,22 +105,14 @@ export function SectionCard({
       ref={wrapperRef}
       id={`anchor-${anchor.slug}`}
       aria-labelledby={`anchor-${anchor.slug}-title`}
-      className="pointer-events-none fixed inset-0 z-10 flex items-center justify-center px-6 will-change-transform"
+      className="pointer-events-none fixed inset-0 z-10 flex items-center justify-center px-6 py-20 will-change-transform"
       style={{ transform: "translate3d(0%, 0%, 0)" }}
     >
       <div
         ref={cardRef}
         style={{ opacity: 0, pointerEvents: "none", transition: "none" }}
       >
-        <CardBody
-          ordinal={ordinal}
-          title={title}
-          ctaHref={ctaHref}
-          ctaLabel={ctaLabel}
-          signatureMotion={signatureMotion}
-        >
-          {children}
-        </CardBody>
+        {body}
       </div>
     </div>
   );
