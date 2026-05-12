@@ -1,6 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 
 const VERT_SRC = `#version 300 es
 const vec2 kPos[3] = vec2[](vec2(-1.0, -1.0), vec2(3.0, -1.0), vec2(-1.0, 3.0));
@@ -19,6 +26,10 @@ precision highp sampler2D;
 uniform sampler2D u_tex;
 uniform float u_time;
 uniform vec2 u_mouse;
+// Aerial-camera offset in UV space. The terrain "pans" by sampling a
+// shifted region of the texture; the canvas itself stays viewport-sized
+// so the apparent zoom level is unchanged.
+uniform vec2 u_camera;
 
 in vec2 v_uv;
 out vec4 fragColor;
@@ -60,7 +71,7 @@ void main() {
     fbm(warpIn + vec2(13.7, 2.4))
   );
   vec2 warp = (q - 0.5) * 0.065;
-  vec2 uvw = uv + warp;
+  vec2 uvw = uv + warp + u_camera;
 
   vec2 m = u_mouse;
   vec2 delta = uvw - m;
@@ -71,7 +82,10 @@ void main() {
   vec2 dir = dist > 1e-5 ? delta / dist : vec2(0.0);
   uvw += dir * falloff * intensity;
 
-  vec3 col = texture(u_tex, clamp(uvw, 0.001, 0.999)).rgb;
+  // No clamp here — let MIRRORED_REPEAT (set in texParameteri) handle
+  // sampling outside [0,1] when the aerial-camera offset pushes us past
+  // the edge. clamp() would defeat the wrap mode and produce streaks.
+  vec3 col = texture(u_tex, uvw).rgb;
 
   vec2 vc = uv - 0.5;
   float vig = 1.0 - dot(vc, vc) * 0.42;
@@ -124,15 +138,48 @@ export type GenerativeHeroWebGLProps = Readonly<{
   className?: string;
 }>;
 
-export function GenerativeHeroWebGL({
-  textureSrc = "/textures/volcanic-terrain-hero.png",
-  texturePreviewSrc = "/textures/volcanic-terrain-hero-low.png",
-  className = "",
-}: GenerativeHeroWebGLProps) {
+/**
+ * Imperative handle for the WebGL hero. Used by the aerial-camera
+ * controller to pan the terrain's UV sampling region without resizing
+ * or scaling the canvas (which would visibly zoom the shader).
+ */
+export type GenerativeHeroWebGLHandle = Readonly<{
+  /**
+   * Set the texture-sampling camera offset, in UV space.
+   * x=0,y=0 is the production look. Typical range is ±0.15.
+   */
+  setCameraOffset(x: number, y: number): void;
+}>;
+
+export const GenerativeHeroWebGL = forwardRef<
+  GenerativeHeroWebGLHandle,
+  GenerativeHeroWebGLProps
+>(function GenerativeHeroWebGL(
+  {
+    textureSrc = "/textures/volcanic-terrain-hero.png",
+    texturePreviewSrc = "/textures/volcanic-terrain-hero-low.png",
+    className = "",
+  },
+  ref,
+) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const mountedRef = useRef(true);
   const [surfaceReady, setSurfaceReady] = useState(false);
+  // Camera UV offset is held in a ref so the imperative handle can mutate
+  // it from outside while the RAF draw loop reads it each frame.
+  const cameraOffsetRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      setCameraOffset(x: number, y: number) {
+        cameraOffsetRef.current.x = x;
+        cameraOffsetRef.current.y = y;
+      },
+    }),
+    [],
+  );
 
   const loadTexture = useCallback(
     (gl: WebGL2RenderingContext, url: string): Promise<WebGLTexture | null> => {
@@ -147,8 +194,12 @@ export function GenerativeHeroWebGL({
           }
           gl.bindTexture(gl.TEXTURE_2D, tex);
           gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+          // MIRRORED_REPEAT so the aerial-camera UV offset never produces
+          // edge-pixel smearing when sampling outside [0,1]; the texture
+          // is noise-like terrain, so a mirrored extension reads as a
+          // continuation of the same material.
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.MIRRORED_REPEAT);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.MIRRORED_REPEAT);
           gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
           gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
           gl.texImage2D(
@@ -210,6 +261,7 @@ export function GenerativeHeroWebGL({
     const locTex = gl.getUniformLocation(program, "u_tex");
     const locTime = gl.getUniformLocation(program, "u_time");
     const locMouse = gl.getUniformLocation(program, "u_mouse");
+    const locCamera = gl.getUniformLocation(program, "u_camera");
 
     let tex: WebGLTexture | null = null;
     let raf = 0;
@@ -343,6 +395,11 @@ export function GenerativeHeroWebGL({
       }
       gl.uniform1f(locTime, t);
       gl.uniform2f(locMouse, mouseX, 1 - mouseY);
+      gl.uniform2f(
+        locCamera,
+        cameraOffsetRef.current.x,
+        cameraOffsetRef.current.y,
+      );
 
       gl.bindVertexArray(vao);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
@@ -383,4 +440,4 @@ export function GenerativeHeroWebGL({
       </div>
     </div>
   );
-}
+});

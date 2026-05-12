@@ -25,17 +25,24 @@ export type Anchor = Readonly<{
 }>;
 
 /**
- * Coordinates preserve the brief's quadrant pattern (anchor 1 upper-right
- * of origin → anchor 2 upper-left across → anchor 3 right-of-center, top).
- * Magnitudes are the brief's table values × 0.5 on x and × 0.213 on y, the
- * largest scaling that keeps the terrain wrapper covering the viewport
- * given its `inset:-25%` overscan plus the camera-altitude scale ceiling.
+ * Coordinates use perfectly balanced 50/50 deltas between anchors so each
+ * leg of the path feels equally diagonal, never lopsided horizontal.
+ * Anchor 3 descends right (positive x, less negative y) to break the
+ * up-left/up-right repeat — clicking it doesn't feel like another upward
+ * sweep.
+ *
+ *   hero  → think  : (-7, -7)   upper-left   (Δ -7, -7)
+ *   think → build  : (+7, -7)   upper-right  (Δ +7, -7)
+ *   build → ahead  : (+10, +10) lower-right  (Δ +10, +10)
+ *
+ * Scale tracks altitude: peaks at anchor 2 (camera highest), descends
+ * slightly toward anchor 3.
  */
 export const ANCHORS: ReadonlyArray<Anchor> = [
-  { id: 0, slug: "hero",  label: "Hero",           href: null,              x:    0,  y:    0,   scale: 1.000 },
-  { id: 1, slug: "think", label: "How I think",    href: "/design-system/", x:   15,  y: -5.3,   scale: 1.013 },
-  { id: 2, slug: "build", label: "How I build",    href: null,              x:  -10,  y: -10.7,  scale: 1.026 },
-  { id: 3, slug: "ahead", label: "Thinking Ahead", href: null,              x:  7.5,  y:  -16,   scale: 1.040 },
+  { id: 0, slug: "hero",  label: "Home",           href: null,              x:   0,   y:   0,   scale: 1.000 },
+  { id: 1, slug: "think", label: "How I think",    href: "/design-system/", x:  -7,   y:  -7,   scale: 1.020 },
+  { id: 2, slug: "build", label: "How I build",    href: null,              x:   0,   y: -14,   scale: 1.040 },
+  { id: 3, slug: "ahead", label: "Thinking Ahead", href: null,              x:  10,   y:  -4,   scale: 1.012 },
 ];
 
 /** Anchors visited as content sections (skips hero). */
@@ -60,10 +67,13 @@ export const FLIGHT_DURATION = 1.4;
 export const FLIGHT_EASE = "power2.inOut";
 
 /**
- * Total scroll distance, expressed as multiples of viewport height.
- * One viewport per segment + one for hero entry breathing room.
+ * Track height contribution per inter-anchor segment, expressed as
+ * multiples of viewport height. The full ScrollTrigger range spans the
+ * entire document (top top → bottom bottom) so the camera begins moving
+ * the instant the user scrolls — by ~70vh of scroll the camera should be
+ * at anchor 1, ~210vh at anchor 3.
  */
-export const SCROLL_VH_PER_ANCHOR = 1.1;
+export const SCROLL_VH_PER_ANCHOR = 0.7;
 
 /** power2.inOut easing applied to in-segment progress (0..1). */
 export function easePower2InOut(t: number): number {

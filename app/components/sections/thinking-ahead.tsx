@@ -17,9 +17,7 @@ export function ThinkingAheadSection() {
       ordinal="03"
       title="Thinking Ahead"
       signatureMotion={
-        <span className="block">
-          [ Manifesto theses + signature motion — placeholder. Final copy TBD. ]
-        </span>
+        <span className="block">More to come →</span>
       }
     >
       <p>

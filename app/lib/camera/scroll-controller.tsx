@@ -143,17 +143,12 @@ export function CameraProvider({ children }: CameraProviderProps) {
         return;
       }
 
-      const track = trackRef.current;
-      if (!track) return;
-
-      const rect = track.getBoundingClientRect();
-      const trackTop = rect.top + window.scrollY;
-      const trackHeight = rect.height;
-      const trackScrollRange = trackHeight - window.innerHeight;
-      // Land in the middle of the segment's settle hold so the user arrives
-      // "stopped" at the anchor, not mid-drift.
+      // Trigger spans the full document, so target scrollY is just a
+      // fraction of the document's scrollable range.
+      const docHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
       const targetProgress = i / SEGMENT_COUNT;
-      const targetY = trackTop + targetProgress * trackScrollRange;
+      const targetY = targetProgress * docHeight;
 
       const startY = window.scrollY;
       const obj = { y: startY };
@@ -220,7 +215,10 @@ export function CameraScrollTrack() {
       _setCameraMode(true);
 
       trigger = ScrollTrigger.create({
-        trigger: track,
+        // Trigger the full document so camera motion begins on the very
+        // first scroll tick, before the hero has finished leaving the
+        // viewport. Track sits in flow purely to extend doc height.
+        trigger: document.documentElement,
         start: "top top",
         end: "bottom bottom",
         scrub: SCROLL_SCRUB,

@@ -13,6 +13,7 @@ import { HowIThinkSection } from "./sections/how-i-think";
 import { HowIBuildSection } from "./sections/how-i-build";
 import { ThinkingAheadSection } from "./sections/thinking-ahead";
 import { ProgressBar } from "./hud/progress-bar";
+import { HeroTagline } from "./hero-tagline";
 
 type ImmersiveHeroClientProps = Readonly<{
   jetbrainsClassName: string;
@@ -236,9 +237,13 @@ export function ImmersiveHeroClient({
         <TerrainCanvas />
       </div>
 
+      {/* Top-left site nav — fixed so it stays visible across all camera
+          anchors. Type matches the [+] Menu / [+] Design Philosophy
+          buttons (Fira, text-sm/sm:text-base, normal case, hover-tracks
+          wider) so the row reads as part of the hero vocabulary. */}
       <nav
         aria-label="Site and social links"
-        className="pointer-events-auto absolute left-0 top-0 z-20 flex max-w-[calc(100%-1rem)] flex-wrap items-center gap-x-5 gap-y-2 px-4 py-3 pr-8 text-[11px] font-medium uppercase sm:px-5 sm:py-3.5 sm:pr-10"
+        className={`pointer-events-auto fixed left-0 top-0 z-30 flex max-w-[calc(100%-1rem)] flex-wrap items-center gap-x-4 gap-y-2 px-5 py-3.5 pr-10 text-[11px] font-normal uppercase tracking-[0.06em] sm:text-[12px] ${firaClassName}`}
         style={{
           background:
             "linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.42) 52%, rgba(0,0,0,0) 100%)",
@@ -247,16 +252,16 @@ export function ImmersiveHeroClient({
         <Link
           href="/classic"
           onClick={() => posthog.capture("layout_switched", { to: "classic", from: "immersive" })}
-          className="tracking-[0.12em] text-white/55 transition-[letter-spacing,color] duration-300 ease-out hover:tracking-[0.2em] hover:text-white/90"
+          className="text-white/75 transition-[letter-spacing,color] duration-300 ease-out [text-shadow:0_1px_2px_rgba(0,0,0,0.85)] hover:tracking-[0.16em] hover:text-white sm:hover:tracking-[0.2em]"
         >
-          ← Home
+          v1
         </Link>
         <a
           href="https://github.com/parvezk"
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => posthog.capture("social_link_clicked", { platform: "GitHub", location: "immersive_nav" })}
-          className="tracking-[0.12em] text-white/55 transition-[letter-spacing,color] duration-300 ease-out hover:tracking-[0.2em] hover:text-white/90"
+          className="text-white/75 transition-[letter-spacing,color] duration-300 ease-out [text-shadow:0_1px_2px_rgba(0,0,0,0.85)] hover:tracking-[0.16em] hover:text-white sm:hover:tracking-[0.2em]"
         >
           GitHub
         </a>
@@ -265,7 +270,7 @@ export function ImmersiveHeroClient({
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => posthog.capture("social_link_clicked", { platform: "LinkedIn", location: "immersive_nav" })}
-          className="tracking-[0.12em] text-white/55 transition-[letter-spacing,color] duration-300 ease-out hover:tracking-[0.2em] hover:text-white/90"
+          className="text-white/75 transition-[letter-spacing,color] duration-300 ease-out [text-shadow:0_1px_2px_rgba(0,0,0,0.85)] hover:tracking-[0.16em] hover:text-white sm:hover:tracking-[0.2em]"
         >
           LinkedIn
         </a>
@@ -274,7 +279,7 @@ export function ImmersiveHeroClient({
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => posthog.capture("social_link_clicked", { platform: "Substack", location: "immersive_nav" })}
-          className="tracking-[0.12em] text-white/55 transition-[letter-spacing,color] duration-300 ease-out hover:tracking-[0.2em] hover:text-white/90"
+          className="text-white/75 transition-[letter-spacing,color] duration-300 ease-out [text-shadow:0_1px_2px_rgba(0,0,0,0.85)] hover:tracking-[0.16em] hover:text-white sm:hover:tracking-[0.2em]"
         >
           Substack
         </a>
@@ -283,16 +288,15 @@ export function ImmersiveHeroClient({
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => posthog.capture("social_link_clicked", { platform: "Medium", location: "immersive_nav" })}
-          className="tracking-[0.12em] text-white/55 transition-[letter-spacing,color] duration-300 ease-out hover:tracking-[0.2em] hover:text-white/90"
+          className="text-white/75 transition-[letter-spacing,color] duration-300 ease-out [text-shadow:0_1px_2px_rgba(0,0,0,0.85)] hover:tracking-[0.16em] hover:text-white sm:hover:tracking-[0.2em]"
         >
           Medium
         </a>
       </nav>
 
-      {/* Aerial-camera anchor nav. Lives only in the camera world — its
-          buttons fire GSAP-eased flights to anchor coords, mirroring the
-          camera/aircraft metaphor. */}
-      <AnchorNav jetbrainsClassName={jetbrainsClassName} />
+      {/* Aerial-camera anchor nav. Home + the three section anchors.
+          Buttons fire GSAP-eased flights to anchor coords. */}
+      <AnchorNav firaClassName={firaClassName} />
 
       {/*
         In-flow column (not position:absolute) so the hero root grows with accordion
@@ -381,8 +385,26 @@ export function ImmersiveHeroClient({
                   id={philosophyPanelId}
                   aria-labelledby={philosophyToggleId}
                   aria-hidden={!philosophyOpen}
-                  className={`${jetbrainsClassName} rounded-md border border-white/12 bg-black/50 px-4 py-3 text-left text-[12px] font-normal leading-[1.65] text-white/85 opacity-100 shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-sm [text-shadow:0_1px_6px_rgba(0,0,0,0.65)] sm:text-[13px] ${philosophyOpen ? "pointer-events-auto" : "pointer-events-none"}`}
+                  className={`relative ${jetbrainsClassName} rounded-md border border-white/12 bg-black/50 px-4 py-3 text-left text-[12px] font-normal leading-[1.65] text-white/85 opacity-100 shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-sm [text-shadow:0_1px_6px_rgba(0,0,0,0.65)] sm:text-[13px] ${philosophyOpen ? "pointer-events-auto" : "pointer-events-none"}`}
                 >
+                  {/* Top-right close affordance. Some visitors don't realize
+                      the `[+] Design Philosophy` button is the toggle — this
+                      surfaces the close gesture inside the panel itself. */}
+                  <button
+                    type="button"
+                    aria-label="Close Design Philosophy"
+                    onClick={() => {
+                      setPhilosophyOpen(false);
+                      posthog.capture("design_philosophy_toggled", {
+                        action: "closed",
+                        source: "panel_close",
+                      });
+                    }}
+                    className="absolute right-2 top-2 z-10 inline-flex h-12 w-12 items-center justify-center rounded text-[28px] leading-none text-white/60 transition-colors duration-200 ease-out hover:bg-white/[0.06] hover:text-[color:var(--accent-terracotta)] focus:outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--accent-terracotta)]/60"
+                  >
+                    ×
+                  </button>
+
                   {/* ┌  ~/.claude/agentic-stack/parvezkose.com
                      The path label doubles as the section header — no
                      separate ◇ philosophy marker needed. The cat command
@@ -401,7 +423,7 @@ export function ImmersiveHeroClient({
                     <p className="text-white/65">
                       <span className="text-[color:var(--accent-terracotta)]">$</span>{" "}
                       <span className="text-white">cat</span>{" "}
-                      <span className="text-[color:var(--neutral-latte)]">philosophy.md</span>
+                      <span className="text-[color:var(--neutral-latte)]">design-philosophy.md</span>
                     </p>
                   </RailRow>
 
@@ -551,27 +573,9 @@ export function ImmersiveHeroClient({
           </div>
         </div>
 
-        <div className="pointer-events-auto flex shrink-0 justify-center px-6 pb-14">
-          <div
-            className="w-fit max-w-[min(100%,22rem)] rounded-md px-7 py-3.5 text-center sm:max-w-[min(100%,28rem)] sm:px-9"
-            style={{
-              background:
-                "linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.42) 52%, rgba(0,0,0,0) 100%)",
-            }}
-          >
-            <div className="flex flex-col items-center gap-1 text-[11px] font-normal uppercase leading-relaxed text-white/88 sm:text-xs [text-shadow:0_1px_12px_rgba(0,0,0,0.85)]">
-              <span className="inline-block tracking-[0.14em] transition-[letter-spacing,color] duration-300 ease-out hover:tracking-[0.24em] hover:text-white sm:tracking-[0.16em] sm:hover:tracking-[0.28em]">
-                Agentic systems.
-              </span>
-              <span className="inline-block tracking-[0.14em] transition-[letter-spacing,color] duration-300 ease-out hover:tracking-[0.24em] hover:text-white sm:tracking-[0.16em] sm:hover:tracking-[0.28em]">
-                Generative UI.
-              </span>
-              <span className="inline-block tracking-[0.14em] transition-[letter-spacing,color] duration-300 ease-out hover:tracking-[0.24em] hover:text-white sm:tracking-[0.16em] sm:hover:tracking-[0.28em]">
-                Visual interpretability.
-              </span>
-            </div>
-          </div>
-        </div>
+        {/* Tagline lives in <HeroTagline/> below — fixed-positioned so it
+            does NOT extend the hero's in-flow height and slow scroll-to
+            anchor-1. It fades out as soon as the camera starts moving. */}
       </div>
 
       {/* Aerial-camera section territory. In camera mode the three section
@@ -586,6 +590,7 @@ export function ImmersiveHeroClient({
       <CameraScrollTrack />
     </div>
 
+    <HeroTagline firaClassName={firaClassName} />
     <ProgressBar />
     </CameraProvider>
   );

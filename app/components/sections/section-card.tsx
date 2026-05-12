@@ -5,18 +5,13 @@ import { ANCHORS, cardOpacity, type Anchor } from "../../lib/camera/path";
 import { useCamera, useCameraEffect } from "../../lib/camera/scroll-controller";
 
 /**
- * The terrain wrapper is sized at `inset:-25%`, i.e. 150% of the viewport
- * in each direction, and the camera transform translates it in
- * percent-of-its-own-layout space. To anchor a card to a terrain
- * coordinate (so it stays glued to the terrain at exactly that spot, no
- * parallax), the card's viewport-space translate must be the difference
- * (anchor.coord - camera.coord) scaled by the wrapper's size ratio:
- *
- *   visible_position_in_viewport_pct = (anchor - camera) * (1 + 2 * inset)
- *
- * with inset = 0.25, so the factor is exactly 1.50.
+ * Card drift factor in viewport percent. The terrain is now static (no
+ * wrapper transform — see TerrainCanvas), so anchor.x/y values map
+ * directly to viewport-percent translates on the card wrapper. Cards
+ * drift across the static backdrop as the camera progresses, providing
+ * the "flying" sensation without zooming the shader.
  */
-const TERRAIN_TO_VIEWPORT = 1.50;
+const TERRAIN_TO_VIEWPORT = 1.0;
 
 type SectionCardProps = Readonly<{
   anchor: Anchor;
