@@ -1,6 +1,26 @@
 "use client";
 
-import { useState, type CSSProperties, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
+import { useReducedMotion } from "./use-reduced-motion";
+
+/**
+ * Wall-label anchor: positioning + max-width within the plate's clipped
+ * well. Per the handoff each plate has its own anchor that lives in
+ * its negative space (e.g. UI Kit places the label bottom-right; Brand
+ * places it top-right to clear the wordmark).
+ */
+export type RationaleAnchor = Readonly<{
+  /** Inline style overrides for absolute positioning + text-align. */
+  style: CSSProperties;
+  /** Cap on label width so it sits within the plate's negative space. */
+  maxWidth: number;
+}>;
 
 /**
  * Shared plate chrome. Per the handoff:
@@ -37,6 +57,25 @@ export type PlateShellProps = Readonly<{
    * hover state (caret blink, swatch crescent, etc).
    */
   children: ReactNode | ((hover: boolean) => ReactNode);
+  /**
+   * Wall-label rationale that fades in after 250ms sustained hover.
+   * Combined with `rationaleAnchor` to position the label inside the
+   * plate's negative space. Skipped (no render) if either is omitted.
+   */
+  rationale?: string;
+  rationaleAnchor?: RationaleAnchor;
+  /**
+   * Per-plate cursor-parallax offset in pixels. Composed into the
+   * plate's transform alongside the hover lift + elevated scale.
+   * Driven from a shared cursor field at the gallery level.
+   */
+  parallaxOffset?: { x: number; y: number };
+  /**
+   * Mount-time entry-stagger delay in ms. The plate animates from
+   * `translateY(16px) + opacity(0)` to its rest state on mount, using
+   * this delay to walk the eye through the cluster.
+   */
+  entryDelayMs?: number;
 }>;
 
 export function PlateShell({
@@ -46,11 +85,63 @@ export function PlateShell({
   motionTier = "restrained",
   style,
   children,
+  rationale,
+  rationaleAnchor,
+  parallaxOffset,
+  entryDelayMs = 0,
 }: PlateShellProps) {
   const [hover, setHover] = useState(false);
+  const [showRationale, setShowRationale] = useState(false);
+  // Plates mount hidden + translated; flips to visible after entryDelayMs.
+  // Avoids hydration mismatch by deferring the reveal to client effect.
+  const [entered, setEntered] = useState(false);
+  const reduced = useReducedMotion();
+  const rationaleTimerRef = useRef<number | null>(null);
+
   const elevated = motionTier === "elevated";
   const scale = elevated && hover ? 1.04 : 1;
   const lift = hover ? -6 : 0;
+  const px = parallaxOffset?.x ?? 0;
+  const py = parallaxOffset?.y ?? 0;
+
+  // Sustained-hover timer for the wall label. Reduced motion: instant.
+  useEffect(() => {
+    if (rationaleTimerRef.current) {
+      window.clearTimeout(rationaleTimerRef.current);
+      rationaleTimerRef.current = null;
+    }
+    if (!hover) {
+      setShowRationale(false);
+      return;
+    }
+    if (reduced) {
+      setShowRationale(true);
+      return;
+    }
+    rationaleTimerRef.current = window.setTimeout(() => {
+      setShowRationale(true);
+    }, 250);
+    return () => {
+      if (rationaleTimerRef.current) {
+        window.clearTimeout(rationaleTimerRef.current);
+      }
+    };
+  }, [hover, reduced]);
+
+  // Entry stagger: flip `entered` on mount after the per-plate delay.
+  // Reduced motion: instant, no delay, no translate/opacity transition.
+  useEffect(() => {
+    if (reduced) {
+      setEntered(true);
+      return;
+    }
+    const t = window.setTimeout(() => setEntered(true), entryDelayMs);
+    return () => window.clearTimeout(t);
+  }, [entryDelayMs, reduced]);
+
+  const entryY = entered ? 0 : 16;
+  const entryOpacity = entered ? 1 : 0;
+  const showWallLabel = Boolean(rationale && rationaleAnchor);
 
   return (
     <div
@@ -68,9 +159,14 @@ export function PlateShell({
         WebkitBackdropFilter: "blur(14px) saturate(120%)",
         border: `1px solid ${hover ? "rgba(226,114,91,0.55)" : "rgba(200,173,143,0.18)"}`,
         transformOrigin: "center center",
-        transform: `translate3d(0, ${lift}px, 0) scale(${scale})`,
-        transition:
-          "transform 420ms cubic-bezier(0.25,0.46,0.45,0.94), border-color 240ms cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 320ms cubic-bezier(0.25,0.46,0.45,0.94)",
+        // Composed transform: parallax (cursor) + lift (hover) + entry
+        // (mount stagger) on translate; scale separately. translate3d
+        // ensures GPU compositing.
+        transform: `translate3d(${px}px, ${lift + py + entryY}px, 0) scale(${scale})`,
+        opacity: entryOpacity,
+        transition: reduced
+          ? "none"
+          : `transform 420ms cubic-bezier(0.25,0.46,0.45,0.94), opacity 360ms cubic-bezier(0.25,0.46,0.45,0.94), border-color 240ms cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 320ms cubic-bezier(0.25,0.46,0.45,0.94)`,
         boxShadow:
           hover && elevated
             ? "0 18px 48px rgba(0,0,0,0.55), 0 0 0 1px rgba(226,114,91,0.18)"
@@ -104,6 +200,55 @@ export function PlateShell({
         }}
       >
         {typeof children === "function" ? children(hover) : children}
+
+        {/* Sustained-hover wall label — fades in after 250ms hover, lives
+            in the plate's negative space at the configured anchor. */}
+        {showWallLabel && (
+          <div
+            aria-hidden={!showRationale}
+            style={{
+              position: "absolute",
+              ...rationaleAnchor!.style,
+              maxWidth: rationaleAnchor!.maxWidth,
+              opacity: showRationale ? 1 : 0,
+              transform: showRationale ? "translateY(0)" : "translateY(3px)",
+              transition: reduced
+                ? "none"
+                : "opacity 280ms cubic-bezier(0.25,0.46,0.45,0.94), transform 360ms cubic-bezier(0.25,0.46,0.45,0.94)",
+              pointerEvents: "none",
+              fontFamily:
+                "var(--font-family-mono), 'JetBrains Mono', monospace",
+              fontSize: 9.5,
+              lineHeight: 1.45,
+              letterSpacing: "0.01em",
+              color: "rgba(200,173,143,0.92)",
+              textShadow:
+                "0 1px 6px rgba(0,0,0,0.95), 0 0 12px rgba(0,0,0,0.7)",
+              zIndex: 8,
+              padding: "5px 7px",
+              background: "rgba(10,7,5,0.78)",
+              backdropFilter: "blur(4px)",
+              WebkitBackdropFilter: "blur(4px)",
+              border: "1px solid rgba(200,173,143,0.18)",
+            }}
+          >
+            <span
+              style={{
+                display: "block",
+                fontFamily:
+                  "var(--font-family-mono), 'JetBrains Mono', monospace",
+                fontSize: 7.5,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                color: "var(--accent-terracotta)",
+                marginBottom: 2,
+              }}
+            >
+              ◇ wall label
+            </span>
+            <span style={{ display: "block" }}>{rationale}</span>
+          </div>
+        )}
       </div>
 
       {/* Footer row: "01 UI KIT  ·  interface". */}
