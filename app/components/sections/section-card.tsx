@@ -105,7 +105,9 @@ export function SectionCard({
       ref={wrapperRef}
       id={`anchor-${anchor.slug}`}
       aria-labelledby={`anchor-${anchor.slug}-title`}
-      className="pointer-events-none fixed inset-0 z-10 flex items-center justify-center px-6 py-20 will-change-transform"
+      className={`pointer-events-none fixed inset-0 z-10 flex justify-center px-6 py-20 will-change-transform ${
+        customLayout ? "items-start" : "items-center"
+      }`}
       style={{ transform: "translate3d(0%, 0%, 0)" }}
     >
       <div
