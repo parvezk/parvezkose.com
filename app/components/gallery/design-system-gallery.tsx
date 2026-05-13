@@ -53,15 +53,19 @@ export function DesignSystemGallery() {
           gap: 20,
         }}
       >
+        {/* Whole grid lifted by 1 row vs the previous shifted layout
+            (top plates from 2/4,2/5 → 1/3,1/4 ; bottom plates from
+            5/7,5/7,5/8 → 4/6,4/6,4/7). Removes the empty top row that
+            was wasting vertical space below the new header, while
+            preserving the uneven-cluster relationship between top and
+            bottom plates (1 empty grid row of vertical gap between
+            them). */}
         <PlateShell
           index="01"
           label="UI Kit"
           kind="interface"
           motionTier="restrained"
-          // Shifted down 1 row vs the handoff (1/3 → 2/4) so the top
-          // plates cluster closer to the bottom row. Empty row 1 above
-          // becomes the gallery's top breathing space.
-          style={{ gridColumn: "1 / 7", gridRow: "2 / 4" }}
+          style={{ gridColumn: "1 / 7", gridRow: "1 / 3" }}
         >
           {(hover) => UIKitSpecimen(hover)}
         </PlateShell>
@@ -71,9 +75,7 @@ export function DesignSystemGallery() {
           label="Color"
           kind="palette"
           motionTier="ambient"
-          // Shifted down 1 row (1/4 → 2/5) so Color's bottom edge sits
-          // ~20px above Type/Brand — tight cluster on this column.
-          style={{ gridColumn: "8 / 11", gridRow: "2 / 5" }}
+          style={{ gridColumn: "8 / 11", gridRow: "1 / 4" }}
         >
           {(hover) => ColorSpecimen(hover)}
         </PlateShell>
@@ -83,7 +85,7 @@ export function DesignSystemGallery() {
           label="Type"
           kind="specimen"
           motionTier="restrained"
-          style={{ gridColumn: "7 / 10", gridRow: "5 / 7" }}
+          style={{ gridColumn: "7 / 10", gridRow: "4 / 6" }}
         >
           {(hover) => TypographySpecimen(hover)}
         </PlateShell>
@@ -93,7 +95,7 @@ export function DesignSystemGallery() {
           label="Brand"
           kind="wordmark"
           motionTier="restrained"
-          style={{ gridColumn: "10 / 13", gridRow: "5 / 8" }}
+          style={{ gridColumn: "10 / 13", gridRow: "4 / 7" }}
         >
           {(hover) => BrandSpecimen(hover)}
         </PlateShell>
@@ -103,7 +105,7 @@ export function DesignSystemGallery() {
           label="Components"
           kind="atoms"
           motionTier="elevated"
-          style={{ gridColumn: "1 / 6", gridRow: "5 / 7" }}
+          style={{ gridColumn: "1 / 6", gridRow: "4 / 6" }}
         >
           {(hover) => ComponentsSpecimen(hover)}
         </PlateShell>
