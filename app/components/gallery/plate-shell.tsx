@@ -155,7 +155,11 @@ export function PlateShell({
     return () => window.clearTimeout(t);
   }, [visible, entered, entryDelayMs, reduced]);
 
-  const entryY = entered ? 0 : 16;
+  // Rise distance + transitions tuned for visible stagger: 28px rise so
+  // each plate's emergence is felt, with opacity drawn out to 600ms so
+  // the per-plate delays (handoff: 0 / 220 / 440 / 600 / 780 ms) read
+  // as distinct beats rather than one uniform fade.
+  const entryY = entered ? 0 : 28;
   const entryOpacity = entered ? 1 : 0;
   const showWallLabel = Boolean(rationale && rationaleAnchor);
 
@@ -182,7 +186,7 @@ export function PlateShell({
         opacity: entryOpacity,
         transition: reduced
           ? "none"
-          : `transform 420ms cubic-bezier(0.25,0.46,0.45,0.94), opacity 360ms cubic-bezier(0.25,0.46,0.45,0.94), border-color 240ms cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 320ms cubic-bezier(0.25,0.46,0.45,0.94)`,
+          : `transform 640ms cubic-bezier(0.25,0.46,0.45,0.94), opacity 600ms cubic-bezier(0.25,0.46,0.45,0.94), border-color 240ms cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 320ms cubic-bezier(0.25,0.46,0.45,0.94)`,
         boxShadow:
           hover && elevated
             ? "0 18px 48px rgba(0,0,0,0.55), 0 0 0 1px rgba(226,114,91,0.18)"

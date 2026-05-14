@@ -23,7 +23,10 @@ import { useReducedMotion } from "./use-reduced-motion";
  * for narrow viewports.
  */
 
-const PARALLAX_MAX_PX = 8;
+// Handoff said 8px; bumped to 18 after the spec value was imperceptible
+// in browser testing. Color (depth 1.6) now hits ~29px at the corners
+// and Brand (0.6) ~11px — still subtle but unmistakable as motion.
+const PARALLAX_MAX_PX = 18;
 
 /** Per-plate cursor-parallax depth (handoff: UI Kit 1.0, Color 1.6, Type 1.3, Brand 0.6, Components 1.1). */
 const DEPTH = {
