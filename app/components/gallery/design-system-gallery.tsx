@@ -86,7 +86,20 @@ const RATIONALE = {
     "// RATIONALE_TBD — Three button atoms — pill, framed, terminal — one design system, three voices.",
 };
 
-export function DesignSystemGallery() {
+export type DesignSystemGalleryProps = Readonly<{
+  /**
+   * Gates the per-plate entry stagger. Defaults to true so the gallery
+   * animates in on mount when used standalone. The `How I think`
+   * anchor passes `false` until the camera arrives at the anchor, so
+   * the stagger fires on first reveal — not invisibly at page load
+   * while the SectionCard wrapper is still at opacity 0.
+   */
+  visible?: boolean;
+}>;
+
+export function DesignSystemGallery({
+  visible = true,
+}: DesignSystemGalleryProps = {}) {
   const sectionRef = useRef<HTMLDivElement>(null);
   // Cursor in normalized [-1, 1] within the section's bounds. State so
   // React composes per-plate offsets; rAF-throttled in the handler so
@@ -169,6 +182,7 @@ export function DesignSystemGallery() {
           rationaleAnchor={UIKIT_RATIONALE}
           parallaxOffset={offset(DEPTH.uiKit)}
           entryDelayMs={ENTRY_MS.uiKit}
+          visible={visible}
         >
           {(hover) => UIKitSpecimen(hover)}
         </PlateShell>
@@ -183,6 +197,7 @@ export function DesignSystemGallery() {
           rationaleAnchor={COLOR_RATIONALE}
           parallaxOffset={offset(DEPTH.color)}
           entryDelayMs={ENTRY_MS.color}
+          visible={visible}
         >
           {(hover) => ColorSpecimen(hover)}
         </PlateShell>
@@ -197,6 +212,7 @@ export function DesignSystemGallery() {
           rationaleAnchor={TYPE_RATIONALE}
           parallaxOffset={offset(DEPTH.type)}
           entryDelayMs={ENTRY_MS.type}
+          visible={visible}
         >
           {(hover) => TypographySpecimen(hover)}
         </PlateShell>
@@ -211,6 +227,7 @@ export function DesignSystemGallery() {
           rationaleAnchor={BRAND_RATIONALE}
           parallaxOffset={offset(DEPTH.brand)}
           entryDelayMs={ENTRY_MS.brand}
+          visible={visible}
         >
           {(hover) => BrandSpecimen(hover)}
         </PlateShell>
@@ -225,6 +242,7 @@ export function DesignSystemGallery() {
           rationaleAnchor={COMPONENTS_RATIONALE}
           parallaxOffset={offset(DEPTH.components)}
           entryDelayMs={ENTRY_MS.components}
+          visible={visible}
         >
           {(hover) => ComponentsSpecimen(hover)}
         </PlateShell>

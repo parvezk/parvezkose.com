@@ -71,11 +71,20 @@ export type PlateShellProps = Readonly<{
    */
   parallaxOffset?: { x: number; y: number };
   /**
-   * Mount-time entry-stagger delay in ms. The plate animates from
-   * `translateY(16px) + opacity(0)` to its rest state on mount, using
-   * this delay to walk the eye through the cluster.
+   * Entry-stagger delay in ms. The plate animates from
+   * `translateY(16px) + opacity(0)` to its rest state when `visible`
+   * transitions to true, using this delay to walk the eye through
+   * the cluster.
    */
   entryDelayMs?: number;
+  /**
+   * Gates the entry stagger. Defaults to true so the plate animates
+   * in immediately on mount; the gallery passes false until its
+   * parent confirms the gallery is in view (e.g. camera arrived at
+   * the `How I think` anchor), so the stagger fires on first reveal
+   * instead of at page load.
+   */
+  visible?: boolean;
 }>;
 
 export function PlateShell({
@@ -89,6 +98,7 @@ export function PlateShell({
   rationaleAnchor,
   parallaxOffset,
   entryDelayMs = 0,
+  visible = true,
 }: PlateShellProps) {
   const [hover, setHover] = useState(false);
   const [showRationale, setShowRationale] = useState(false);
@@ -128,16 +138,22 @@ export function PlateShell({
     };
   }, [hover, reduced]);
 
-  // Entry stagger: flip `entered` on mount after the per-plate delay.
-  // Reduced motion: instant, no delay, no translate/opacity transition.
+  // Entry stagger: flip `entered` after the per-plate delay, but only
+  // once `visible` is true. The gallery passes false until its parent
+  // confirms the gallery is in view, so the stagger fires on first
+  // reveal instead of at page load (when the plates would all animate
+  // in invisibly at opacity 0 inside the camera-anchor wrapper).
+  // Reduced motion: instant, no delay, no transition.
   useEffect(() => {
+    if (!visible) return;
+    if (entered) return;
     if (reduced) {
       setEntered(true);
       return;
     }
     const t = window.setTimeout(() => setEntered(true), entryDelayMs);
     return () => window.clearTimeout(t);
-  }, [entryDelayMs, reduced]);
+  }, [visible, entered, entryDelayMs, reduced]);
 
   const entryY = entered ? 0 : 16;
   const entryOpacity = entered ? 1 : 0;

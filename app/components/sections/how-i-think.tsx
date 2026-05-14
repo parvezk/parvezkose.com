@@ -1,6 +1,11 @@
 "use client";
 
-import { ANCHORS } from "../../lib/camera/path";
+import { useState } from "react";
+import { ANCHORS, cardOpacity } from "../../lib/camera/path";
+import {
+  useCamera,
+  useCameraEffect,
+} from "../../lib/camera/scroll-controller";
 import { SectionCard } from "./section-card";
 import { DesignSystemGallery } from "../gallery/design-system-gallery";
 
@@ -11,15 +16,39 @@ const ANCHOR = ANCHORS[1];
  * (eyebrow + title + 2-line subtitle), followed by the design-system
  * gallery (5 plates on an asymmetric scatter grid).
  *
- * SectionCard's camera-aware wrapper / opacity / drift mechanics apply
- * to the whole composite — the entire block fades in as the camera
- * arrives at anchor 1 and drifts off as it leaves.
+ * Visibility gating for entry stagger
+ * -----------------------------------
+ * The gallery (and its plates) mount on page load regardless of camera
+ * position — they sit inside the SectionCard's camera-aware wrapper at
+ * `opacity: 0` until the camera arrives at anchor 1. If the plates
+ * fire their entry-stagger animation at mount time, that animation
+ * runs invisibly while the user is still at the hero anchor and is
+ * finished by the time the gallery actually becomes visible.
  *
- * Header copy is intentionally short — a placeholder anchor so visitors
- * know *why* before they look at the plates. Will be replaced with
- * finalized design-philosophy copy in a follow-up.
+ * We watch the camera state here and flip a `visible` flag when the
+ * card-opacity envelope first becomes non-zero — that's the moment
+ * the gallery starts to appear, and the moment the stagger should
+ * fire. The flag is sticky (set once, never unset) so re-arriving at
+ * the anchor doesn't replay the stagger.
  */
 export function HowIThinkSection() {
+  const { cameraMode } = useCamera();
+  // Simple mode: gallery is in-flow and always visible, so stagger
+  // fires on mount. Camera mode: defer to the first camera tick that
+  // shows non-zero card opacity.
+  const [visible, setVisible] = useState(() => !cameraMode);
+
+  useCameraEffect((cam) => {
+    if (visible) return;
+    if (!cameraMode) {
+      setVisible(true);
+      return;
+    }
+    if (cardOpacity(cam, ANCHOR.id) > 0.05) {
+      setVisible(true);
+    }
+  });
+
   return (
     <SectionCard
       anchor={ANCHOR}
@@ -57,7 +86,7 @@ export function HowIThinkSection() {
               {`Craft rooted in culture and material honesty. Visual interpretability shapes how I build — the model's shape should be visible to the people working with it.`}
             </p>
           </header>
-          <DesignSystemGallery />
+          <DesignSystemGallery visible={visible} />
         </div>
       }
     />
