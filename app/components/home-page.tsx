@@ -54,7 +54,12 @@ export function HomePage() {
           </span>
           <Link
             href="/"
-            onClick={() => posthog.capture("layout_switched", { to: "immersive", from: "classic" })}
+            onClick={() =>
+              posthog.capture("layout_switched", {
+                to: "immersive",
+                from: "classic",
+              })
+            }
             style={{
               fontSize: "10px",
               color: "var(--fg3)",
@@ -144,7 +149,7 @@ export function HomePage() {
             I design and build AI-powered systems that automate complex
             workflows and optimize costs at scale. I bring a designer&apos;s eye
             to engineering problems, with deep roots in data visualization,
-            motion design, and generative interfaces.
+            motion design and user experience development.
           </p>
         </div>
 
@@ -181,7 +186,11 @@ export function HomePage() {
               target="_blank"
               rel="noopener noreferrer"
               className="homepage-link"
-              onClick={() => posthog.capture("classic_homepage_social_link_clicked", { platform: link.label })}
+              onClick={() =>
+                posthog.capture("classic_homepage_social_link_clicked", {
+                  platform: link.label,
+                })
+              }
               style={{
                 fontSize: "13px",
                 fontWeight: 500,
