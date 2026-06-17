@@ -21,7 +21,7 @@ type ImmersiveHeroClientProps = Readonly<{
 }>;
 
 const DESIGN_PHILOSOPHY = [
-  "I build AI-augmented interfaces and agentic systems with a deliberate break from generic SaaS design: craft rooted in culture and material honesty.",
+  "I build AI-powered user interfaces and agentic systems with a deliberate break from generic SaaS design: craft rooted in culture and material honesty.",
   "Visual interpretability shapes how I build. I'm drawn to what lives under the surface and what the model is actually doing. And I think the people using it should too.",
 ] as const;
 
@@ -30,20 +30,24 @@ const DESIGN_PHILOSOPHY = [
 // "View Design System →" link so users see this is multi-page, not
 // a one-link footnote. Concept D from the v2.1 gallery exploration.
 type SpecRow = Readonly<{
-  slug: string;          // numbered folder label, e.g. "01-overview"
-  href: string;          // destination URL (relative for /design-system pages)
-  event: string;         // PostHog event payload identifier
-  badge?: "LIVE";        // optional pin (atoms only)
+  slug: string; // numbered folder label, e.g. "01-overview"
+  href: string; // destination URL (relative for /design-system pages)
+  event: string; // PostHog event payload identifier
+  badge?: "LIVE"; // optional pin (atoms only)
 }>;
 
 const SPEC_INDEX: ReadonlyArray<SpecRow> = [
-  { slug: "01-overview",   href: "/design-system/",            event: "overview" },
-  { slug: "02-brand",      href: "/design-system/Brand.html",  event: "brand" },
-  { slug: "03-colors",     href: "/design-system/Colors.html", event: "colors" },
-  { slug: "04-type",       href: "/design-system/Type.html",   event: "type" },
-  { slug: "05-spacing",    href: "/design-system/Spacing.html",event: "spacing" },
-  { slug: "06-components", href: "/design-system/Components.html", event: "components" },
-  { slug: "07-ui-kit",     href: "/design-system/UIKit.html",  event: "ui_kit" },
+  { slug: "01-overview", href: "/design-system/", event: "overview" },
+  { slug: "02-brand", href: "/design-system/Brand.html", event: "brand" },
+  { slug: "03-colors", href: "/design-system/Colors.html", event: "colors" },
+  { slug: "04-type", href: "/design-system/Type.html", event: "type" },
+  { slug: "05-spacing", href: "/design-system/Spacing.html", event: "spacing" },
+  {
+    slug: "06-components",
+    href: "/design-system/Components.html",
+    event: "components",
+  },
+  { slug: "07-ui-kit", href: "/design-system/UIKit.html", event: "ui_kit" },
 ];
 
 const ATOMS_ROW: SpecRow = {
@@ -204,171 +208,201 @@ export function ImmersiveHeroClient({
 
   return (
     <CameraProvider>
-    <div
-      className={`relative min-h-screen w-full overflow-x-hidden bg-neutral-950 [overflow-anchor:none] ${jetbrainsClassName}`}
-    >
-      {/* Warm HTTP cache for WebGL; raw <img> so Next does not re-encode. Low-res first, full-res in parallel at lower priority. */}
-      {/* eslint-disable-next-line @next/next/no-img-element -- intentional preload URLs match WebGL textures */}
-      <img
-        src="/textures/volcanic-terrain-hero-low.png"
-        alt=""
-        width={1}
-        height={1}
-        fetchPriority="high"
-        decoding="async"
-        className="pointer-events-none fixed left-0 top-0 h-px w-px opacity-0"
-        aria-hidden
-      />
-      {/* eslint-disable-next-line @next/next/no-img-element -- intentional preload */}
-      <img
-        src="/textures/volcanic-terrain-hero.png"
-        alt=""
-        width={1}
-        height={1}
-        fetchPriority="low"
-        decoding="async"
-        className="pointer-events-none fixed left-0 top-0 h-px w-px opacity-0"
-        aria-hidden
-      />
-      {/* Viewport-fixed terrain backdrop. The aerial-camera transform lives
+      <div
+        className={`relative min-h-screen w-full overflow-x-hidden bg-neutral-950 [overflow-anchor:none] ${jetbrainsClassName}`}
+      >
+        {/* Warm HTTP cache for WebGL; raw <img> so Next does not re-encode. Low-res first, full-res in parallel at lower priority. */}
+        {/* eslint-disable-next-line @next/next/no-img-element -- intentional preload URLs match WebGL textures */}
+        <img
+          src="/textures/volcanic-terrain-hero-low.png"
+          alt=""
+          width={1}
+          height={1}
+          fetchPriority="high"
+          decoding="async"
+          className="pointer-events-none fixed left-0 top-0 h-px w-px opacity-0"
+          aria-hidden
+        />
+        {/* eslint-disable-next-line @next/next/no-img-element -- intentional preload */}
+        <img
+          src="/textures/volcanic-terrain-hero.png"
+          alt=""
+          width={1}
+          height={1}
+          fetchPriority="low"
+          decoding="async"
+          className="pointer-events-none fixed left-0 top-0 h-px w-px opacity-0"
+          aria-hidden
+        />
+        {/* Viewport-fixed terrain backdrop. The aerial-camera transform lives
           inside <TerrainCanvas/>; the shader itself is unchanged from the
           standalone hero (cursor diffusion + ambient loop only). */}
-      <div className="fixed inset-0 z-0" aria-hidden>
-        <TerrainCanvas />
-      </div>
+        <div className="fixed inset-0 z-0" aria-hidden>
+          <TerrainCanvas />
+        </div>
 
-      {/* Top-left site nav — fixed so it stays visible across all camera
+        {/* Top-left site nav — fixed so it stays visible across all camera
           anchors. Type matches the [+] Menu / [+] Design Philosophy
           buttons (Fira, text-sm/sm:text-base, normal case, hover-tracks
           wider) so the row reads as part of the hero vocabulary. */}
-      <nav
-        aria-label="Site and social links"
-        className={`pointer-events-auto fixed left-0 top-0 z-30 flex max-w-[calc(100%-1rem)] flex-wrap items-center gap-x-4 gap-y-2 px-5 py-3.5 pr-10 text-[11px] font-normal uppercase tracking-[0.06em] sm:text-[12px] ${firaClassName}`}
-        style={{
-          background:
-            "linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.42) 52%, rgba(0,0,0,0) 100%)",
-        }}
-      >
-        <Link
-          href="/classic"
-          onClick={() => posthog.capture("layout_switched", { to: "classic", from: "immersive" })}
-          className="text-white/75 transition-[letter-spacing,color] duration-300 ease-out [text-shadow:0_1px_2px_rgba(0,0,0,0.85)] hover:tracking-[0.16em] hover:text-white sm:hover:tracking-[0.2em]"
+        <nav
+          aria-label="Site and social links"
+          className={`pointer-events-auto fixed left-0 top-0 z-30 flex max-w-[calc(100%-1rem)] flex-wrap items-center gap-x-4 gap-y-2 px-5 py-3.5 pr-10 text-[11px] font-normal uppercase tracking-[0.06em] sm:text-[12px] ${firaClassName}`}
+          style={{
+            background:
+              "linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.42) 52%, rgba(0,0,0,0) 100%)",
+          }}
         >
-          v1
-        </Link>
-        <a
-          href="https://github.com/parvezk"
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => posthog.capture("social_link_clicked", { platform: "GitHub", location: "immersive_nav" })}
-          className="text-white/75 transition-[letter-spacing,color] duration-300 ease-out [text-shadow:0_1px_2px_rgba(0,0,0,0.85)] hover:tracking-[0.16em] hover:text-white sm:hover:tracking-[0.2em]"
-        >
-          GitHub
-        </a>
-        <a
-          href="https://linkedin.com/in/parvezkose"
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => posthog.capture("social_link_clicked", { platform: "LinkedIn", location: "immersive_nav" })}
-          className="text-white/75 transition-[letter-spacing,color] duration-300 ease-out [text-shadow:0_1px_2px_rgba(0,0,0,0.85)] hover:tracking-[0.16em] hover:text-white sm:hover:tracking-[0.2em]"
-        >
-          LinkedIn
-        </a>
-        <a
-          href="https://designlogic.substack.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => posthog.capture("social_link_clicked", { platform: "Substack", location: "immersive_nav" })}
-          className="text-white/75 transition-[letter-spacing,color] duration-300 ease-out [text-shadow:0_1px_2px_rgba(0,0,0,0.85)] hover:tracking-[0.16em] hover:text-white sm:hover:tracking-[0.2em]"
-        >
-          Substack
-        </a>
-        <a
-          href="https://medium.com/@parvez__"
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => posthog.capture("social_link_clicked", { platform: "Medium", location: "immersive_nav" })}
-          className="text-white/75 transition-[letter-spacing,color] duration-300 ease-out [text-shadow:0_1px_2px_rgba(0,0,0,0.85)] hover:tracking-[0.16em] hover:text-white sm:hover:tracking-[0.2em]"
-        >
-          Medium
-        </a>
-      </nav>
+          <Link
+            href="/classic"
+            onClick={() =>
+              posthog.capture("layout_switched", {
+                to: "classic",
+                from: "immersive",
+              })
+            }
+            className="text-white/75 transition-[letter-spacing,color] duration-300 ease-out [text-shadow:0_1px_2px_rgba(0,0,0,0.85)] hover:tracking-[0.16em] hover:text-white sm:hover:tracking-[0.2em]"
+          >
+            v1
+          </Link>
+          <a
+            href="https://github.com/parvezk"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() =>
+              posthog.capture("social_link_clicked", {
+                platform: "GitHub",
+                location: "immersive_nav",
+              })
+            }
+            className="text-white/75 transition-[letter-spacing,color] duration-300 ease-out [text-shadow:0_1px_2px_rgba(0,0,0,0.85)] hover:tracking-[0.16em] hover:text-white sm:hover:tracking-[0.2em]"
+          >
+            GitHub
+          </a>
+          <a
+            href="https://linkedin.com/in/parvezkose"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() =>
+              posthog.capture("social_link_clicked", {
+                platform: "LinkedIn",
+                location: "immersive_nav",
+              })
+            }
+            className="text-white/75 transition-[letter-spacing,color] duration-300 ease-out [text-shadow:0_1px_2px_rgba(0,0,0,0.85)] hover:tracking-[0.16em] hover:text-white sm:hover:tracking-[0.2em]"
+          >
+            LinkedIn
+          </a>
+          <a
+            href="https://designlogic.substack.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() =>
+              posthog.capture("social_link_clicked", {
+                platform: "Substack",
+                location: "immersive_nav",
+              })
+            }
+            className="text-white/75 transition-[letter-spacing,color] duration-300 ease-out [text-shadow:0_1px_2px_rgba(0,0,0,0.85)] hover:tracking-[0.16em] hover:text-white sm:hover:tracking-[0.2em]"
+          >
+            Substack
+          </a>
+          <a
+            href="https://medium.com/@parvez__"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() =>
+              posthog.capture("social_link_clicked", {
+                platform: "Medium",
+                location: "immersive_nav",
+              })
+            }
+            className="text-white/75 transition-[letter-spacing,color] duration-300 ease-out [text-shadow:0_1px_2px_rgba(0,0,0,0.85)] hover:tracking-[0.16em] hover:text-white sm:hover:tracking-[0.2em]"
+          >
+            Medium
+          </a>
+        </nav>
 
-      {/* Aerial-camera anchor nav. Home + the three section anchors.
+        {/* Aerial-camera anchor nav. Home + the three section anchors.
           Buttons fire GSAP-eased flights to anchor coords. */}
-      <AnchorNav firaClassName={firaClassName} />
+        <AnchorNav firaClassName={firaClassName} />
 
-      {/*
+        {/*
         In-flow column (not position:absolute) so the hero root grows with accordion
         content. Previously absolute inset-0 kept the shell at min-h-screen while the
         panel overflowed, so WebGL stopped at ~100vh and the body background showed.
       */}
-      <div className="pointer-events-none relative z-10 flex min-h-screen w-full flex-col">
-        {/*
+        <div className="pointer-events-none relative z-10 flex min-h-screen w-full flex-col">
+          {/*
           justify-start (not justify-center) keeps the hero anchored when the accordion
           grows — otherwise flex recenters the whole block and the headline visibly jumps.
         */}
-        <div className="flex flex-1 flex-col items-center justify-start px-6 pb-8 pt-[clamp(4.75rem,18vh,10rem)] text-center sm:pt-[clamp(5rem,20vh,11rem)]">
-          <div className="group pointer-events-auto relative inline-flex max-w-3xl flex-col items-center px-7 py-6 before:pointer-events-none before:absolute before:left-0 before:top-0 before:h-6 before:w-6 before:border-l-2 before:border-t-2 before:border-white/80 before:content-[''] after:pointer-events-none after:absolute after:bottom-0 after:right-0 after:h-6 after:w-6 after:border-b-2 after:border-r-2 after:border-white/80 after:content-[''] sm:px-9 sm:py-8 sm:before:h-7 sm:before:w-7 sm:after:h-7 sm:after:w-7 md:px-11 md:py-9 md:before:h-8 md:before:w-8 md:after:h-8 md:after:w-8">
-            <h1
-              className="mb-3 max-w-3xl text-4xl font-light tracking-[-0.02em] text-white transition-[text-shadow,filter] duration-300 sm:text-5xl md:text-6xl [text-shadow:0_1px_3px_rgba(0,0,0,0.95),0_0_28px_rgba(0,0,0,0.65),0_0_56px_rgba(0,0,0,0.35)] drop-shadow-[0_4px_20px_rgba(0,0,0,0.55)] group-hover:[text-shadow:0_2px_6px_rgba(0,0,0,1),0_0_36px_rgba(0,0,0,0.85),0_0_72px_rgba(0,0,0,0.5)] group-hover:drop-shadow-[0_6px_28px_rgba(0,0,0,0.75)]"
-              style={{ fontWeight: 300 }}
-            >
-              Parvez Kose
-            </h1>
-            <p
-              className={`${firaClassName} flex max-w-xl flex-wrap justify-center text-sm font-normal leading-relaxed text-white/90 transition-[text-shadow,color] duration-300 sm:text-base [text-shadow:0_1px_2px_rgba(0,0,0,0.95),0_0_18px_rgba(0,0,0,0.8),0_0_36px_rgba(0,0,0,0.45)] group-hover:text-white group-hover:[text-shadow:0_2px_4px_rgba(0,0,0,1),0_0_26px_rgba(0,0,0,0.95),0_0_48px_rgba(0,0,0,0.6)]`}
-            >
-              <span className="relative inline-block">
-                <span>Designing interfaces for intelligence</span>
+          <div className="flex flex-1 flex-col items-center justify-start px-6 pb-8 pt-[clamp(4.75rem,18vh,10rem)] text-center sm:pt-[clamp(5rem,20vh,11rem)]">
+            <div className="group pointer-events-auto relative inline-flex max-w-3xl flex-col items-center px-7 py-6 before:pointer-events-none before:absolute before:left-0 before:top-0 before:h-6 before:w-6 before:border-l-2 before:border-t-2 before:border-white/80 before:content-[''] after:pointer-events-none after:absolute after:bottom-0 after:right-0 after:h-6 after:w-6 after:border-b-2 after:border-r-2 after:border-white/80 after:content-[''] sm:px-9 sm:py-8 sm:before:h-7 sm:before:w-7 sm:after:h-7 sm:after:w-7 md:px-11 md:py-9 md:before:h-8 md:before:w-8 md:after:h-8 md:after:w-8">
+              <h1
+                className="mb-3 max-w-3xl text-4xl font-light tracking-[-0.02em] text-white transition-[text-shadow,filter] duration-300 sm:text-5xl md:text-6xl [text-shadow:0_1px_3px_rgba(0,0,0,0.95),0_0_28px_rgba(0,0,0,0.65),0_0_56px_rgba(0,0,0,0.35)] drop-shadow-[0_4px_20px_rgba(0,0,0,0.55)] group-hover:[text-shadow:0_2px_6px_rgba(0,0,0,1),0_0_36px_rgba(0,0,0,0.85),0_0_72px_rgba(0,0,0,0.5)] group-hover:drop-shadow-[0_6px_28px_rgba(0,0,0,0.75)]"
+                style={{ fontWeight: 300 }}
+              >
+                Parvez Kose
+              </h1>
+              <p
+                className={`${firaClassName} flex max-w-xl flex-wrap justify-center text-sm font-normal leading-relaxed text-white/90 transition-[text-shadow,color] duration-300 sm:text-base [text-shadow:0_1px_2px_rgba(0,0,0,0.95),0_0_18px_rgba(0,0,0,0.8),0_0_36px_rgba(0,0,0,0.45)] group-hover:text-white group-hover:[text-shadow:0_2px_4px_rgba(0,0,0,1),0_0_26px_rgba(0,0,0,0.95),0_0_48px_rgba(0,0,0,0.6)]`}
+              >
+                <span className="relative inline-block">
+                  <span>Designing interfaces for intelligence</span>
+                  <span
+                    className="immersive-caret-blink absolute left-full ml-[0.12ch] h-[2px] w-[1ch] min-w-[9px] bg-white [bottom:0.14em]"
+                    aria-hidden
+                  />
+                </span>
+              </p>
+
+              <div className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+                <button
+                  type="button"
+                  id={philosophyToggleId}
+                  aria-expanded={philosophyOpen}
+                  aria-controls={philosophyPanelId}
+                  onClick={() => {
+                    const next = !philosophyOpen;
+                    setPhilosophyOpen(next);
+                    posthog.capture("design_philosophy_toggled", {
+                      action: next ? "opened" : "closed",
+                    });
+                  }}
+                  className={`${firaClassName} cursor-pointer text-sm font-normal tracking-normal text-white/75 transition-[color,text-shadow,letter-spacing] duration-300 ease-out [text-shadow:0_1px_2px_rgba(0,0,0,0.85)] hover:tracking-[0.14em] hover:text-white/95 sm:text-base sm:hover:tracking-[0.18em]`}
+                >
+                  {philosophyOpen ? "[−]" : "[+]"} Design Philosophy
+                </button>
                 <span
-                  className="immersive-caret-blink absolute left-full ml-[0.12ch] h-[2px] w-[1ch] min-w-[9px] bg-white [bottom:0.14em]"
                   aria-hidden
-                />
-              </span>
-            </p>
+                  className="text-white/30 [text-shadow:0_1px_2px_rgba(0,0,0,0.85)]"
+                >
+                  ·
+                </span>
+                <button
+                  type="button"
+                  id={menuToggleId}
+                  aria-expanded={menuOpen}
+                  aria-controls={menuPanelId}
+                  onClick={() => {
+                    const next = !menuOpen;
+                    setMenuOpen(next);
+                    posthog.capture("immersive_menu_toggled", {
+                      action: next ? "opened" : "closed",
+                    });
+                  }}
+                  className={`${firaClassName} cursor-pointer text-sm font-normal tracking-normal text-white/75 transition-[color,text-shadow,letter-spacing] duration-300 ease-out [text-shadow:0_1px_2px_rgba(0,0,0,0.85)] hover:tracking-[0.14em] hover:text-white/95 sm:text-base sm:hover:tracking-[0.18em]`}
+                >
+                  {menuOpen ? "[−]" : "[+]"} Menu
+                </button>
+              </div>
 
-            <div className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-              <button
-                type="button"
-                id={philosophyToggleId}
-                aria-expanded={philosophyOpen}
-                aria-controls={philosophyPanelId}
-                onClick={() => {
-                  const next = !philosophyOpen;
-                  setPhilosophyOpen(next);
-                  posthog.capture("design_philosophy_toggled", {
-                    action: next ? "opened" : "closed",
-                  });
-                }}
-                className={`${firaClassName} cursor-pointer text-sm font-normal tracking-normal text-white/75 transition-[color,text-shadow,letter-spacing] duration-300 ease-out [text-shadow:0_1px_2px_rgba(0,0,0,0.85)] hover:tracking-[0.14em] hover:text-white/95 sm:text-base sm:hover:tracking-[0.18em]`}
+              <div
+                className={`mt-3 grid w-full max-w-xl transition-[grid-template-rows] duration-[780ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${philosophyOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
               >
-                {philosophyOpen ? "[−]" : "[+]"} Design Philosophy
-              </button>
-              <span aria-hidden className="text-white/30 [text-shadow:0_1px_2px_rgba(0,0,0,0.85)]">·</span>
-              <button
-                type="button"
-                id={menuToggleId}
-                aria-expanded={menuOpen}
-                aria-controls={menuPanelId}
-                onClick={() => {
-                  const next = !menuOpen;
-                  setMenuOpen(next);
-                  posthog.capture("immersive_menu_toggled", {
-                    action: next ? "opened" : "closed",
-                  });
-                }}
-                className={`${firaClassName} cursor-pointer text-sm font-normal tracking-normal text-white/75 transition-[color,text-shadow,letter-spacing] duration-300 ease-out [text-shadow:0_1px_2px_rgba(0,0,0,0.85)] hover:tracking-[0.14em] hover:text-white/95 sm:text-base sm:hover:tracking-[0.18em]`}
-              >
-                {menuOpen ? "[−]" : "[+]"} Menu
-              </button>
-            </div>
-
-            <div
-              className={`mt-3 grid w-full max-w-xl transition-[grid-template-rows] duration-[780ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${philosophyOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
-            >
-              <div className="min-h-0 overflow-hidden">
-                {/*
+                <div className="min-h-0 overflow-hidden">
+                  {/*
                   ─── [+] Design Philosophy panel · CLI installer view (Option A) ───────
                   The whole panel is now a single clack-style rail: ┌ (top), ◇ (section
                   markers), │ (rail body), └ (bottom). JetBrains Mono throughout so prose
@@ -381,217 +415,227 @@ export function ImmersiveHeroClient({
                   border-white/12 bg-black/50) so the open/close transition is
                   unchanged from main.
                 */}
-                <section
-                  id={philosophyPanelId}
-                  aria-labelledby={philosophyToggleId}
-                  aria-hidden={!philosophyOpen}
-                  className={`relative ${jetbrainsClassName} rounded-md border border-white/12 bg-black/50 px-4 py-3 text-left text-[12px] font-normal leading-[1.65] text-white/85 opacity-100 shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-sm [text-shadow:0_1px_6px_rgba(0,0,0,0.65)] sm:text-[13px] ${philosophyOpen ? "pointer-events-auto" : "pointer-events-none"}`}
-                >
-                  {/* Top-right close affordance. Some visitors don't realize
+                  <section
+                    id={philosophyPanelId}
+                    aria-labelledby={philosophyToggleId}
+                    aria-hidden={!philosophyOpen}
+                    className={`relative ${jetbrainsClassName} rounded-md border border-white/12 bg-black/50 px-4 py-3 text-left text-[12px] font-normal leading-[1.65] text-white/85 opacity-100 shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-sm [text-shadow:0_1px_6px_rgba(0,0,0,0.65)] sm:text-[13px] ${philosophyOpen ? "pointer-events-auto" : "pointer-events-none"}`}
+                  >
+                    {/* Top-right close affordance. Some visitors don't realize
                       the `[+] Design Philosophy` button is the toggle — this
                       surfaces the close gesture inside the panel itself. */}
-                  <button
-                    type="button"
-                    aria-label="Close Design Philosophy"
-                    onClick={() => {
-                      setPhilosophyOpen(false);
-                      posthog.capture("design_philosophy_toggled", {
-                        action: "closed",
-                        source: "panel_close",
-                      });
-                    }}
-                    className="absolute right-2 top-2 z-10 inline-flex h-12 w-12 items-center justify-center rounded text-[28px] leading-none text-white/60 transition-colors duration-200 ease-out hover:bg-white/[0.06] hover:text-[color:var(--accent-terracotta)] focus:outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--accent-terracotta)]/60"
-                  >
-                    ×
-                  </button>
+                    <button
+                      type="button"
+                      aria-label="Close Design Philosophy"
+                      onClick={() => {
+                        setPhilosophyOpen(false);
+                        posthog.capture("design_philosophy_toggled", {
+                          action: "closed",
+                          source: "panel_close",
+                        });
+                      }}
+                      className="absolute right-2 top-2 z-10 inline-flex h-12 w-12 items-center justify-center rounded text-[28px] leading-none text-white/60 transition-colors duration-200 ease-out hover:bg-white/[0.06] hover:text-[color:var(--accent-terracotta)] focus:outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--accent-terracotta)]/60"
+                    >
+                      ×
+                    </button>
 
-                  {/* ┌  ~/.claude/agentic-stack/parvezkose.com
+                    {/* ┌  ~/.claude/agentic-stack/parvezkose.com
                      The path label doubles as the section header — no
                      separate ◇ philosophy marker needed. The cat command
                      follows immediately and reads as "this is what's in
                      this directory." */}
-                  <RailRow glyph="┌" tone="marker">
-                    <span className="break-all text-white/90">
-                      ~/.claude/agentic-stack/parvezkose.com
-                    </span>
-                  </RailRow>
+                    <RailRow glyph="┌" tone="marker">
+                      <span className="break-all text-white/90">
+                        ~/.claude/agentic-stack/parvezkose.com
+                      </span>
+                    </RailRow>
 
-                  <RailGap />
+                    <RailGap />
 
-                  {/* │  $ cat philosophy.md */}
-                  <RailRow glyph="│" tone="rail">
-                    <p className="text-white/65">
-                      <span className="text-[color:var(--accent-terracotta)]">$</span>{" "}
-                      <span className="text-white">cat</span>{" "}
-                      <span className="text-[color:var(--neutral-latte)]">design-philosophy.md</span>
-                    </p>
-                  </RailRow>
+                    {/* │  $ cat philosophy.md */}
+                    <RailRow glyph="│" tone="rail">
+                      <p className="text-white/65">
+                        <span className="text-[color:var(--accent-terracotta)]">
+                          $
+                        </span>{" "}
+                        <span className="text-white">cat</span>{" "}
+                        <span className="text-[color:var(--neutral-latte)]">
+                          design-philosophy.md
+                        </span>
+                      </p>
+                    </RailRow>
 
-                  <RailGap />
+                    <RailGap />
 
-                  {/* prose paragraphs (rendered as cat output) */}
-                  {DESIGN_PHILOSOPHY.map((para, idx) => (
-                    <div key={para}>
-                      <RailRow glyph="│" tone="rail">
-                        <p className="text-white/85">{para}</p>
-                      </RailRow>
-                      {idx < DESIGN_PHILOSOPHY.length - 1 && <RailGap />}
-                    </div>
-                  ))}
+                    {/* prose paragraphs (rendered as cat output) */}
+                    {DESIGN_PHILOSOPHY.map((para, idx) => (
+                      <div key={para}>
+                        <RailRow glyph="│" tone="rail">
+                          <p className="text-white/85">{para}</p>
+                        </RailRow>
+                        {idx < DESIGN_PHILOSOPHY.length - 1 && <RailGap />}
+                      </div>
+                    ))}
 
-                  <RailGap />
+                    <RailGap />
 
-                  {/* ◇  design-system */}
-                  <RailRow glyph="◇" tone="marker">
-                    <span className="text-white/90">design-system</span>
-                  </RailRow>
+                    {/* ◇  design-system */}
+                    <RailRow glyph="◇" tone="marker">
+                      <span className="text-white/90">design-system</span>
+                    </RailRow>
 
-                  {/* │  $ ls -lh design-system/ */}
-                  <RailRow glyph="│" tone="rail">
-                    <p className="text-white/65">
-                      <span className="text-[color:var(--accent-terracotta)]">$</span>{" "}
-                      <span className="text-white">ls -lh</span>{" "}
-                      <span className="text-[color:var(--neutral-latte)]">design-system/</span>
-                    </p>
-                  </RailRow>
+                    {/* │  $ ls -lh design-system/ */}
+                    <RailRow glyph="│" tone="rail">
+                      <p className="text-white/65">
+                        <span className="text-[color:var(--accent-terracotta)]">
+                          $
+                        </span>{" "}
+                        <span className="text-white">ls -lh</span>{" "}
+                        <span className="text-[color:var(--neutral-latte)]">
+                          design-system/
+                        </span>
+                      </p>
+                    </RailRow>
 
-                  <RailGap />
+                    <RailGap />
 
-                  {/* spec listing — 7 specimen pages */}
-                  <ul
-                    className="m-0 flex list-none flex-col gap-px p-0"
-                    aria-label="Design system pages"
-                  >
-                    {SPEC_INDEX.map((row) => (
-                      <li key={row.event}>
+                    {/* spec listing — 7 specimen pages */}
+                    <ul
+                      className="m-0 flex list-none flex-col gap-px p-0"
+                      aria-label="Design system pages"
+                    >
+                      {SPEC_INDEX.map((row) => (
+                        <li key={row.event}>
+                          <RailLink
+                            href={row.href}
+                            prefix="·"
+                            slug={row.slug}
+                            onClick={() =>
+                              posthog.capture("design_system_link_clicked", {
+                                location: "immersive_philosophy_terminal",
+                                target: row.event,
+                              })
+                            }
+                          />
+                        </li>
+                      ))}
+                      {/* atoms — continuation glyph + LIVE pill */}
+                      <li>
                         <RailLink
-                          href={row.href}
-                          prefix="·"
-                          slug={row.slug}
+                          href={ATOMS_ROW.href}
+                          prefix="⤷"
+                          slug={ATOMS_ROW.slug}
+                          badge={ATOMS_ROW.badge}
                           onClick={() =>
                             posthog.capture("design_system_link_clicked", {
                               location: "immersive_philosophy_terminal",
-                              target: row.event,
+                              target: ATOMS_ROW.event,
                             })
                           }
                         />
                       </li>
-                    ))}
-                    {/* atoms — continuation glyph + LIVE pill */}
-                    <li>
-                      <RailLink
-                        href={ATOMS_ROW.href}
-                        prefix="⤷"
-                        slug={ATOMS_ROW.slug}
-                        badge={ATOMS_ROW.badge}
-                        onClick={() =>
-                          posthog.capture("design_system_link_clicked", {
-                            location: "immersive_philosophy_terminal",
-                            target: ATOMS_ROW.event,
-                          })
-                        }
-                      />
-                    </li>
-                  </ul>
+                    </ul>
 
-                  <RailGap />
+                    <RailGap />
 
-                  {/* │  # 7 specs · 1 live preview */}
-                  <RailRow glyph="│" tone="rail">
-                    <p className="text-white/55">
-                      <span className="text-[color:var(--accent-golden)]">#</span>{" "}
-                      7 specs · 1 live preview
-                    </p>
-                  </RailRow>
+                    {/* │  # 7 specs · 1 live preview */}
+                    <RailRow glyph="│" tone="rail">
+                      <p className="text-white/55">
+                        <span className="text-[color:var(--accent-golden)]">
+                          #
+                        </span>{" "}
+                        7 specs · 1 live preview
+                      </p>
+                    </RailRow>
 
-                  <RailGap />
+                    <RailGap />
 
-                  {/* └  $ │ caret ~½ monospace cell wide — between hairline (w-px) and full █ */}
-                  <RailRow glyph="└" tone="marker">
-                    <span className="flex items-baseline gap-1.5">
-                      <span className="text-white/70">$</span>
-                      <span
-                        aria-hidden
-                        className="immersive-caret-blink inline-block h-[0.85em] w-[0.5ch] min-w-[2px] max-w-[5px] shrink-0 bg-[color:var(--accent-terracotta)] align-text-bottom"
-                      />
-                    </span>
-                  </RailRow>
-                </section>
+                    {/* └  $ │ caret ~½ monospace cell wide — between hairline (w-px) and full █ */}
+                    <RailRow glyph="└" tone="marker">
+                      <span className="flex items-baseline gap-1.5">
+                        <span className="text-white/70">$</span>
+                        <span
+                          aria-hidden
+                          className="immersive-caret-blink inline-block h-[0.85em] w-[0.5ch] min-w-[2px] max-w-[5px] shrink-0 bg-[color:var(--accent-terracotta)] align-text-bottom"
+                        />
+                      </span>
+                    </RailRow>
+                  </section>
+                </div>
               </div>
-            </div>
 
-            <div
-              className={`mt-3 grid w-full max-w-xl transition-[grid-template-rows] duration-[780ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${menuOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
-            >
-              <div className="min-h-0 overflow-hidden">
-                <section
-                  id={menuPanelId}
-                  aria-labelledby={menuToggleId}
-                  aria-hidden={!menuOpen}
-                  className={`${firaClassName} rounded-md border border-white/12 bg-black/50 px-4 py-3 text-left text-[11px] font-normal leading-relaxed text-white/92 opacity-100 shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-sm sm:text-[12px] ${menuOpen ? "pointer-events-auto" : "pointer-events-none"}`}
-                >
-                  <ul className="flex flex-wrap items-center gap-x-5 gap-y-2 uppercase tracking-[0.12em] text-[10px] sm:text-[11px]">
-                    {MENU_ITEMS.map((item) =>
-                      item.external ? (
-                        <li key={item.event}>
-                          <a
-                            href={item.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={() =>
-                              posthog.capture("immersive_menu_link_clicked", {
-                                target: item.event,
-                                external: true,
-                              })
-                            }
-                            className="inline-block font-medium text-white/85 transition-[color,letter-spacing] duration-300 ease-out hover:tracking-[0.18em] hover:text-[color:var(--accent-terracotta)] [text-shadow:0_1px_6px_rgba(0,0,0,0.65)]"
-                          >
-                            {item.label}
-                          </a>
-                        </li>
-                      ) : (
-                        <li key={item.event}>
-                          <Link
-                            href={item.href}
-                            onClick={() =>
-                              posthog.capture("immersive_menu_link_clicked", {
-                                target: item.event,
-                                external: false,
-                              })
-                            }
-                            className="inline-block font-medium text-white/85 transition-[color,letter-spacing] duration-300 ease-out hover:tracking-[0.18em] hover:text-[color:var(--accent-terracotta)] [text-shadow:0_1px_6px_rgba(0,0,0,0.65)]"
-                          >
-                            {item.label}
-                          </Link>
-                        </li>
-                      ),
-                    )}
-                  </ul>
-                </section>
+              <div
+                className={`mt-3 grid w-full max-w-xl transition-[grid-template-rows] duration-[780ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${menuOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
+              >
+                <div className="min-h-0 overflow-hidden">
+                  <section
+                    id={menuPanelId}
+                    aria-labelledby={menuToggleId}
+                    aria-hidden={!menuOpen}
+                    className={`${firaClassName} rounded-md border border-white/12 bg-black/50 px-4 py-3 text-left text-[11px] font-normal leading-relaxed text-white/92 opacity-100 shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-sm sm:text-[12px] ${menuOpen ? "pointer-events-auto" : "pointer-events-none"}`}
+                  >
+                    <ul className="flex flex-wrap items-center gap-x-5 gap-y-2 uppercase tracking-[0.12em] text-[10px] sm:text-[11px]">
+                      {MENU_ITEMS.map((item) =>
+                        item.external ? (
+                          <li key={item.event}>
+                            <a
+                              href={item.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={() =>
+                                posthog.capture("immersive_menu_link_clicked", {
+                                  target: item.event,
+                                  external: true,
+                                })
+                              }
+                              className="inline-block font-medium text-white/85 transition-[color,letter-spacing] duration-300 ease-out hover:tracking-[0.18em] hover:text-[color:var(--accent-terracotta)] [text-shadow:0_1px_6px_rgba(0,0,0,0.65)]"
+                            >
+                              {item.label}
+                            </a>
+                          </li>
+                        ) : (
+                          <li key={item.event}>
+                            <Link
+                              href={item.href}
+                              onClick={() =>
+                                posthog.capture("immersive_menu_link_clicked", {
+                                  target: item.event,
+                                  external: false,
+                                })
+                              }
+                              className="inline-block font-medium text-white/85 transition-[color,letter-spacing] duration-300 ease-out hover:tracking-[0.18em] hover:text-[color:var(--accent-terracotta)] [text-shadow:0_1px_6px_rgba(0,0,0,0.65)]"
+                            >
+                              {item.label}
+                            </Link>
+                          </li>
+                        ),
+                      )}
+                    </ul>
+                  </section>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Tagline lives in <HeroTagline/> below — fixed-positioned so it
+          {/* Tagline lives in <HeroTagline/> below — fixed-positioned so it
             does NOT extend the hero's in-flow height and slow scroll-to
             anchor-1. It fades out as soon as the camera starts moving. */}
-      </div>
+        </div>
 
-      {/* Aerial-camera section territory. In camera mode the three section
+        {/* Aerial-camera section territory. In camera mode the three section
           cards are fixed-positioned and drift with the terrain transform;
           the scroll track below provides the vertical scroll range that
           drives ScrollTrigger. In simple mode (mobile / reduced-motion)
           the cards render as in-flow stacked sections and the track
           collapses to zero height. */}
-      <HowIThinkSection />
-      <HowIBuildSection />
-      <ThinkingAheadSection />
-      <CameraScrollTrack />
-    </div>
+        <HowIThinkSection />
+        <HowIBuildSection />
+        <ThinkingAheadSection />
+        <CameraScrollTrack />
+      </div>
 
-    <HeroTagline firaClassName={firaClassName} />
-    <ProgressBar />
+      <HeroTagline firaClassName={firaClassName} />
+      <ProgressBar />
     </CameraProvider>
   );
 }
