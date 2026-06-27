@@ -95,7 +95,7 @@ export function SectionCard({
         id={`anchor-${anchor.slug}`}
         className="relative z-10 flex min-h-[80vh] w-full items-center justify-center px-6 py-16"
       >
-        {body}
+        <div data-agent-keepout>{body}</div>
       </section>
     );
   }
@@ -112,6 +112,7 @@ export function SectionCard({
     >
       <div
         ref={cardRef}
+        data-agent-keepout
         style={{ opacity: 0, pointerEvents: "none", transition: "none" }}
       >
         {body}

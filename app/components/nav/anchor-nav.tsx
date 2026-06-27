@@ -27,6 +27,7 @@ export function AnchorNav({
   return (
     <nav
       aria-label="Section anchors"
+      data-agent-keepout
       className={`pointer-events-auto fixed right-0 top-0 z-30 flex max-w-[calc(100%-1rem)] flex-wrap items-center justify-end gap-x-3 gap-y-2 px-5 py-3.5 pl-10 text-[11px] font-normal uppercase tracking-[0.06em] sm:text-[12px] ${firaClassName}`}
       style={{
         background:

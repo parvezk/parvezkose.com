@@ -14,6 +14,7 @@ import { HowIBuildSection } from "./sections/how-i-build";
 import { ThinkingAheadSection } from "./sections/thinking-ahead";
 import { ProgressBar } from "./hud/progress-bar";
 import { HeroTagline } from "./hero-tagline";
+import { AgentTransmission } from "./agent-transmission/agent-transmission";
 
 type ImmersiveHeroClientProps = Readonly<{
   jetbrainsClassName: string;
@@ -241,12 +242,18 @@ export function ImmersiveHeroClient({
           <TerrainCanvas />
         </div>
 
+        {/* Ambient agent-transmission overlay. Sits above the terrain (z-0)
+          and below the hero content (z-10) + nav (z-30) via its own z-index.
+          Picks spots clear of any [data-agent-keepout] region. */}
+        <AgentTransmission fontClassName={jetbrainsClassName} />
+
         {/* Top-left site nav — fixed so it stays visible across all camera
           anchors. Type matches the [+] Menu / [+] Design Philosophy
           buttons (Fira, text-sm/sm:text-base, normal case, hover-tracks
           wider) so the row reads as part of the hero vocabulary. */}
         <nav
           aria-label="Site and social links"
+          data-agent-keepout
           className={`pointer-events-auto fixed left-0 top-0 z-30 flex max-w-[calc(100%-1rem)] flex-wrap items-center gap-x-4 gap-y-2 px-5 py-3.5 pr-10 text-[11px] font-normal uppercase tracking-[0.06em] sm:text-[12px] ${firaClassName}`}
           style={{
             background:
@@ -338,7 +345,10 @@ export function ImmersiveHeroClient({
           grows — otherwise flex recenters the whole block and the headline visibly jumps.
         */}
           <div className="flex flex-1 flex-col items-center justify-start px-6 pb-8 pt-[clamp(4.75rem,18vh,10rem)] text-center sm:pt-[clamp(5rem,20vh,11rem)]">
-            <div className="group pointer-events-auto relative inline-flex max-w-3xl flex-col items-center px-7 py-6 before:pointer-events-none before:absolute before:left-0 before:top-0 before:h-6 before:w-6 before:border-l-2 before:border-t-2 before:border-white/80 before:content-[''] after:pointer-events-none after:absolute after:bottom-0 after:right-0 after:h-6 after:w-6 after:border-b-2 after:border-r-2 after:border-white/80 after:content-[''] sm:px-9 sm:py-8 sm:before:h-7 sm:before:w-7 sm:after:h-7 sm:after:w-7 md:px-11 md:py-9 md:before:h-8 md:before:w-8 md:after:h-8 md:after:w-8">
+            <div
+              data-agent-keepout
+              className="group pointer-events-auto relative inline-flex max-w-3xl flex-col items-center px-7 py-6 before:pointer-events-none before:absolute before:left-0 before:top-0 before:h-6 before:w-6 before:border-l-2 before:border-t-2 before:border-white/80 before:content-[''] after:pointer-events-none after:absolute after:bottom-0 after:right-0 after:h-6 after:w-6 after:border-b-2 after:border-r-2 after:border-white/80 after:content-[''] sm:px-9 sm:py-8 sm:before:h-7 sm:before:w-7 sm:after:h-7 sm:after:w-7 md:px-11 md:py-9 md:before:h-8 md:before:w-8 md:after:h-8 md:after:w-8"
+            >
               <h1
                 className="mb-3 max-w-3xl text-4xl font-light tracking-[-0.02em] text-white transition-[text-shadow,filter] duration-300 sm:text-5xl md:text-6xl [text-shadow:0_1px_3px_rgba(0,0,0,0.95),0_0_28px_rgba(0,0,0,0.65),0_0_56px_rgba(0,0,0,0.35)] drop-shadow-[0_4px_20px_rgba(0,0,0,0.55)] group-hover:[text-shadow:0_2px_6px_rgba(0,0,0,1),0_0_36px_rgba(0,0,0,0.85),0_0_72px_rgba(0,0,0,0.5)] group-hover:drop-shadow-[0_6px_28px_rgba(0,0,0,0.75)]"
                 style={{ fontWeight: 300 }}
