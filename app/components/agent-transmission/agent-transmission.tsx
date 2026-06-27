@@ -58,8 +58,10 @@ const DEFAULTS = {
   //                    not from permanently see-through text)
   textColor: "#e8e4e0", // desaturated warm near-white
   accent: "#e2725b", // terracotta — telemetry tag, prompt sigil, caret
-  scrimStrength: 0.78, // 0..1 — how hard the backdrop scrim darkens the terrain
-  scrimBlurPx: 3, // backdrop blur behind the text (softens terrain detail)
+  // Legibility leans on dark placement (spawnZones) + a per-glyph halo, NOT a
+  // visible box. The scrim is blur-only — no dark fill — so no "black box".
+  scrimStrength: 0.5, // 0..1 — glyph-halo strength
+  scrimBlurPx: 2.5, // backdrop blur behind the text (softens terrain detail)
   reticleOpacity: 0.32, // corner crop-mark brackets
   zIndex: 3, // above terrain, below hero content (z-10) + nav (z-30)
 
@@ -71,8 +73,22 @@ const DEFAULTS = {
   minCols: 54, // floor on box width, in mono columns (terminals run wide)
   maxCandidates: 20, // reject-and-retry budget; skip the cycle if none fit
   overflowRatio: 0.4, // box may run off a viewport edge by up to 40%
-  edgeBias: 0.72, // 0..1 — how strongly to favor edges / corners
+  edgeBias: 0.72, // 0..1 — edge/corner bias when spawnZones is null
   keepoutMargin: 16, // px breathing room around data-agent-keepout rects
+  // Allowed spawn regions, as viewport-fraction ranges for the box CENTER.
+  // Tuned to the home-anchor terrain's DARK areas so text stays legible
+  // without a heavy scrim. null → roam the whole viewport (edge-biased).
+  // The center zone clears itself when the hero panel expands (the hero
+  // keep-out box grows over it). Light bottom-left/right corners are excluded.
+  // cx pushed toward the edges so the wide box clears the centered hero by
+  // running off the viewport edge (the "caught mid-frame" overflow), rather
+  // than overlapping the title. Validated: even spread, no hero/nav overlap,
+  // never the light bottom band.
+  spawnZones: [
+    { cx: [0.06, 0.12], cy: [0.17, 0.33] }, // top-left
+    { cx: [0.88, 0.94], cy: [0.17, 0.33] }, // top-right
+    { cx: [0.4, 0.6], cy: [0.55, 0.74] }, // center, below the hero title
+  ] as Array<{ cx: [number, number]; cy: [number, number] }> | null,
 
   /* ---- reduced motion ---- */
   reducedMotionMode: "static" as "static" | "none",
@@ -307,6 +323,10 @@ function rectsOverlap(a: Rect, b: Rect, margin: number): boolean {
   );
 }
 
+function clamp(v: number, min: number, max: number): number {
+  return v < min ? min : v > max ? max : v;
+}
+
 /** One coordinate, biased toward the two ends of [min, max]. */
 function edgeBiased(min: number, max: number, bias: number): number {
   if (max <= min) return min;
@@ -355,9 +375,22 @@ function pickPosition(box: Box, cfg: Config): Pos | null {
   const minTop = -overY;
   const maxTop = vh - box.height + overY;
 
+  const zones = cfg.spawnZones;
+
   for (let i = 0; i < cfg.maxCandidates; i++) {
-    const left = edgeBiased(minLeft, maxLeft, cfg.edgeBias);
-    const top = edgeBiased(minTop, maxTop, cfg.edgeBias);
+    let left: number;
+    let top: number;
+    if (zones && zones.length) {
+      // Sample the box CENTER inside a random allowed (dark) zone.
+      const z = zones[Math.floor(Math.random() * zones.length)];
+      const cx = (z.cx[0] + Math.random() * (z.cx[1] - z.cx[0])) * vw;
+      const cy = (z.cy[0] + Math.random() * (z.cy[1] - z.cy[0])) * vh;
+      left = clamp(cx - box.width / 2, minLeft, maxLeft);
+      top = clamp(cy - box.height / 2, minTop, maxTop);
+    } else {
+      left = edgeBiased(minLeft, maxLeft, cfg.edgeBias);
+      top = edgeBiased(minTop, maxTop, cfg.edgeBias);
+    }
     const candidate: Rect = {
       left,
       top,
@@ -620,22 +653,21 @@ export function AgentTransmission({
           textShadow,
         }}
       >
-        {/* Backdrop scrim: blurs + darkens the terrain behind the text, with a
-          feathered mask so the edges dissolve (reads as "caught mid-frame",
-          not a window). Sits behind the content. */}
+        {/* Backdrop scrim: blur ONLY (no dark fill) — softens busy terrain
+          detail behind the text without tinting a visible box. Feathered mask
+          so the edges dissolve. Legibility comes from dark placement + halo. */}
         <div
           aria-hidden
           style={{
             position: "absolute",
             inset: 0,
             zIndex: 0,
-            backdropFilter: `blur(${cfg.scrimBlurPx}px) brightness(${(1 - s * 0.62).toFixed(3)}) saturate(0.6)`,
-            WebkitBackdropFilter: `blur(${cfg.scrimBlurPx}px) brightness(${(1 - s * 0.62).toFixed(3)}) saturate(0.6)`,
-            backgroundColor: `rgba(8,7,6,${(s * 0.42).toFixed(3)})`,
+            backdropFilter: `blur(${cfg.scrimBlurPx}px) saturate(0.85)`,
+            WebkitBackdropFilter: `blur(${cfg.scrimBlurPx}px) saturate(0.85)`,
             maskImage:
-              "radial-gradient(122% 130% at 50% 46%, #000 0%, #000 60%, transparent 93%)",
+              "radial-gradient(125% 135% at 50% 46%, #000 0%, #000 55%, transparent 92%)",
             WebkitMaskImage:
-              "radial-gradient(122% 130% at 50% 46%, #000 0%, #000 60%, transparent 93%)",
+              "radial-gradient(125% 135% at 50% 46%, #000 0%, #000 55%, transparent 92%)",
           }}
         />
 

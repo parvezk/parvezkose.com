@@ -97,7 +97,9 @@ export default function AgentTransmissionLab() {
         scroll — the transmission overlay stays fixed
       </div>
 
-      <AgentTransmission devFast config={{ firstDelayMs: 1500 }} />
+      {/* spawnZones: null → roam the whole viewport, to exercise placement /
+        collision broadly. The real home page uses the default dark zones. */}
+      <AgentTransmission devFast config={{ firstDelayMs: 1500, spawnZones: null }} />
     </main>
   );
 }
