@@ -245,11 +245,11 @@ export function ImmersiveHeroClient({
         {/* Ambient agent-transmission overlay. Sits above the terrain (z-0)
           and below the hero content (z-10) + nav (z-30) via its own z-index.
           Picks spots clear of any [data-agent-keepout] region. First intercept
-          fires 10s after load (before visitors scroll away); recurs each
-          interval after that. */}
+          fires 10s after load (before visitors scroll away), then recurs
+          every ~45s — present but not constant. */}
         <AgentTransmission
           fontClassName={jetbrainsClassName}
-          config={{ firstDelayMs: 10_000 }}
+          config={{ firstDelayMs: 10_000, intervalMs: 45_000 }}
         />
 
         {/* Top-left site nav — fixed so it stays visible across all camera
