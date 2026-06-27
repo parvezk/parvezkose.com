@@ -54,11 +54,13 @@ const DEFAULTS = {
 
   /* ---- appearance ---- */
   fontSizePx: 12,
-  textOpacity: 0.55, // resting opacity of the whole transmission
+  textOpacity: 0.94, // resting opacity (the ambient feel comes from the fade,
+  //                    not from permanently see-through text)
   textColor: "#e8e4e0", // desaturated warm near-white
   accent: "#e2725b", // terracotta — telemetry tag, prompt sigil, caret
-  scrimStrength: 0.4, // 0..1 — backdrop halo + text-shadow for legibility
-  reticleOpacity: 0.28, // corner crop-mark brackets
+  scrimStrength: 0.78, // 0..1 — how hard the backdrop scrim darkens the terrain
+  scrimBlurPx: 3, // backdrop blur behind the text (softens terrain detail)
+  reticleOpacity: 0.32, // corner crop-mark brackets
   zIndex: 3, // above terrain, below hero content (z-10) + nav (z-30)
 
   /* ---- statusline (Claude-Code-style footer) ---- */
@@ -554,8 +556,9 @@ export function AgentTransmission({
           fontSize: cfg.fontSizePx,
           lineHeight: 1.55,
           color: cfg.textColor,
-          opacity: cfg.textOpacity * 0.7,
-          textShadow: `0 1px 2px rgba(0,0,0,${0.3 + cfg.scrimStrength * 0.4})`,
+          opacity: cfg.textOpacity * 0.8,
+          textShadow:
+            "0 0 1px rgba(0,0,0,0.95), 0 0 3px rgba(0,0,0,0.9), 0 1px 1px rgba(0,0,0,0.95)",
           whiteSpace: "pre",
           fontVariantNumeric: "tabular-nums",
         }}
@@ -578,6 +581,16 @@ export function AgentTransmission({
     cfg.reticleOpacity * 100,
   )}%, transparent)`;
 
+  const s = cfg.scrimStrength;
+  // Dark glyph halo — a tight outline + soft glow so near-white text reads on
+  // bright-red, black, AND latte-white terrain. The single biggest legibility win.
+  const haloAlpha = Math.min(1, 0.62 + s * 0.38);
+  const textShadow =
+    `0 0 1px rgba(0,0,0,${haloAlpha}),` +
+    `0 0 2px rgba(0,0,0,${haloAlpha}),` +
+    `0 0 5px rgba(0,0,0,${(haloAlpha * 0.85).toFixed(3)}),` +
+    `0 1px 1px rgba(0,0,0,${haloAlpha})`;
+
   return (
     <>
       <style>{CARET_KEYFRAMES}</style>
@@ -591,7 +604,7 @@ export function AgentTransmission({
           width: view.box.width,
           zIndex: cfg.zIndex,
           pointerEvents: "none",
-          padding: "5px 7px",
+          padding: "6px 9px",
           fontSize: cfg.fontSizePx,
           lineHeight: 1.55,
           color: cfg.textColor,
@@ -604,14 +617,30 @@ export function AgentTransmission({
           transition: view.rolling
             ? `max-height ${cfg.collapseMs}ms ease-in, opacity ${cfg.fadeOutMs}ms ease ${cfg.collapseMs}ms`
             : `opacity ${cfg.fadeInMs}ms ease`,
-          // Soft dark halo (no hard box edge) keeps near-white text legible
-          // over both dark and latte-white terrain.
-          backgroundImage: `radial-gradient(120% 120% at 50% 45%, rgba(0,0,0,${
-            cfg.scrimStrength * 0.55
-          }) 0%, rgba(0,0,0,${cfg.scrimStrength * 0.22}) 48%, transparent 80%)`,
-          textShadow: `0 1px 2px rgba(0,0,0,${0.3 + cfg.scrimStrength * 0.45})`,
+          textShadow,
         }}
       >
+        {/* Backdrop scrim: blurs + darkens the terrain behind the text, with a
+          feathered mask so the edges dissolve (reads as "caught mid-frame",
+          not a window). Sits behind the content. */}
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 0,
+            backdropFilter: `blur(${cfg.scrimBlurPx}px) brightness(${(1 - s * 0.62).toFixed(3)}) saturate(0.6)`,
+            WebkitBackdropFilter: `blur(${cfg.scrimBlurPx}px) brightness(${(1 - s * 0.62).toFixed(3)}) saturate(0.6)`,
+            backgroundColor: `rgba(8,7,6,${(s * 0.42).toFixed(3)})`,
+            maskImage:
+              "radial-gradient(122% 130% at 50% 46%, #000 0%, #000 60%, transparent 93%)",
+            WebkitMaskImage:
+              "radial-gradient(122% 130% at 50% 46%, #000 0%, #000 60%, transparent 93%)",
+          }}
+        />
+
+        {/* Content sits above the scrim. */}
+        <div style={{ position: "relative", zIndex: 1 }}>
         {/* corner crop-marks (matches hero L-bracket style) */}
         <Reticle color={reticleColor} />
 
@@ -668,6 +697,7 @@ export function AgentTransmission({
             lineH={lineH}
           />
         )}
+        </div>
       </div>
     </>
   );
@@ -691,7 +721,7 @@ function ShellPrompt({
         <span style={{ opacity: 0.5 }}>@</span>
         {shell.host}
       </span>
-      <span style={{ color: textColor, opacity: 0.45 }}>{` ${shell.cwd} `}</span>
+      <span style={{ color: textColor, opacity: 0.6 }}>{` ${shell.cwd} `}</span>
       <span style={{ color: accent, opacity: 0.85 }}>{"% "}</span>
     </span>
   );
