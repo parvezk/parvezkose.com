@@ -249,7 +249,7 @@ export function ImmersiveHeroClient({
           for the live demo). */}
         <AgentTransmission
           fontClassName={jetbrainsClassName}
-          config={{ firstDelayMs: 10_000, intervalMs: 10_000 }}
+          config={{ firstDelayMs: 5_000, intervalMs: 10_000 }}
         />
 
         {/* Top-left site nav — fixed so it stays visible across all camera
