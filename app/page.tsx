@@ -1,16 +1,6 @@
-import { Fira_Code, JetBrains_Mono } from "next/font/google";
 import type { Metadata } from "next";
 import { ImmersiveHeroClient } from "./components/immersive-hero-client";
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["300", "400", "500"],
-});
-
-const firaCode = Fira_Code({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-});
+import { jetbrainsMono, firaCode } from "./fonts";
 
 export const metadata: Metadata = {
   title: "Parvez Kose",
