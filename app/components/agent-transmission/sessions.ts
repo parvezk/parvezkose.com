@@ -27,8 +27,8 @@ export const SESSIONS: Session[] = [
   {
     id: "diffuse-palette",
     cmd: [
-      'infer palette from "volcanic dusk" · 6 swatches',
-      "diffuse 1 frame · 24 steps · seed 0x5c233a",
+      'infer palette · "volcanic dusk" · 6sw',
+      "diffuse 1 frame · 24 steps · seed 0x5c23",
     ],
     out: [
       "→ latent locked · cfg 7.5 · eta 0.0",
@@ -51,7 +51,7 @@ export const SESSIONS: Session[] = [
   {
     id: "orchestrate-grid",
     cmd: [
-      'orchestrate 3 agents · task "compose grid"',
+      'orchestrate 3 agents · "compose grid"',
       "await consensus · quorum 2 of 3",
     ],
     out: [
@@ -75,7 +75,7 @@ export const SESSIONS: Session[] = [
   {
     id: "infer-caption",
     cmd: [
-      'infer caption · img "aerial, crimson delta"',
+      'infer caption · "aerial crimson delta"',
       "sample · temp 0.7 · top_p 0.9",
     ],
     out: ['✓ "lava deltas seen from low orbit"'],
@@ -148,19 +148,19 @@ export const MODELS = [
 ];
 
 export const DIRECTORIES = [
-  "~/dev2/parvezkose.com",
-  "~/agents/atlas",
-  "~/scratch/diffuse",
-  "~/lab/terrain",
-  "~/work/interp",
+  "~/atlas",
+  "~/diffuse",
+  "~/terrain",
+  "~/interp",
+  "~/sandbox",
 ];
 
 export const BRANCHES = [
-  "feat/agent-transmission",
-  "diffuse/ink-contour",
-  "render/terrain-frag",
-  "orchestrate/grid",
-  "interp/sae-probe",
+  "diffuse-ink",
+  "render-frag",
+  "sae-probe",
+  "compose-grid",
+  "ship-nyc",
   "main",
 ];
 
@@ -174,15 +174,16 @@ export const MODE_LINES = [
   "auto-context on (32k window)",
 ];
 
-/** Hostnames for the shell-prompt identity (`agent-xxxx@host ~ %`). */
+/** Hostnames for the shell-prompt identity (`agent-xxxx@host ~ %`). Kept short
+ *  so the prompt doesn't drive the box width wider than the commands. */
 export const HOSTS = [
-  "orbital-7",
   "atlas",
-  "gpu-node-2",
-  "edge-sfo",
   "lab-01",
   "mbp-6",
-  "relay-04",
+  "sfo-1",
+  "gpu-2",
+  "relay4",
+  "edge-7",
 ];
 
 /** Labels for the occasional loading bar. */

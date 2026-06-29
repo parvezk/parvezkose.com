@@ -70,7 +70,7 @@ const DEFAULTS = {
   modeLine: true,
 
   /* ---- positioning / collision ---- */
-  minCols: 54, // floor on box width, in mono columns (terminals run wide)
+  minCols: 46, // floor on box width, in mono columns
   maxCandidates: 20, // reject-and-retry budget; skip the cycle if none fit
   overflowRatio: 0.4, // box may run off a viewport edge by up to 40%
   edgeBias: 0.72, // 0..1 — edge/corner bias when spawnZones is null
@@ -85,8 +85,8 @@ const DEFAULTS = {
   // than overlapping the title. Validated: even spread, no hero/nav overlap,
   // never the light bottom band.
   spawnZones: [
-    { cx: [0.06, 0.12], cy: [0.17, 0.33] }, // top-left
-    { cx: [0.88, 0.94], cy: [0.17, 0.33] }, // top-right
+    { cx: [0.1, 0.14], cy: [0.17, 0.33] }, // top-left
+    { cx: [0.86, 0.9], cy: [0.17, 0.33] }, // top-right
     { cx: [0.4, 0.6], cy: [0.55, 0.74] }, // center, below the hero title
   ] as Array<{ cx: [number, number]; cy: [number, number] }> | null,
 
