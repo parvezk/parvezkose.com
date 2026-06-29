@@ -1,39 +1,6 @@
 import type { Metadata } from "next";
 import type { CSSProperties, ReactNode } from "react";
-import {
-  Fira_Code,
-  IBM_Plex_Sans,
-  IBM_Plex_Serif,
-  JetBrains_Mono,
-} from "next/font/google";
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["300", "400", "500"],
-  variable: "--font-jetbrains-mono",
-  display: "swap",
-});
-
-const firaCode = Fira_Code({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-fira-code",
-  display: "swap",
-});
-
-const plexSans = IBM_Plex_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-plex-sans",
-  display: "swap",
-});
-
-const plexSerif = IBM_Plex_Serif({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-plex-serif",
-  display: "swap",
-});
+import { jetbrainsMono, firaCode, plexSans, plexSerif } from "../fonts";
 
 export const metadata: Metadata = {
   title: "Lab · parvezkose.com",

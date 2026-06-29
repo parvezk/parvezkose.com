@@ -1,6 +1,6 @@
 # parvezkose.com
 
-→ [parvezkose.com](https://parvezkose.com) — A portfolio site for AI-powered interfaces, agentic systems,  
+→ [parvezkose.com](https://parvezkose.com) — A portfolio site for AI-powered interfaces, agentic systems,
 generative UI, visual interpretability, and design–engineering.
 
 [![parvezkose.com — immersive WebGL landing](.github/cover.jpg)](https://parvezkose.com)
@@ -9,11 +9,11 @@ generative UI, visual interpretability, and design–engineering.
 
 ## Design philosophy
 
-> I build AI-augmented interfaces and agentic systems with a deliberate break from generic SaaS design: craft rooted in culture and material honesty.
+> I build AI-powered interfaces and agentic systems with a deliberate break from generic SaaS design: craft rooted in culture and material honesty.
 >
 > Visual interpretability shapes how I build. I'm drawn to what lives under the surface and what the model is actually doing. And I think the people using it should too.
 
-The site argues against the visual homogeneity of the modern web — the same rounded cards, neutral palettes, safe sans-serifs, blurred gradients, glowing accents. The counter-move is one strong signature (an immersive WebGL terrain) and quiet structure around it. *Poetry in the shell, rigor in the stack.*
+The site argues against the visual homogeneity of the modern web — the same rounded cards, neutral palettes, safe sans-serifs, blurred gradients, glowing accents. The counter-move is one strong signature (an immersive WebGL terrain) and quiet structure around it. _Poetry in the shell, rigor in the stack._
 
 ## Stack
 
