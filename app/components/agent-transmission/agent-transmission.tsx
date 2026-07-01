@@ -48,7 +48,7 @@ const DEFAULTS = {
   progressEvery: 2, // draw a loading bar every Nth intercept (0 → use progressChance)
   progressChance: 0.5, // fallback odds when progressEvery is 0
   progressFillMs: 1800, // time for the loading bar to reach 100%
-  holdMs: 3000, // dwell after content, caret blinking, before close
+  holdMs: 5000, // dwell after content, caret blinking, before roll-up
   collapseMs: 460, // roll-up duration
   fadeOutMs: 420, // fade after the roll-up
 
