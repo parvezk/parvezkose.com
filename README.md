@@ -19,6 +19,12 @@ The site argues against the visual homogeneity of the modern web — the same ro
 
 Next.js 15 (App Router) · React 19 · Tailwind v4 alpha · WebGL2 · MDX.
 
+## GitHub streak
+
+<a href="https://git.io/streak-stats"><img src="./profile/streak.svg" alt="GitHub contribution streak for parvezk" /></a>
+
+The streak card is generated daily by GitHub Actions so the README does not depend on a hosted stats endpoint.
+
 ## Design system
 
 Tokens and component specimens live in [`design-system/`](./design-system) and at [`parvezkose.com/design-system`](https://parvezkose.com/design-system/). Added via a separate PR.
