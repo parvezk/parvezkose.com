@@ -21,7 +21,7 @@ Next.js 15 (App Router) · React 19 · Tailwind v4 alpha · WebGL2 · MDX.
 
 ## Design system
 
-Tokens and component specimens live in [`design-system/`](./design-system) and at [`parvezkose.com/design-system`](https://parvezkose.com/design-system/). Added via a separate PR.
+Tokens and component specimens live in [`design-system/`](./design-system) and at [`parvezkose.com/design-system`](https://parvezkose.com/design-system/).
 
 ## Writing
 
