@@ -40,22 +40,22 @@ export function HowIBuildSection() {
           <span className="tool">Antigravity</span>
           {` or `}
           <span className="tool">Codex</span>
-          {` for spec planning. Everything else earns its keep or it doesn't, and most don't. I treat my workflow as an authored operating model, not a tools list: the aesthetic taste on the surface and the agentic rigor underneath are the same practice viewed from two angles, both about composing constraints to get a specific outcome. The long version, with five layers, a running tried-and-dropped log, and the live diagram, lives `}
+          {` for spec planning. Everything else earns its keep or it doesn't, and most don't. I treat my workflow as an authored operating model, not a tools list: the aesthetic taste on the surface and the agentic rigor underneath are the same practice viewed from two angles, both about composing constraints to get a specific outcome. The long version, with three layers, a running tried-and-dropped log lives `}
           <a
-            href="https://github.com/parvezk"
+            href="https://designlogic.substack.com/p/my-ai-dev-workflow-2026-first-half"
             target="_blank"
             rel="noopener noreferrer"
             className="text-[color:var(--accent-terracotta)] underline decoration-[color:var(--accent-terracotta)]/40 underline-offset-[4px] transition-[letter-spacing,text-decoration-color] duration-200 hover:tracking-[0.04em] hover:decoration-[color:var(--accent-terracotta)]"
           >
-            here →
+            here → My AI Dev Workflow - 2026 First Half
           </a>
         </p>
       }
     >
       <p className="font-medium text-white">
-        Three layers, orchestrated: a thinking layer for framing, an
-        execution layer of agents for implementation, and a validation
-        layer of telemetry holding both honest.
+        Three layers, orchestrated: a thinking layer for framing, an execution
+        layer of agents for implementation, and a validation layer of telemetry
+        holding both honest.
       </p>
     </SectionCard>
   );
