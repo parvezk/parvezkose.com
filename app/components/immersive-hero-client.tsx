@@ -83,6 +83,12 @@ const MENU_ITEMS: ReadonlyArray<MenuItem> = [
     event: "linkedin",
   },
   {
+    label: "X",
+    href: "https://x.com/parvez__",
+    external: true,
+    event: "x",
+  },
+  {
     label: "Substack",
     href: "https://designlogic.substack.com",
     external: true,
@@ -304,6 +310,20 @@ export function ImmersiveHeroClient({
             className="text-white/75 transition-[letter-spacing,color] duration-300 ease-out [text-shadow:0_1px_2px_rgba(0,0,0,0.85)] hover:tracking-[0.16em] hover:text-white sm:hover:tracking-[0.2em]"
           >
             LinkedIn
+          </a>
+          <a
+            href="https://x.com/parvez__"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() =>
+              posthog.capture("social_link_clicked", {
+                platform: "X",
+                location: "immersive_nav",
+              })
+            }
+            className="text-white/75 transition-[letter-spacing,color] duration-300 ease-out [text-shadow:0_1px_2px_rgba(0,0,0,0.85)] hover:tracking-[0.16em] hover:text-white sm:hover:tracking-[0.2em]"
+          >
+            X
           </a>
           <a
             href="https://designlogic.substack.com"
