@@ -23,9 +23,14 @@ test.describe("Immersive landing (/)", () => {
   test("opens Design Philosophy panel", async ({ page }) => {
     await page.goto("/");
 
-    const toggle = page.getByRole("button", { name: /Design Philosophy/i });
-    await expect(toggle).toHaveAttribute("aria-expanded", "false");
-    await toggle.click();
-    await expect(toggle).toHaveAttribute("aria-expanded", "true");
+    const closed = page.getByRole("button", { name: "[+] Design Philosophy" });
+    await expect(closed).toHaveAttribute("aria-expanded", "false");
+    await closed.click();
+
+    const open = page.getByRole("button", { name: "[−] Design Philosophy" });
+    await expect(open).toHaveAttribute("aria-expanded", "true");
+    await expect(
+      page.getByRole("button", { name: "Close Design Philosophy" }),
+    ).toBeVisible();
   });
 });
