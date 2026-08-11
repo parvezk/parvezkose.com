@@ -64,7 +64,14 @@ function getMDXData(dir) {
  * Fetches all blog posts from the predefined posts directory.
  */
 export function getBlogPosts() {
-  return getMDXData(path.join(process.cwd(), 'app', 'blog', 'posts'))
+  return getMDXData(path.join(process.cwd(), 'app', 'blog', 'posts')).sort(
+    (a, b) => {
+      if (a.metadata.publishedAt > b.metadata.publishedAt) {
+        return -1
+      }
+      return 1
+    }
+  )
 }
 
 export { formatDate } from './date-format'
