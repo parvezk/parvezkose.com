@@ -12,13 +12,17 @@ let htmlCachePromise: Promise<string> | null = null;
  * skipTrailingSlashRedirect is enabled for PostHog, so /design-system (no slash)
  * would otherwise serve this HTML at a URL where relative CSS/nav assets resolve
  * to the site root and 404. Canonicalize to /design-system/.
+ *
+ * Use a raw Location header (not NextURL/NextResponse.redirect): NextURL strips
+ * trailing slashes even when skipTrailingSlashRedirect is set (vercel/next.js#66738).
  */
 export async function GET(request: NextRequest) {
   const { pathname } = request.nextUrl;
   if (!pathname.endsWith("/")) {
-    const url = request.nextUrl.clone();
-    url.pathname = `${pathname}/`;
-    return NextResponse.redirect(url, 308);
+    return new Response(null, {
+      status: 308,
+      headers: { Location: `${pathname}/` },
+    });
   }
 
   if (!htmlCachePromise) {
