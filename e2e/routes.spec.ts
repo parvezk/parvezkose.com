@@ -41,7 +41,7 @@ test.describe("Key routes", () => {
     await expect(page).toHaveURL(/\/design-system\/$/);
     await cssResponsePromise;
     await expect(
-      page.getByRole("heading", { name: /Design System/i }).first(),
+      page.getByRole("heading", { name: /Poetry in the shell/i }),
     ).toBeVisible();
   });
 });
