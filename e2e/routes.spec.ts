@@ -26,4 +26,22 @@ test.describe("Key routes", () => {
       page.getByRole("heading", { name: "Parvez Kose", level: 1 }),
     ).toBeVisible();
   });
+
+  test("/design-system redirects to trailing slash and loads CSS", async ({
+    page,
+  }) => {
+    const cssResponsePromise = page.waitForResponse(
+      (response) =>
+        response.url().includes("/design-system/colors_and_type.css") &&
+        response.ok(),
+    );
+
+    await page.goto("/design-system");
+
+    await expect(page).toHaveURL(/\/design-system\/$/);
+    await cssResponsePromise;
+    await expect(
+      page.getByRole("heading", { name: /Design System/i }).first(),
+    ).toBeVisible();
+  });
 });
