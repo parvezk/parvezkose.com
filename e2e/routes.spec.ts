@@ -26,4 +26,24 @@ test.describe("Key routes", () => {
       page.getByRole("heading", { name: "Parvez Kose", level: 1 }),
     ).toBeVisible();
   });
+
+  test("/design-system redirects to trailing slash, preserves search, and loads CSS", async ({
+    page,
+  }) => {
+    const cssResponsePromise = page.waitForResponse(
+      (response) =>
+        response.url().includes("/design-system/colors_and_type.css") &&
+        response.ok(),
+    );
+
+    await page.goto("/design-system?utm_source=newsletter&variant=a");
+
+    const currentUrl = new URL(page.url());
+    expect(currentUrl.pathname).toBe("/design-system/");
+    expect(currentUrl.search).toBe("?utm_source=newsletter&variant=a");
+    await cssResponsePromise;
+    await expect(
+      page.getByRole("heading", { name: /Poetry in the shell/i }),
+    ).toBeVisible();
+  });
 });
