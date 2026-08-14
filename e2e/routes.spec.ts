@@ -27,7 +27,7 @@ test.describe("Key routes", () => {
     ).toBeVisible();
   });
 
-  test("/design-system redirects to trailing slash and loads CSS", async ({
+  test("/design-system redirects to trailing slash, preserves search, and loads CSS", async ({
     page,
   }) => {
     const cssResponsePromise = page.waitForResponse(
@@ -36,9 +36,11 @@ test.describe("Key routes", () => {
         response.ok(),
     );
 
-    await page.goto("/design-system");
+    await page.goto("/design-system?utm_source=newsletter&variant=a");
 
-    await expect(page).toHaveURL(/\/design-system\/$/);
+    const currentUrl = new URL(page.url());
+    expect(currentUrl.pathname).toBe("/design-system/");
+    expect(currentUrl.search).toBe("?utm_source=newsletter&variant=a");
     await cssResponsePromise;
     await expect(
       page.getByRole("heading", { name: /Poetry in the shell/i }),
