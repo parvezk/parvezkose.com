@@ -17,11 +17,11 @@ let htmlCachePromise: Promise<string> | null = null;
  * trailing slashes even when skipTrailingSlashRedirect is set (vercel/next.js#66738).
  */
 export async function GET(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, search } = request.nextUrl;
   if (!pathname.endsWith("/")) {
     return new Response(null, {
       status: 308,
-      headers: { Location: `${pathname}/` },
+      headers: { Location: `${pathname}/${search}` },
     });
   }
 
