@@ -1,27 +1,29 @@
-import { notFound } from 'next/navigation'
-import { CustomMDX } from 'app/components/mdx'
-import { formatDate, getBlogPosts } from 'app/blog/utils'
-import { baseUrl } from 'app/sitemap'
-import { cache } from 'react'
-import { getPostHogClient } from 'app/lib/posthog-server'
+import { notFound } from "next/navigation";
+import { CustomMDX } from "app/components/mdx";
+import { formatDate, getBlogPosts } from "app/blog/utils";
+import { baseUrl } from "app/sitemap";
+import { cache } from "react";
+import { getPostHogClient } from "app/lib/posthog-server";
 
-const getPost = cache((slug: string) => getBlogPosts().find((post) => post.slug === slug))
+const getPost = cache((slug: string) =>
+  getBlogPosts().find((post) => post.slug === slug),
+);
 
 export async function generateStaticParams() {
-  let posts = getBlogPosts()
+  let posts = getBlogPosts();
 
   return posts.map((post) => ({
     slug: post.slug,
-  }))
+  }));
 }
 
-type BlogPageProps = { params: Promise<{ slug: string }> }
+type BlogPageProps = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: BlogPageProps) {
-  const { slug } = await params
-  let post = getPost(slug)
+  const { slug } = await params;
+  let post = getPost(slug);
   if (!post) {
-    return
+    return;
   }
 
   let {
@@ -29,10 +31,10 @@ export async function generateMetadata({ params }: BlogPageProps) {
     publishedAt: publishedTime,
     summary: description,
     image,
-  } = post.metadata
+  } = post.metadata;
   let ogImage = image
     ? image
-    : `${baseUrl}/og?title=${encodeURIComponent(title)}`
+    : `${baseUrl}/og?title=${encodeURIComponent(title)}`;
 
   return {
     title,
@@ -40,7 +42,7 @@ export async function generateMetadata({ params }: BlogPageProps) {
     openGraph: {
       title,
       description,
-      type: 'article',
+      type: "article",
       publishedTime,
       url: `${baseUrl}/blog/${post.slug}`,
       images: [
@@ -50,58 +52,54 @@ export async function generateMetadata({ params }: BlogPageProps) {
       ],
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title,
       description,
       images: [ogImage],
     },
-  }
+  };
 }
 
 export default async function Blog({ params }: BlogPageProps) {
-  const { slug } = await params
-  let post = getPost(slug)
+  const { slug } = await params;
+  let post = getPost(slug);
 
   if (!post) {
-    notFound()
+    notFound();
   }
 
-  const posthog = getPostHogClient()
+  const posthog = getPostHogClient();
   posthog.capture({
-    distinctId: 'anonymous',
-    event: 'blog_post_viewed',
+    distinctId: "anonymous",
+    event: "blog_post_viewed",
     properties: {
       slug: post!.slug,
       title: post!.metadata.title,
       published_at: post!.metadata.publishedAt,
     },
-  })
-  await posthog.shutdown()
+  });
+  await posthog.shutdown();
 
   return (
     <section>
-      <script
-        type="application/ld+json"
-        suppressHydrationWarning
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'BlogPosting',
-            headline: post.metadata.title,
-            datePublished: post.metadata.publishedAt,
-            dateModified: post.metadata.publishedAt,
-            description: post.metadata.summary,
-            image: post.metadata.image
-              ? `${baseUrl}${post.metadata.image}`
-              : `/og?title=${encodeURIComponent(post.metadata.title)}`,
-            url: `${baseUrl}/blog/${post.slug}`,
-            author: {
-              '@type': 'Person',
-              name: 'My Portfolio',
-            },
-          }).replace(/</g, '\\u003c'),
-        }}
-      />
+      <script type="application/ld+json" suppressHydrationWarning>
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          headline: post.metadata.title,
+          datePublished: post.metadata.publishedAt,
+          dateModified: post.metadata.publishedAt,
+          description: post.metadata.summary,
+          image: post.metadata.image
+            ? `${baseUrl}${post.metadata.image}`
+            : `/og?title=${encodeURIComponent(post.metadata.title)}`,
+          url: `${baseUrl}/blog/${post.slug}`,
+          author: {
+            "@type": "Person",
+            name: "My Portfolio",
+          },
+        })}
+      </script>
       <h1 className="title font-semibold text-2xl tracking-tighter">
         {post.metadata.title}
       </h1>
@@ -114,5 +112,5 @@ export default async function Blog({ params }: BlogPageProps) {
         <CustomMDX source={post.content} />
       </article>
     </section>
-  )
+  );
 }
