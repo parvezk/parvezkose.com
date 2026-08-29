@@ -271,7 +271,7 @@ export function ImmersiveHeroClient({
               "linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.42) 52%, rgba(0,0,0,0) 100%)",
           }}
         >
-          <Link
+          {/* <Link
             href="/classic"
             onClick={() =>
               posthog.capture("layout_switched", {
@@ -282,7 +282,7 @@ export function ImmersiveHeroClient({
             className="text-white/75 transition-[letter-spacing,color] duration-300 ease-out [text-shadow:0_1px_2px_rgba(0,0,0,0.85)] hover:tracking-[0.16em] hover:text-white sm:hover:tracking-[0.2em]"
           >
             v1
-          </Link>
+          </Link> */}
           <a
             href="https://github.com/parvezk"
             target="_blank"
