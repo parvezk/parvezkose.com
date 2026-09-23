@@ -36,6 +36,7 @@ function CustomLink(props) {
         return <a {...props} href="#" />
       }
     } catch (e) {
+      console.error('Invalid URL in MDX CustomLink:', href, e);
       // If URL parsing fails, it's safer to not render the link as clickable
       return <a {...props} href="#" />
     }
