@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { MDXRemote } from 'next-mdx-remote/rsc'
-import { highlight } from 'sugar-high'
+import { tokenize } from 'sugar-high'
 import React from 'react'
 
 function Table({ data }) {
@@ -60,9 +60,70 @@ function RoundedImage(props) {
   return <Image alt={props.alt} className="rounded-lg" {...props} />
 }
 
+const tokenTypes = [
+  'identifier', 'keyword', 'string', 'class', 'property',
+  'entity', 'jsxliterals', 'sign', 'comment', 'break', 'space'
+];
+
 function Code({ children, ...props }) {
-  let codeHTML = highlight(children)
-  return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />
+  // If children is not a string, render it safely as is
+  if (typeof children !== 'string') {
+    return <code {...props}>{children}</code>;
+  }
+
+  const tokens = tokenize(children);
+
+  // Group tokens by line
+  const lines: [number, string][][] = [];
+  let currentLine: [number, string][] = [];
+
+  tokens.forEach(([type, value]) => {
+    if (type === 9) { // break
+      lines.push(currentLine);
+      currentLine = [];
+    } else {
+      if (value.includes('\n')) {
+        const splitValues = value.split('\n');
+        splitValues.forEach((val, index) => {
+          currentLine.push([type, val]);
+          if (index < splitValues.length - 1) {
+            lines.push(currentLine);
+            currentLine = [];
+          }
+        });
+      } else {
+        currentLine.push([type, value]);
+      }
+    }
+  });
+
+  if (currentLine.length > 0) {
+    lines.push(currentLine);
+  }
+
+  return (
+    <code {...props}>
+      {lines.map((lineTokens, lineIndex) => (
+        <React.Fragment key={lineIndex}>
+          <span className="sh__line">
+            {lineTokens.map(([type, value], tokenIndex) => {
+              const tokenType = tokenTypes[type];
+              return (
+                <span
+                  key={tokenIndex}
+                  className={`sh__token--${tokenType}`}
+                  style={{ color: `var(--sh-${tokenType})` }}
+                >
+                  {value}
+                </span>
+              );
+            })}
+          </span>
+          {lineIndex < lines.length - 1 && '\n'}
+        </React.Fragment>
+      ))}
+    </code>
+  );
 }
 
 function slugify(str) {
