@@ -66,8 +66,9 @@ function Code({ children, ...props }) {
 }
 
 function slugify(str) {
-  return str
-    .toString()
+  // next-mdx-remote can pass undefined for empty ATX headings (e.g. `##`).
+  // Calling .toString() on undefined aborts prerender / next build.
+  return String(str ?? '')
     .toLowerCase()
     .trim() // Remove whitespace from both ends of a string
     .replace(/\s+/g, '-') // Replace spaces with -
