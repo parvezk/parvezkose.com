@@ -8,9 +8,7 @@ export function BlogPosts() {
     <div>
       {allBlogs
         .sort((a, b) => {
-          if (
-            new Date(a.metadata.publishedAt) > new Date(b.metadata.publishedAt)
-          ) {
+          if (a.metadata.publishedAt > b.metadata.publishedAt) {
             return -1
           }
           return 1
