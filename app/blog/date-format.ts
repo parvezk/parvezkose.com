@@ -1,11 +1,19 @@
 /** Pure date formatting — safe for client components (no `fs`). */
 
 export function formatDate(date: string, includeRelative = false) {
+  // Missing/invalid frontmatter `publishedAt` used to throw on `.includes` and
+  // abort SSG for that slug (and thus `next build`).
+  if (!date) {
+    return ''
+  }
   let currentDate = new Date()
   if (!date.includes('T')) {
     date = `${date}T00:00:00`
   }
   let targetDate = new Date(date)
+  if (Number.isNaN(targetDate.getTime())) {
+    return ''
+  }
 
   let yearsAgo = currentDate.getFullYear() - targetDate.getFullYear()
   let monthsAgo = currentDate.getMonth() - targetDate.getMonth()
