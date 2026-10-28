@@ -11,7 +11,7 @@
   --bg2: #141414;
   --fg: #e8e4e0;
   --muted: #9a9590;
-  --faint: #5a5550;
+  --faint: #6e6862;
   --border: #2a2520;
   --line: #6a645e;
   --latte: #c8ad8f;
@@ -21,8 +21,8 @@
   --c-design: var(--mulberry);
   --c-engineering: var(--terracotta);
   --ease: cubic-bezier(0.33, 1, 0.68, 1);
-  /* Translucent panel over the terrain, matching the How I think plates. */
-  --panel: rgba(10, 10, 10, 0.62);
+  /* Translucent panel over the terrain like the How I think plates, a little darker so muted text holds up over the light terrain. */
+  --panel: rgba(10, 10, 10, 0.74);
 
   display: grid;
   gap: 10px;
