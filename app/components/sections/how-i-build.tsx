@@ -1,62 +1,46 @@
 "use client";
 
-import { ANCHORS } from "../../lib/camera/path";
+import { useState } from "react";
+import { ANCHORS, cardOpacity } from "../../lib/camera/path";
+import { useCamera, useCameraEffect } from "../../lib/camera/scroll-controller";
 import { SectionCard } from "./section-card";
+import { GravityWellsGraph } from "./gravity-wells/gravity-wells-graph";
 
 const ANCHOR = ANCHORS[2];
 
 /**
- * Anchor 2 — How I build. Hierarchy between the two paragraphs:
- *   - The top paragraph is the *thesis*: font-medium + bright white.
- *     It carries the reader at a glance.
- *   - The inner-panel paragraph is the *elaboration*: slightly smaller,
- *     dimmer, and loosened leading, so it visually settles back as the
- *     "long version" of the same idea. Same monospace voice — just the
- *     two ends of a single content rhythm.
+ * Anchor 2 — How I build. The Gravity Wells graph: research, design and
+ * engineering as gravity wells, with the tools I use orbiting each one.
+ * Mounted through SectionCard's `customLayout` (like How I think) because
+ * it needs far more width than the default card.
  *
- * The trailing "here →" links to GitHub for the long-form / live
- * diagram destination.
+ * In camera mode every section is mounted at once and faded by the camera,
+ * so the graph's simulation is paused whenever this card is invisible.
+ * In simple mode (mobile / reduced motion) it runs while it is in view.
  */
 export function HowIBuildSection() {
+  const { cameraMode } = useCamera();
+  const [onCamera, setOnCamera] = useState(false);
+
+  // cardOpacity is 0 forever in simple mode, so this only matters in camera mode.
+  useCameraEffect((cam) => {
+    const visible = cardOpacity(cam, ANCHOR.id) > 0.02;
+    setOnCamera((prev) => (prev === visible ? prev : visible));
+  });
+
   return (
     <SectionCard
       anchor={ANCHOR}
       ordinal="02"
       title="How I build"
-      signatureMotion={
-        // Tool names wrapped in a warm-Latte tone — palette accent that
-        // isn't already claimed (terracotta = links, golden = eyebrows).
-        // No underline so readers don't mistake them for links.
-        <p className="text-[13px] normal-case tracking-normal leading-[1.75] text-white/72 [&_.tool]:text-[color:var(--neutral-latte)]">
-          {`Minimal core, evolving edges. `}
-          <span className="tool">Claude Code</span>
-          {` in `}
-          <span className="tool">Ghostty</span>
-          {` plus `}
-          <span className="tool">Tmux</span>
-          {` as the daily driver, `}
-          <span className="tool">Cursor</span>
-          {` for visual review, `}
-          <span className="tool">Antigravity</span>
-          {` or `}
-          <span className="tool">Codex</span>
-          {` for spec planning. Everything else earns its keep or it doesn't, and most don't. I treat my workflow as an authored operating model, not a tools list: the aesthetic taste on the surface and the agentic rigor underneath are the same practice viewed from two angles, both about composing constraints to get a specific outcome. The long version, with three layers, a running tried-and-dropped log lives `}
-          <a
-            href="https://designlogic.substack.com/p/my-ai-dev-workflow-2026-first-half"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[color:var(--accent-terracotta)] underline decoration-[color:var(--accent-terracotta)]/40 underline-offset-[4px] transition-[letter-spacing,text-decoration-color] duration-200 hover:tracking-[0.04em] hover:decoration-[color:var(--accent-terracotta)]"
-          >
-            here → My AI Dev Workflow - 2026 First Half
-          </a>
-        </p>
+      compact
+      customLayout={
+        <GravityWellsGraph
+          ordinal="02"
+          titleId={`anchor-${ANCHOR.slug}-title`}
+          active={cameraMode ? onCamera : true}
+        />
       }
-    >
-      <p className="font-medium text-white">
-        Three layers, orchestrated: a thinking layer for framing, an execution
-        layer of agents for implementation, and a validation layer of telemetry
-        holding both honest.
-      </p>
-    </SectionCard>
+    />
   );
 }

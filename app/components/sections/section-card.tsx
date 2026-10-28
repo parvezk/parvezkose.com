@@ -33,6 +33,11 @@ type SectionCardProps = Readonly<{
    * system gallery in place of the small placeholder card.
    */
   customLayout?: ReactNode;
+  /**
+   * Tighter top/bottom padding in camera mode (56px / 48px instead of
+   * 80px), for custom layouts sized to fit the viewport height.
+   */
+  compact?: boolean;
 }>;
 
 /**
@@ -49,6 +54,7 @@ export function SectionCard({
   ctaHref,
   ctaLabel = "Open →",
   customLayout,
+  compact = false,
 }: SectionCardProps) {
   const { cameraMode, mounted } = useCamera();
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -105,9 +111,9 @@ export function SectionCard({
       ref={wrapperRef}
       id={`anchor-${anchor.slug}`}
       aria-labelledby={`anchor-${anchor.slug}-title`}
-      className={`pointer-events-none fixed inset-0 z-10 flex justify-center px-6 py-20 will-change-transform ${
-        customLayout ? "items-start" : "items-center"
-      }`}
+      className={`pointer-events-none fixed inset-0 z-10 flex justify-center px-6 will-change-transform ${
+        compact ? "pb-12 pt-14" : "py-20"
+      } ${customLayout ? "items-start" : "items-center"}`}
       style={{ transform: "translate3d(0%, 0%, 0)" }}
     >
       <div
