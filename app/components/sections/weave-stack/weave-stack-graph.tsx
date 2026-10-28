@@ -79,6 +79,15 @@ export const WeaveStackGraph = forwardRef<HTMLDivElement, Props>(
       >
         <div className="holder" data-ws="holder">
           <div className="art" data-ws="art">
+            <header className="head">
+              <p className="eyebrow">How I build · Agent infrastructure</p>
+              <h3>Agent infrastructure, end to end.</h3>
+              <p className="desc">
+                Three layers: the agents I build, the harness that keeps long
+                runs durable, and the evals that check the work. Each tab lights
+                the tools one kind of system depends on.
+              </p>
+            </header>
             <div className="bar">
               <div
                 className="seg"
@@ -120,15 +129,6 @@ export const WeaveStackGraph = forwardRef<HTMLDivElement, Props>(
             </div>
 
             <div className="panel">
-              <div className="col span2">
-                <span className="caps">02 — How I build</span>
-                <h3>Agent infrastructure, end to end.</h3>
-                <p>
-                  Three layers: the agents I build, the harness that keeps long
-                  runs durable, and the evals that check the work. Each tab
-                  lights the tools one kind of system depends on.
-                </p>
-              </div>
               <div className="col selected">
                 <div className="sel" data-ws="sel" hidden>
                   <div className="sel-head">
@@ -144,7 +144,7 @@ export const WeaveStackGraph = forwardRef<HTMLDivElement, Props>(
                 <span className="no-sel" data-ws="noSel">
                   <span
                     className="caps"
-                    style={{ display: "block", marginBottom: 8 }}
+                    style={{ display: "block", marginBottom: 4 }}
                   >
                     Selected tool
                   </span>

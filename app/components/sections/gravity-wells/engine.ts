@@ -32,8 +32,6 @@ import {
  * differences are plumbing:
  *   - elements are looked up inside `root` by `data-gw` instead of by id,
  *   - SVG ids are prefixed with `gw-` so they can't clash with the page,
- *   - `forceWide()` lets the host keep the triangle on laptop screens even
- *     when the height-capped stage is narrower than 760px,
  *   - `setActive(false)` pauses the simulation and orbit timer while the
  *     section is off screen,
  *   - `destroy()` stops every timer, observer and listener.
@@ -47,12 +45,8 @@ export type GravityWellsHandle = {
   destroy: () => void;
 };
 
-type MountOptions = {
-  /** True when the triangle layout must be used regardless of stage width. */
-  forceWide?: () => boolean;
-};
 
-export function mountGravityWells(root: HTMLElement, opts: MountOptions = {}): GravityWellsHandle {
+export function mountGravityWells(root: HTMLElement): GravityWellsHandle {
   const $ = <T extends Element = HTMLElement>(k: string) =>
     root.querySelector(`[data-gw="${k}"]`) as unknown as T;
 
@@ -417,6 +411,8 @@ export function mountGravityWells(root: HTMLElement, opts: MountOptions = {}): G
 
     // Lens: a magnified live copy of the scene, clipped to a circle that follows the pointer.
     const lensG = svg.append("g").attr("pointer-events", "none").style("display", "none");
+    // The scene has no ground of its own (the panel is translucent), so the lens gets a backing disc.
+    const lensBack = lensG.append("circle").attr("class", "lens-back");
     const lensUse = lensG.append("g").attr("clip-path", "url(#gw-lens-clip)").append("use").attr("href", "#gw-scene");
     const lensRing = lensG.append("circle").attr("class", "lens-ring");
     const LENS = { r: 0, k: 2 };
@@ -670,6 +666,7 @@ export function mountGravityWells(root: HTMLElement, opts: MountOptions = {}): G
       lensG.style("display", null);
       lensClip.attr("cx", px).attr("cy", py).attr("r", LENS.r);
       lensRing.attr("cx", px).attr("cy", py).attr("r", LENS.r);
+      lensBack.attr("cx", px).attr("cy", py).attr("r", LENS.r);
       lensUse.attr("transform", `translate(${px},${py}) scale(${LENS.k}) translate(${-px},${-py})`);
     }
     svg.on("pointermove.lens", moveLens).on("pointerleave.lens", () => lensG.style("display", "none"));
@@ -813,7 +810,7 @@ export function mountGravityWells(root: HTMLElement, opts: MountOptions = {}): G
   sync();
 
   // ---- Layout follows the stage width; text size follows the scale ----
-  const layoutFor = (w: number): "wide" | "narrow" => (opts.forceWide?.() || w >= 760 ? "wide" : "narrow");
+  const layoutFor = (w: number): "wide" | "narrow" => (w >= 760 ? "wide" : "narrow");
   function ensure() {
     const want = layoutFor(stageEl.clientWidth);
     if (current && current.name === want) {

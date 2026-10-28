@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { ANCHORS, cardOpacity } from "../../lib/camera/path";
 import { useCamera, useCameraEffect } from "../../lib/camera/scroll-controller";
 import { SectionCard } from "./section-card";
@@ -18,8 +18,7 @@ const ANCHOR = ANCHORS[2];
  * they need far more width than the default card.
  *
  * In camera mode the section is a fixed overlay, so it scrolls inside
- * itself: Gravity Wells is sized to fill the first screen, and the Weave
- * stack is below it. Once the inner scroll reaches either end, the wheel
+ * itself: Gravity Wells first, then the Weave stack below it. Once the inner scroll reaches either end, the wheel
  * carries on to the page and the camera moves on.
  *
  * Every section is mounted at once in camera mode and faded by the camera,
@@ -28,8 +27,6 @@ const ANCHOR = ANCHORS[2];
 export function HowIBuildSection() {
   const { cameraMode } = useCamera();
   const [onCamera, setOnCamera] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const weaveRef = useRef<HTMLDivElement>(null);
 
   // cardOpacity is 0 forever in simple mode, so this only matters in camera mode.
   useCameraEffect((cam) => {
@@ -39,25 +36,6 @@ export function HowIBuildSection() {
 
   const active = cameraMode ? onCamera : true;
 
-  const toWeave = () => {
-    const box = scrollRef.current;
-    const weave = weaveRef.current;
-    if (!box || !weave) return;
-    const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)")
-      .matches;
-    if (cameraMode) {
-      box.scrollTo({
-        top: weave.offsetTop,
-        behavior: smooth ? "smooth" : "auto",
-      });
-    } else {
-      weave.scrollIntoView({
-        behavior: smooth ? "smooth" : "auto",
-        block: "start",
-      });
-    }
-  };
-
   return (
     <SectionCard
       anchor={ANCHOR}
@@ -66,7 +44,6 @@ export function HowIBuildSection() {
       compact
       customLayout={
         <div
-          ref={scrollRef}
           className={`relative flex flex-col gap-4 ${
             cameraMode
               ? "max-h-[calc(100vh-104px)] overflow-y-auto [scrollbar-color:#2a2520_transparent] [scrollbar-width:thin]"
@@ -74,13 +51,10 @@ export function HowIBuildSection() {
           }`}
         >
           <GravityWellsGraph
-            ordinal="02"
             titleId={`anchor-${ANCHOR.slug}-title`}
             active={active}
-            onNext={toWeave}
-            nextLabel="Agent infrastructure"
           />
-          <WeaveStackGraph ref={weaveRef} active={active} />
+          <WeaveStackGraph active={active} />
         </div>
       }
     />
