@@ -515,7 +515,7 @@ export function mountWeaveStack(root: HTMLElement): WeaveStackHandle {
       const filled = n.kind === "hub" || (n.kind === "tool" && n.id === focus);
       el.b.style.left = r1(n.x!) + "px";
       el.b.style.top = r1(n.y!) + "px";
-      el.b.style.opacity = lit ? "1" : "0.34";
+      el.b.style.opacity = lit ? "1" : "0.22";
       el.b.setAttribute("aria-pressed", app.sel === n.id ? "true" : "false");
       const m = el.mark.style;
       m.width = size + "px";
