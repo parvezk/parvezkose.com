@@ -126,6 +126,13 @@
   transition: text-decoration-color 150ms var(--ease);
 }
 .gw-root .note a:hover { text-decoration-color: var(--terracotta); }
+.gw-root .next {
+  align-self: flex-start; margin-top: 4px; padding: 0; border: 0; background: none;
+  font: 500 11px/1.4 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+}
+.gw-root .next:hover { color: var(--fg); border: 0; }
+/* Only needed when the section scrolls inside itself (laptops). */
+@media (max-width: 1023px) { .gw-root .next { display: none; } }
 
 /* ---- SVG marks. Font sizes come from JS so text keeps a steady on-screen size as the stage scales. ---- */
 .gw-root .ring { fill: none; stroke: var(--latte); stroke-opacity: .24; stroke-width: 1; stroke-dasharray: 3 4; vector-effect: non-scaling-stroke; transition: stroke-opacity 150ms var(--ease); }
@@ -177,16 +184,17 @@
 
 /* ---- Laptop fit ---- */
 @media (min-width: 1024px) {
+  /* Full width, so it lines up with the Weave stack panel below. The
+     stage is centred in its column. */
   .gw-root {
-    width: auto;
-    max-width: min(1320px, calc(100vw - 48px));
-    grid-template-columns: var(--gw-side) auto;
+    grid-template-columns: var(--gw-side) minmax(0, 1fr);
     grid-template-areas: none;
     column-gap: var(--gw-gap);
     align-items: start;
   }
   .gw-root > * { grid-area: auto; }
   .gw-side, .gw-main { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  .gw-main { align-items: center; }
   /* Text column scrolls on its own only if a very short screen needs it. */
   .gw-side {
     max-height: calc(100vh - 104px - 2 * var(--gw-pad));
@@ -197,13 +205,15 @@
   .gw-root .controls .sep { display: none; }
   /* The stage takes whatever width the viewport height allows, so the
      triangle keeps its proportions and the section never scrolls. */
-  .gw-root .stage {
-    width: min(
+  .gw-root {
+    --gw-stage-w: min(
       calc(min(1320px, 100vw - 48px) - 2 * var(--gw-pad) - var(--gw-side) - var(--gw-gap)),
       calc((100vh - var(--gw-vchrome)) * 1200 / 890)
     );
   }
-  .gw-root .key { width: 0; min-width: 100%; column-gap: 14px; }
+  .gw-root .stage { width: var(--gw-stage-w); }
+  /* The legend lines up with the stage above it. */
+  .gw-root .key { width: var(--gw-stage-w); column-gap: 14px; }
   .gw-root .readout { min-height: 4.5em; }
 }
 

@@ -17,6 +17,9 @@ type Props = Readonly<{
    * timer pause while it is false so off-screen sections cost nothing.
    */
   active: boolean;
+  /** Optional "next" cue at the end of the text column (e.g. a link to the graph below). */
+  onNext?: () => void;
+  nextLabel?: string;
 }>;
 
 /**
@@ -25,7 +28,13 @@ type Props = Readonly<{
  * and wires the controls after mount, so nothing renders on the server
  * except the static chrome.
  */
-export function GravityWellsGraph({ ordinal, titleId, active }: Props) {
+export function GravityWellsGraph({
+  ordinal,
+  titleId,
+  active,
+  onNext,
+  nextLabel,
+}: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
   const handleRef = useRef<GravityWellsHandle | null>(null);
   // Also pause when the panel is scrolled out of view (simple mode).
@@ -154,6 +163,11 @@ export function GravityWellsGraph({ ordinal, titleId, active }: Props) {
           </a>
           .
         </p>
+        {onNext && (
+          <button type="button" className="next" onClick={onNext}>
+            {nextLabel ?? "Next"} ↓
+          </button>
+        )}
       </div>
 
       <div className="gw-main">
