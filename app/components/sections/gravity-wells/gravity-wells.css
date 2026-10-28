@@ -26,7 +26,7 @@
 
   display: grid;
   gap: 10px;
-  width: min(1240px, calc(100vw - 48px));
+  width: min(1244px, calc(100vw - 48px));
   padding: 20px;
   border: 1px solid rgba(200, 173, 143, 0.18);
   border-radius: 6px;
@@ -35,6 +35,7 @@
   -webkit-backdrop-filter: blur(6px) saturate(120%);
   color: var(--fg);
   font-family: var(--sans);
+  line-height: 20px;
   text-align: left;
   grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
@@ -58,9 +59,9 @@
 .gw-root .hint { grid-area: hint; }
 .gw-root .note { grid-area: note; }
 
-.gw-root .eyebrow { margin: 0; font: 500 11px/1.4 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-.gw-root h2 { margin: 0; font: 300 28px/1.15 var(--mono); letter-spacing: -.01em; color: var(--latte); text-wrap: balance; }
-.gw-root .lede { margin: 0; font-size: 13px; line-height: 1.5; color: var(--muted); }
+.gw-root .eyebrow { margin: 0; font: 500 11px/15px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.gw-root h2 { margin: 0; font: 300 28px/32px var(--mono); letter-spacing: -.01em; color: var(--latte); text-wrap: balance; }
+.gw-root .lede { margin: 0; font-size: 13px; line-height: 20px; color: var(--muted); }
 .gw-root .lede .s-r { color: var(--c-research); }
 .gw-root .lede .s-d { color: var(--c-design); }
 .gw-root .lede .s-e { color: var(--c-engineering); }
@@ -76,16 +77,16 @@
 .gw-root button[aria-pressed="true"] { color: var(--fg); border-color: var(--latte); background: rgba(200, 173, 143, .10); }
 .gw-root button:focus-visible { outline: 1px solid var(--terracotta); outline-offset: 2px; }
 .gw-root .controls .sep { width: 1px; align-self: stretch; background: var(--border); margin: 0 4px; }
-.gw-root .caption { margin: 0; min-height: 1.45em; font-size: 13px; line-height: 1.45; color: var(--muted); }
+.gw-root .caption { margin: 0; min-height: 19px; font-size: 13px; line-height: 19px; color: var(--muted); }
 .gw-root .caption b { font: 500 11px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--fg); margin-right: .5ch; }
 
-.gw-root .key { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; margin: 0; padding: 0; list-style: none; font: 12px/1.3 var(--mono); color: var(--muted); }
+.gw-root .key { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; margin: 0; padding: 0; list-style: none; font: 12px/16px var(--mono); color: var(--muted); }
 .gw-root .key li { flex: none; display: flex; align-items: center; gap: 7px; white-space: nowrap; }
 .gw-root .key svg { width: 22px; height: 22px; flex: none; overflow: visible; }
 .gw-root .key svg.wide { width: 22px; height: 12px; }
 .gw-root .key .k-ring { fill: none; stroke: var(--latte); stroke-width: 1; stroke-dasharray: 2 3; }
 .gw-root .key .k-on { stroke-width: 1.4; }
-.gw-root .hint { margin: 0 0 2px; font: 12px/1.4 var(--mono); color: var(--faint); }
+.gw-root .hint { margin: 0 0 2px; font: 12px/17px var(--mono); color: var(--faint); }
 
 .gw-root .stage { position: relative; margin: 0; border: 1px solid var(--border); border-radius: 6px; background: transparent; overflow: hidden; }
 .gw-root .graph { display: block; width: 100%; height: auto; margin: 0 auto; touch-action: none; cursor: default; }
@@ -94,7 +95,7 @@
 .gw-root .zoombar { position: absolute; top: 10px; right: 10px; display: flex; gap: 4px; z-index: 2; }
 .gw-root .zoombar button { padding: 7px 10px; font-size: 12px; background: rgba(10, 10, 10, .85); }
 .gw-root .zoombar button.sym { min-width: 32px; font-size: 15px; letter-spacing: 0; }
-.gw-root .dropped { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; margin: 0; padding: 12px 16px; border-top: 1px solid var(--border); font: 13px/1.5 var(--mono); color: var(--muted); }
+.gw-root .dropped { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; margin: 0; padding: 12px 16px; border-top: 1px solid var(--border); font: 13px/20px var(--mono); color: var(--muted); }
 .gw-root .dropped .tag { font-size: 11px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin-right: 4px; }
 .gw-root .dropped .sep { color: var(--faint); }
 .gw-root .tip {
@@ -104,8 +105,8 @@
 }
 .gw-root .tip[hidden] { display: none; }
 .gw-root .tip b { display: block; font: 500 13px/1.4 var(--mono); color: var(--fg); }
-.gw-root .readout { margin: 0; min-height: 1.5em; font: 13px/1.5 var(--mono); color: var(--fg); }
-.gw-root .note { margin: 0; font-size: 13px; line-height: 1.5; color: var(--faint); }
+.gw-root .readout { margin: 0; min-height: 20px; font: 13px/20px var(--mono); color: var(--fg); }
+.gw-root .note { margin: 0; font-size: 13px; line-height: 20px; color: var(--faint); }
 .gw-root .note a {
   color: var(--terracotta);
   text-decoration: underline;
@@ -159,8 +160,8 @@
 .gw-root .lens-bg { fill: transparent; }
 .gw-root .lens-back { fill: var(--bg); fill-opacity: .94; }
 
-/* Knock lines out behind text so labels read cleanly. Kept soft so it doesn't read as an outline on the translucent panel. */
-.gw-root .tool-label, .gw-root .hub-label, .gw-root .well-label, .gw-root .cli-label { paint-order: stroke; stroke: rgba(10, 10, 10, .5); stroke-width: 3px; stroke-linejoin: round; }
+/* No strokes, glows or shadows on text: labels are plain fills. */
+.gw-root .tool-label, .gw-root .hub-label, .gw-root .well-label, .gw-root .cli-label { stroke: none; }
 .gw-root .hit { fill: transparent; stroke: none; }
 
 @media (max-width: 680px) {

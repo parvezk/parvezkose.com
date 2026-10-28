@@ -17,8 +17,9 @@ import {
  * The Weave stack graph: agent infrastructure in three layers. A port of
  * the approved prototype (weave-stack.html) into a mount function.
  *
- * Wide (container ≥ 1000px): the prototype unchanged. A 1240px artboard,
- * scaled down a little when the container is narrower.
+ * Wide (container ≥ 1000px): the prototype's layout, laid out at the
+ * container's real width (columns spread from the prototype's 1240px
+ * artboard) so nothing is scaled and text renders at 1:1.
  *
  * Narrow (phones, tablets): the same structure turned on its side. One
  * straight line runs down the left: root, then each layer's hub, with
@@ -30,7 +31,7 @@ import {
 
 const NS = "http://www.w3.org/2000/svg";
 const WIDE_MIN = 1000;
-const WIDE_W = 1240;
+const ART_W = 1240; // the prototype's artboard width
 
 type Mode = "wide" | "narrow";
 
@@ -82,7 +83,8 @@ export function mountWeaveStack(root: HTMLElement): WeaveStackHandle {
     hover: null as string | null,
     drag: null as WNode | null,
     mode: null as Mode | null,
-    W: WIDE_W,
+    W: ART_W,
+    wideW: 0,
     H: 600,
     detailH: 0,
     active: true,
@@ -117,14 +119,15 @@ export function mountWeaveStack(root: HTMLElement): WeaveStackHandle {
   type Band = { top: number; h: number };
   let bands: Band[] = [];
 
-  // The prototype's layout, unchanged.
-  function layoutWide() {
+  // The prototype's layout. Columns keep their spacing relative to the
+  // prototype's artboard, rounded to whole pixels.
+  function layoutWide(W: number) {
+    const k = W / ART_W;
     const PER_ROW = 5,
-      X0 = 300,
-      DX = 210,
-      SPINE = 46,
-      HUB_X = 62;
-    const W = WIDE_W;
+      HUB_X = 62,
+      X0 = HUB_X + Math.round((300 - HUB_X) * k),
+      DX = Math.round(210 * k),
+      SPINE = 46;
     const r = byId[ROOT];
     r.sx = HUB_X;
     r.sy = 34;
@@ -159,7 +162,7 @@ export function mountWeaveStack(root: HTMLElement): WeaveStackHandle {
         });
         second.forEach((n, i) => {
           const idx = second.length > 1 ? Math.round((i * (PER_ROW - 2)) / (second.length - 1)) : 0;
-          n.sx = X0 + DX / 2 + idx * DX;
+          n.sx = X0 + Math.round(DX / 2) + idx * DX;
           n.sy = rowB;
           n.side = "below";
         });
@@ -355,7 +358,10 @@ export function mountWeaveStack(root: HTMLElement): WeaveStackHandle {
 
   /** Lay the graph out for a mode. `slide` starts tools a little left of their slots so rows slide in. */
   function relayout(slide: boolean) {
-    if (app.mode === "wide") layoutWide();
+    if (app.mode === "wide") {
+      layoutWide(app.wideW);
+      measureLabels();
+    }
     else layoutNarrow(graph.clientWidth || 360);
     graph.style.height = app.H + "px";
     svg.setAttribute("width", String(app.W));
@@ -432,10 +438,12 @@ export function mountWeaveStack(root: HTMLElement): WeaveStackHandle {
   // Wide: one horizontal line runs out from the hub; each tool hangs off it on a short vertical tick.
   // Narrow: the same, turned: down the left line, then a short horizontal tick to the tool.
   // Every tool's path covers the line up to its own tick, so a focused tool lights its whole route.
+  // Straight lines sit on half pixels so a 1px stroke fills one pixel row exactly.
+  const px = (v: number) => Math.round(v) + 0.5;
   function fanPath(hub: WNode, n: WNode) {
-    if (app.mode === "narrow") return `M ${r1(hub.x!)} ${r1(edgeY(hub, 1))} V ${r1(n.y!)} H ${r1(edgeX(n, -1))}`;
+    if (app.mode === "narrow") return `M ${px(hub.x!)} ${px(edgeY(hub, 1))} V ${px(n.y!)} H ${px(edgeX(n, -1))}`;
     const hx = hub.x! + markSize(hub) / 2 + 4;
-    return `M ${r1(hx)} ${r1(hub.y!)} H ${r1(n.x!)} V ${r1(edgeY(n, n.y! < hub.y! ? 1 : -1))}`;
+    return `M ${px(hx)} ${px(hub.y!)} H ${px(n.x!)} V ${px(edgeY(n, n.y! < hub.y! ? 1 : -1))}`;
   }
   // Solid mixes instead of opacity, so paths that share the hub line don't stack up brighter.
   function mix(hex: string, t: number) {
@@ -446,7 +454,7 @@ export function mountWeaveStack(root: HTMLElement): WeaveStackHandle {
     return `rgb(${c(16)}, ${c(8)}, ${c(0)})`;
   }
   function trunkPath(rt: WNode, hub: WNode) {
-    return `M ${r1(rt.x!)} ${r1(edgeY(rt, 1) + 4)} L ${r1(hub.x!)} ${r1(edgeY(hub, -1))}`;
+    return `M ${px(rt.x!)} ${px(edgeY(rt, 1) + 4)} L ${px(hub.x!)} ${px(edgeY(hub, -1))}`;
   }
   function weavePath(a: WNode, b: WNode) {
     const dy = b.y! - a.y!,
@@ -494,7 +502,8 @@ export function mountWeaveStack(root: HTMLElement): WeaveStackHandle {
         stroke = mix(colorOf(t), focus ? (hot ? 0.95 : 0.12) : lit ? 0.55 : 0.18);
         op = 1;
       }
-      if (hot) w = 1.5;
+      // Straight lines stay 1px; a focused one shows by colour.
+      if (hot && weaveL) w = 1.5;
       l.el!.setAttribute("stroke", stroke);
       l.el!.setAttribute("stroke-opacity", String(op));
       l.el!.setAttribute("stroke-width", String(w));
@@ -513,8 +522,8 @@ export function mountWeaveStack(root: HTMLElement): WeaveStackHandle {
       const lit = focus ? n.id === focus || fadj!.has(n.id) : inSub(n);
       const size = markSize(n);
       const filled = n.kind === "hub" || (n.kind === "tool" && n.id === focus);
-      el.b.style.left = r1(n.x!) + "px";
-      el.b.style.top = r1(n.y!) + "px";
+      el.b.style.left = Math.round(n.x!) + "px";
+      el.b.style.top = Math.round(n.y!) + "px";
       el.b.style.opacity = lit ? "1" : "0.22";
       el.b.setAttribute("aria-pressed", app.sel === n.id ? "true" : "false");
       const m = el.mark.style;
@@ -526,6 +535,8 @@ export function mountWeaveStack(root: HTMLElement): WeaveStackHandle {
       m.transform = n.layer === "v" ? "rotate(45deg)" : "";
       m.boxShadow = n.kind === "root" ? `0 0 0 5px ${COL.bg}, 0 0 0 6px ${COL.fg}` : "none";
       const t = el.label.style;
+      // Wide labels are centred under the mark on a whole pixel; narrow ones sit right of it (stylesheet).
+      t.left = narrow ? "" : Math.round(22 - (labelW.get(n.id) || 0) / 2) + "px";
       // Narrow labels sit to the right of the mark; the stylesheet places them.
       t.top = narrow
         ? ""
@@ -538,8 +549,8 @@ export function mountWeaveStack(root: HTMLElement): WeaveStackHandle {
     const sel = narrow && app.sel ? byId[app.sel] : null;
     if (sel && sel.kind === "tool") {
       detail.hidden = false;
-      detail.style.top = r1(sel.y! + sel.rh / 2 - 4) + "px";
-      detail.style.left = r1(sel.x! + 12) + "px";
+      detail.style.top = Math.round(sel.y! + sel.rh / 2 - 4) + "px";
+      detail.style.left = Math.round(sel.x! + 12) + "px";
     } else {
       detail.hidden = true;
     }
@@ -630,6 +641,11 @@ export function mountWeaveStack(root: HTMLElement): WeaveStackHandle {
 
   /* -------------------------------- fit ------------------------------------ */
   let lastNarrowW = 0;
+  // Label widths, measured once per layout, so wide labels can be centred on whole pixels.
+  const labelW = new Map<string, number>();
+  function measureLabels() {
+    nodes.forEach((n) => labelW.set(n.id, els.get(n.id)!.label.getBoundingClientRect().width));
+  }
   function fit() {
     const w = holder.clientWidth;
     const mode: Mode = w >= WIDE_MIN ? "wide" : "narrow";
@@ -640,13 +656,12 @@ export function mountWeaveStack(root: HTMLElement): WeaveStackHandle {
       root.classList.toggle("ws-wide", mode === "wide");
     }
     if (mode === "wide") {
-      const k = Math.min(1, w / WIDE_W);
-      art.style.transform = k < 1 ? `scale(${k})` : "";
-      if (changed) relayout(true);
-      holder.style.height = Math.ceil(art.offsetHeight * k) + "px";
+      const ww = Math.floor(w);
+      if (changed || ww !== app.wideW) {
+        app.wideW = ww;
+        relayout(changed);
+      }
     } else {
-      art.style.transform = "";
-      holder.style.height = "";
       const gw = graph.clientWidth;
       if (changed || Math.abs(gw - lastNarrowW) > 1) {
         lastNarrowW = gw;
@@ -667,7 +682,11 @@ export function mountWeaveStack(root: HTMLElement): WeaveStackHandle {
   let alive = true;
   if (document.fonts && document.fonts.ready)
     document.fonts.ready.then(() => {
-      if (alive) fit();
+      if (!alive) return;
+      // Web fonts change label widths; measure again.
+      app.wideW = 0;
+      lastNarrowW = 0;
+      fit();
     });
 
   return {

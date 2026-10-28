@@ -125,6 +125,9 @@ export function mountGravityWells(root: HTMLElement): GravityWellsHandle {
 
     const fs: Record<string, number> = {};
     function sizeText() {
+      // A whole-pixel height keeps everything below the stage on the pixel grid.
+      const cw = svgEl.clientWidth;
+      if (cw) svgEl.style.height = Math.round((cw * H) / W) + "px";
       const scale = Math.min(
         L.maxScale,
         Math.max(1, W / (svgEl.clientWidth || W), H / (svgEl.clientHeight || H)),
@@ -385,7 +388,6 @@ export function mountGravityWells(root: HTMLElement): GravityWellsHandle {
     const wellText = coreG
       .append("text")
       .attr("class", (d) => "well-label wl-" + d.key)
-      .style("stroke", "var(--bg)")
       .attr("text-anchor", "middle")
       .attr("y", -20)
       .text((d) => d.name);
@@ -528,7 +530,7 @@ export function mountGravityWells(root: HTMLElement): GravityWellsHandle {
     function placeText(sel: any) {
       sel.each(function (this: any, d: any) {
         const p = place(d);
-        select(this).select("text").attr("x", p.ox).attr("y", p.oy).attr("text-anchor", p.anchor);
+        select(this).select("text").attr("x", Math.round(p.ox)).attr("y", Math.round(p.oy)).attr("text-anchor", p.anchor);
       });
     }
     function render() {
@@ -542,9 +544,10 @@ export function mountGravityWells(root: HTMLElement): GravityWellsHandle {
         .attr("y1", (d) => d.hub.y)
         .attr("x2", (d) => d.x)
         .attr("y2", (d) => d.y);
-      hubG.attr("transform", (d) => `translate(${d.x},${d.y})`);
+      // Whole pixels so marks and text stay on the pixel grid.
+      hubG.attr("transform", (d) => `translate(${Math.round(d.x)},${Math.round(d.y)})`);
       placeText(hubG);
-      toolG.attr("transform", (d) => `translate(${d.x},${d.y})`);
+      toolG.attr("transform", (d) => `translate(${Math.round(d.x)},${Math.round(d.y)})`);
       placeText(toolG);
       handoffPaths.attr("d", arcPath);
       pulls.each(function (this: any, d: any) {
