@@ -109,6 +109,8 @@ export function mountGravityWells(root: HTMLElement): GravityWellsHandle {
   function build(name: "wide" | "narrow"): Built {
     const L = LAYOUTS[name];
     const { W, H, ring: RING } = L;
+    // Height of the visible stage. Can be shorter than H (the layout's height) to trim empty space below the home view.
+    const VH = L.viewH ?? H;
     const WELLS: Record<string, any> = {};
     Object.entries(STREAMS).forEach(([k, s]) => {
       WELLS[k] = { ...s, key: k, x: L.pos[k][0], y: L.pos[k][1] };
@@ -118,7 +120,7 @@ export function mountGravityWells(root: HTMLElement): GravityWellsHandle {
 
     svg.selectAll("*").remove();
     svg
-      .attr("viewBox", `0 0 ${W} ${H}`)
+      .attr("viewBox", `0 0 ${W} ${VH}`)
       .style("max-width", W + "px")
       .classed("handoffs-off", !ui.handoffs)
       .classed("picking", false);
@@ -127,10 +129,10 @@ export function mountGravityWells(root: HTMLElement): GravityWellsHandle {
     function sizeText() {
       // A whole-pixel height keeps everything below the stage on the pixel grid.
       const cw = svgEl.clientWidth;
-      if (cw) svgEl.style.height = Math.round((cw * H) / W) + "px";
+      if (cw) svgEl.style.height = Math.round((cw * VH) / W) + "px";
       const scale = Math.min(
         L.maxScale,
-        Math.max(1, W / (svgEl.clientWidth || W), H / (svgEl.clientHeight || H)),
+        Math.max(1, W / (svgEl.clientWidth || W), VH / (svgEl.clientHeight || VH)),
       );
       Object.entries(TEXT).forEach(([k, px]) => {
         fs[k] = px * scale * (L.textScale || 1);
@@ -450,7 +452,7 @@ export function mountGravityWells(root: HTMLElement): GravityWellsHandle {
           y1: (z.bottom - s.top) * k + 4,
         });
       }
-      LENS.r = 70 * Math.max(1, W / (svgEl.clientWidth || W), H / (svgEl.clientHeight || H));
+      LENS.r = 70 * Math.max(1, W / (svgEl.clientWidth || W), VH / (svgEl.clientHeight || VH));
     }
     measure();
 
@@ -608,7 +610,7 @@ export function mountGravityWells(root: HTMLElement): GravityWellsHandle {
     const ease = (sel: any) => (reduceMotion ? sel : sel.transition().duration(420).ease(easeCubicOut));
     function zoomTo(d: any) {
       const k = Math.min(4, zt().k * 1.25);
-      ease(svg).call(zoom.transform, zoomIdentity.translate(W / 2, H / 2).scale(k).translate(-d.x, -d.y));
+      ease(svg).call(zoom.transform, zoomIdentity.translate(W / 2, VH / 2).scale(k).translate(-d.x, -d.y));
     }
     const zoomBy = (f: number) => ease(svg).call(zoom.scaleBy, f);
     const zoomReset = () => ease(svg).call(zoom.transform, home);

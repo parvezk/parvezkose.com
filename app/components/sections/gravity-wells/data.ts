@@ -26,6 +26,8 @@ export const TEXT = { tool: 13.5, hub: 10.5, well: 13.5 };
 export type Layout = {
   W: number;
   H: number;
+  /** Visible stage height, if shorter than H. */
+  viewH?: number;
   maxScale: number;
   pull: number;
   textScale?: number;
@@ -51,7 +53,8 @@ export type Layout = {
 export const LAYOUTS: Record<"wide" | "narrow", Layout> = {
   wide: {
     // Prototype A's triangle, with room above design and below engineering. The CLI arc sits where A's escape arc was.
-    W: 1200, H: 890, maxScale: 1.3, pull: 0.85,
+    // viewH trims the stage by half the empty space left under the zoomed-out home view.
+    W: 1200, H: 890, viewH: 775, maxScale: 1.3, pull: 0.85,
     ring: { active: 80, evaluating: 130, backlog: 174 }, hub: 44,
     pos: { research: [300, 450], design: [830, 245], engineering: [830, 640] },
     cli: { cx: 830, cy: 640, r: 236, from: -53, to: 21, slots: [-36, -15, 6], label: { a: 28, r: 246, anchor: "middle" } },
