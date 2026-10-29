@@ -18,7 +18,9 @@
   border: 1px solid rgba(200, 173, 143, 0.18);
   border-radius: 6px;
   /* Translucent over the terrain, matching the How I think plates. */
-  background: rgba(10, 10, 10, 0.94);
+  background: rgba(10, 10, 10, 0.96);
+  /* Set by the camera while the section fades in and out (see SectionCard `tall`). */
+  opacity: var(--card-opacity, 1);
   backdrop-filter: blur(6px) saturate(120%);
   -webkit-backdrop-filter: blur(6px) saturate(120%);
   color: var(--fg);
@@ -60,7 +62,7 @@
 .ws-root .node { position: absolute; width: 44px; height: 44px; margin: -22px 0 0 -22px; padding: 0; background: transparent; border: 0; display: flex; align-items: center; justify-content: center; cursor: grab; touch-action: none; transition: opacity 180ms ease; }
 .ws-root .node:active { cursor: grabbing; }
 .ws-root .node .mark { display: block; }
-.ws-root .node .label { position: absolute; left: 0; top: 32px; white-space: nowrap; pointer-events: none; font-size: 14px; line-height: 18px; padding: 0 4px; background: transparent; }
+.ws-root .node .label { position: absolute; left: 0; top: 32px; white-space: nowrap; pointer-events: none; font-size: 13px; line-height: 18px; padding: 0 4px; background: transparent; }
 .ws-root .node.hub .label, .ws-root .node.root .label { background: rgba(10, 10, 10, .85); border-radius: 2px; }
 .ws-root .node.hub .label { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; }
 .ws-root .detail { position: absolute; z-index: 2; max-width: var(--ws-lw, 260px); padding: 0 4px; pointer-events: none; }

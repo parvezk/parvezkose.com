@@ -99,7 +99,38 @@ export type CameraSample = Readonly<{
   nearestAnchor: number;
   /** Climb altitude 0..1, computed from current eased position along the path. */
   altitude: number;
+  /**
+   * Pixels scrolled into the dwell at DWELL_ANCHOR (0 outside it before,
+   * the full dwell length after). The camera holds at that anchor while
+   * the section's tall content scrolls up by this much.
+   */
+  dwell: number;
 }>;
+
+/**
+ * The anchor whose section is taller than the viewport (How I build). The
+ * page gets extra scroll length there: the camera holds at the anchor while
+ * that section's content scrolls with the page.
+ */
+export const DWELL_ANCHOR = 2;
+
+/**
+ * Map a scroll position to camera progress, with `dwell` px of extra scroll
+ * inserted at DWELL_ANCHOR. `range` is the full scroll range including the dwell.
+ */
+export function sampleScroll(y: number, range: number, dwell: number): CameraSample {
+  const base = Math.max(1, range - dwell);
+  const at = (DWELL_ANCHOR / SEGMENT_COUNT) * base;
+  if (dwell <= 0 || y < at) return sampleCamera(y / base, 0);
+  if (y < at + dwell) return sampleCamera(at / base, y - at);
+  return sampleCamera((y - dwell) / base, dwell);
+}
+
+/** Scroll position that lands on an anchor, with the dwell inserted at DWELL_ANCHOR. */
+export function scrollForAnchor(index: number, range: number, dwell: number): number {
+  const base = Math.max(1, range - dwell);
+  return (index / SEGMENT_COUNT) * base + (index > DWELL_ANCHOR ? dwell : 0);
+}
 
 /**
  * Convert raw 0..1 scroll progress into a camera sample by:
@@ -108,7 +139,7 @@ export type CameraSample = Readonly<{
  *   3. Easing what remains with power2.inOut.
  *   4. Lerping translation + scale between the two segment anchors.
  */
-export function sampleCamera(progress: number): CameraSample {
+export function sampleCamera(progress: number, dwell = 0): CameraSample {
   const p = Math.max(0, Math.min(1, progress));
   const segIdx = Math.min(SEGMENT_COUNT - 1, Math.floor(p * SEGMENT_COUNT));
   const segP = p * SEGMENT_COUNT - segIdx;
@@ -135,6 +166,7 @@ export function sampleCamera(progress: number): CameraSample {
     segmentIndex: segIdx,
     nearestAnchor: ease < 0.5 ? segIdx : segIdx + 1,
     altitude,
+    dwell,
   };
 }
 

@@ -594,6 +594,16 @@ export function mountGravityWells(root: HTMLElement): GravityWellsHandle {
       .on("end", () => svg.classed("panning", false))
       .on("zoom", (e: any) => scene.attr("transform", e.transform));
     svg.call(zoom).on("dblclick.zoom", null).on("wheel.zoom", null);
+    // Home view (load and Reset). Wide starts one zoom-out step back, with the
+    // top ring near the top edge, so the whole graph fits a laptop screen as you
+    // scroll in. Whole-pixel offsets keep lines and text sharp.
+    const home = (() => {
+      if (name !== "wide") return zoomIdentity;
+      const k = 0.8;
+      const top = Math.min(...Object.values(WELLS).map((w: any) => w.y)) - RING.backlog - 34;
+      return zoomIdentity.translate(Math.round((W / 2) * (1 - k)), Math.round(16 - k * top)).scale(k);
+    })();
+    svg.call(zoom.transform, home);
     const zt = () => zoomTransform(svgEl);
     const ease = (sel: any) => (reduceMotion ? sel : sel.transition().duration(420).ease(easeCubicOut));
     function zoomTo(d: any) {
@@ -601,7 +611,7 @@ export function mountGravityWells(root: HTMLElement): GravityWellsHandle {
       ease(svg).call(zoom.transform, zoomIdentity.translate(W / 2, H / 2).scale(k).translate(-d.x, -d.y));
     }
     const zoomBy = (f: number) => ease(svg).call(zoom.scaleBy, f);
-    const zoomReset = () => ease(svg).call(zoom.transform, zoomIdentity);
+    const zoomReset = () => ease(svg).call(zoom.transform, home);
 
     toolG.call(
       (d3drag() as any)

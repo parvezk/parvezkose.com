@@ -32,6 +32,7 @@ import {
 const NS = "http://www.w3.org/2000/svg";
 const WIDE_MIN = 1000;
 const ART_W = 1240; // the prototype's artboard width
+const CH = 7.9; // tool label advance per character (13px JetBrains Mono)
 
 type Mode = "wide" | "narrow";
 
@@ -173,7 +174,7 @@ export function mountWeaveStack(root: HTMLElement): WeaveStackHandle {
       bandTop = bottom + 24;
     });
     nodes.forEach((n) => {
-      const lw = n.kind === "tool" ? n.id.length * 8.5 : n.id.length * 9.2;
+      const lw = n.kind === "tool" ? n.id.length * CH : n.id.length * 9.2;
       const hw = Math.max(16, lw / 2 + 5);
       n.bx0 = -hw;
       n.bx1 = hw;
@@ -207,7 +208,7 @@ export function mountWeaveStack(root: HTMLElement): WeaveStackHandle {
       nodes
         .filter((n) => n.layer === k && n.kind === "tool")
         .forEach((n) => {
-          const lines = n.id.length * 8.5 + 8 > maxw ? 2 : 1;
+          const lines = n.id.length * CH + 8 > maxw ? 2 : 1;
           n.rh = lines === 1 ? ROW : ROW + 18;
           n.sx = MX;
           n.sy = c + n.rh / 2;
@@ -220,7 +221,7 @@ export function mountWeaveStack(root: HTMLElement): WeaveStackHandle {
       y = bottom + 14;
     });
     nodes.forEach((n) => {
-      const lw = Math.min(maxw, n.id.length * 8.5 + 8);
+      const lw = Math.min(maxw, n.id.length * CH + 8);
       n.bx0 = -10;
       n.bx1 = 14 + lw;
       n.top = n.bottom = n.kind === "tool" ? n.rh / 2 - 2 : 12;

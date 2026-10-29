@@ -22,7 +22,9 @@
   --c-engineering: var(--terracotta);
   --ease: cubic-bezier(0.33, 1, 0.68, 1);
   /* Translucent panel over the terrain like the How I think plates, dark enough that muted text holds up over the light terrain. */
-  --panel: rgba(10, 10, 10, 0.94);
+  --panel: rgba(10, 10, 10, 0.96);
+  /* Set by the camera while the section fades in and out (see SectionCard `tall`). */
+  opacity: var(--card-opacity, 1);
 
   display: grid;
   gap: 10px;
@@ -124,8 +126,8 @@
 .gw-root .w-engineering { stroke: var(--c-engineering); color: var(--c-engineering); }
 .gw-root .cli-arc { fill: none; stroke: var(--muted); stroke-opacity: .55; stroke-width: 1; stroke-dasharray: 1 5; stroke-linecap: round; }
 .gw-root .cli-label { font-family: var(--mono); font-weight: 500; font-size: var(--fs-hub); letter-spacing: .1em; fill: var(--muted); text-transform: uppercase; }
-.gw-root .trunk { stroke: var(--line); stroke-width: 1.2; }
-.gw-root .branch { stroke: var(--line); stroke-opacity: .8; stroke-width: 1; }
+.gw-root .trunk { stroke: var(--line); stroke-width: 1.2; vector-effect: non-scaling-stroke; }
+.gw-root .branch { stroke: var(--line); stroke-opacity: .8; stroke-width: 1; vector-effect: non-scaling-stroke; }
 .gw-root .hub { fill: var(--bg); stroke: var(--muted); stroke-width: 1.1; }
 .gw-root .hub-label { font-family: var(--mono); font-weight: 500; font-size: var(--fs-hub); fill: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
 .gw-root .well-core { fill: var(--bg); stroke-width: 1.5; }
@@ -143,7 +145,7 @@
 .gw-root .s-backlog .tool-label { fill: var(--muted); }
 .gw-root .tool.unused .tool-label { fill: var(--faint); font-size: calc(var(--fs-tool) * .8); }
 .gw-root .tool.unused .dot { stroke: var(--faint); }
-.gw-root .handoff { fill: none; stroke: var(--fg); stroke-opacity: .38; stroke-width: 1.1; }
+.gw-root .handoff { fill: none; stroke: var(--fg); stroke-opacity: .38; stroke-width: 1.1; vector-effect: non-scaling-stroke; }
 .gw-root .arrowhead { fill: var(--fg); fill-opacity: .55; }
 .gw-root .handoffs-off .handoff { display: none; }
 .gw-root .pull { stroke: var(--latte); stroke-linecap: round; }
