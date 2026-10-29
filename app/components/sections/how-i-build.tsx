@@ -53,6 +53,17 @@ export function HowIBuildSection() {
   useCameraEffect((cam) => {
     const visible = cardOpacity(cam, ANCHOR.id) > 0.02;
     setOnCamera((prev) => (prev === visible ? prev : visible));
+
+    // As the content scrolls up, cut each panel off at the top padding line
+    // (56px) so nothing shows through the see-through top nav. Each panel is
+    // clipped on its own: clipping a shared parent would switch off the
+    // panels' backdrop blur.
+    const el = contentRef.current;
+    if (!el) return;
+    for (const panel of Array.from(el.children) as HTMLElement[]) {
+      const cut = Math.max(0, Math.round(cam.dwell) - panel.offsetTop);
+      panel.style.clipPath = cut > 0 ? `inset(${cut}px 0 0 0)` : "";
+    }
   });
 
   const active = cameraMode ? onCamera : true;

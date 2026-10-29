@@ -82,6 +82,9 @@ export function SectionCard({
     const opacity = cardOpacity(cam, anchor.id);
     if (tall) {
       card.style.setProperty("--card-opacity", `${opacity}`);
+      // The card itself stays at opacity 1, so hide it outright when faded out;
+      // otherwise its rect would still count as a keep-out for the overlay.
+      card.style.visibility = opacity > 0 ? "visible" : "hidden";
       // Whole pixels so text stays sharp while it scrolls.
       card.style.transform = `translate3d(0, ${-Math.round(cam.dwell)}px, 0)`;
     } else {

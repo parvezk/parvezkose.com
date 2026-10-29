@@ -14,7 +14,7 @@ import { HowIBuildSection } from "./sections/how-i-build";
 import { ThinkingAheadSection } from "./sections/thinking-ahead";
 import { ProgressBar } from "./hud/progress-bar";
 import { HeroTagline } from "./hero-tagline";
-import { AgentTransmission } from "./agent-transmission/agent-transmission";
+import { CameraAwareTransmission } from "./agent-transmission/camera-aware-transmission";
 
 type ImmersiveHeroClientProps = Readonly<{
   jetbrainsClassName: string;
@@ -252,8 +252,8 @@ export function ImmersiveHeroClient({
           and below the hero content (z-10) + nav (z-30) via its own z-index.
           Picks spots clear of any [data-agent-keepout] region. First intercept
           ~10s after load, then a 10s idle gap between each one (tight cadence
-          for the live demo). */}
-        <AgentTransmission
+          for the live demo). Hidden while How I build is on screen. */}
+        <CameraAwareTransmission
           fontClassName={jetbrainsClassName}
           config={{ firstDelayMs: 5_000, intervalMs: 5_000 }}
         />
