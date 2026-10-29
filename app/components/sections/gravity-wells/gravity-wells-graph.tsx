@@ -69,6 +69,7 @@ export function GravityWellsGraph({ titleId, active }: Props) {
 
   return (
     <div ref={rootRef} className="gw-root" style={fonts}>
+      <span className="corners" aria-hidden="true" />
       <header className="gw-head">
         <p className="eyebrow">How I build · AI dev workflow</p>
         <h2 id={titleId}>Gravity wells</h2>

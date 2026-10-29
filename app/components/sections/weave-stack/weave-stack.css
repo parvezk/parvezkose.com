@@ -16,7 +16,6 @@
   width: min(1244px, calc(100vw - 48px));
   padding: 20px;
   border: 1px solid rgba(200, 173, 143, 0.18);
-  border-radius: 6px;
   /* Translucent over the terrain, matching the How I think plates. */
   background: rgba(10, 10, 10, 0.96);
   /* Set by the camera while the section fades in and out (see SectionCard `tall`). */
@@ -103,3 +102,17 @@
 @media (prefers-reduced-motion: reduce) {
   .ws-root .node, .ws-root .seg button[aria-disabled="true"]::after { transition: none; }
 }
+
+/* Panel edge, matching the How I think plates: square corners, 1px latte
+   border, and four 14px corner brackets. The panel draws the top two; the
+   .corners span draws the bottom two. */
+.ws-root { position: relative; }
+.ws-root::before, .ws-root::after, .ws-root > .corners::before, .ws-root > .corners::after {
+  content: ""; position: absolute; width: 14px; height: 14px; pointer-events: none;
+  border: 0 solid rgba(232, 228, 224, 0.55);
+}
+.ws-root > .corners { position: absolute; inset: 0; pointer-events: none; }
+.ws-root::before { top: -1px; left: -1px; border-top-width: 1px; border-left-width: 1px; }
+.ws-root::after { top: -1px; right: -1px; border-top-width: 1px; border-right-width: 1px; }
+.ws-root > .corners::before { bottom: -1px; left: -1px; border-bottom-width: 1px; border-left-width: 1px; }
+.ws-root > .corners::after { bottom: -1px; right: -1px; border-bottom-width: 1px; border-right-width: 1px; }

@@ -77,6 +77,7 @@ export const WeaveStackGraph = forwardRef<HTMLDivElement, Props>(
         aria-label="Agent infrastructure stack"
         role="region"
       >
+        <span className="corners" aria-hidden="true" />
         <div className="holder" data-ws="holder">
           <div className="art" data-ws="art">
             <header className="head">
