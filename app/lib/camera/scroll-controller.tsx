@@ -20,7 +20,8 @@ import {
   SCROLL_SCRUB,
   SCROLL_VH_PER_ANCHOR,
   SEGMENT_COUNT,
-  sampleCamera,
+  sampleScroll,
+  scrollForAnchor,
   type CameraSample,
 } from "./path";
 
@@ -33,7 +34,7 @@ const DESKTOP_QUERY = "(min-width: 1024px)";
 const HERO_SAMPLE: CameraSample = {
   x: 0, y: 0, scale: 1,
   progress: 0, segmentT: 0, segmentEase: 0,
-  segmentIndex: 0, nearestAnchor: 0, altitude: 0,
+  segmentIndex: 0, nearestAnchor: 0, altitude: 0, dwell: 0,
 };
 
 type CameraSubscriber = (sample: CameraSample) => void;
@@ -55,9 +56,15 @@ type CameraApi = Readonly<{
   _setCameraMode: (next: boolean) => void;
   /** Internal: subscribers fired by the track component on each scroll tick. */
   _emit: (sample: CameraSample) => void;
+  /** The tall section reports how much it overflows the viewport. */
+  setDwell: (px: number) => void;
+  /** Internal: current dwell, read inside scroll callbacks. */
+  _dwellRef: RefObject<number>;
 }>;
 
 const CameraContext = createContext<CameraApi | null>(null);
+/** Extra scroll length (px) at DWELL_ANCHOR. Kept apart so a change doesn't rebuild the camera API. */
+const DwellContext = createContext(0);
 
 export function useCamera(): CameraApi {
   const ctx = useContext(CameraContext);
@@ -112,6 +119,9 @@ export function CameraProvider({ children }: CameraProviderProps) {
   const trackRef = useRef<HTMLDivElement | null>(null);
   const [cameraMode, setCameraMode] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [dwell, setDwellState] = useState(0);
+  const dwellRef = useRef(0);
+  dwellRef.current = dwell;
   const cameraModeRef = useRef(cameraMode);
   cameraModeRef.current = cameraMode;
 
@@ -147,8 +157,7 @@ export function CameraProvider({ children }: CameraProviderProps) {
       // fraction of the document's scrollable range.
       const docHeight =
         document.documentElement.scrollHeight - window.innerHeight;
-      const targetProgress = i / SEGMENT_COUNT;
-      const targetY = targetProgress * docHeight;
+      const targetY = scrollForAnchor(i, docHeight, dwellRef.current);
 
       const startY = window.scrollY;
       const obj = { y: startY };
@@ -168,10 +177,17 @@ export function CameraProvider({ children }: CameraProviderProps) {
       stateRef.current = sample;
       subsRef.current.forEach((fn) => fn(sample));
     },
+    setDwell: (px: number) => {
+      const next = Math.max(0, Math.round(px));
+      setDwellState((prev) => (Math.abs(prev - next) < 2 ? prev : next));
+    },
+    _dwellRef: dwellRef,
   }), [cameraMode, mounted]);
 
   return (
-    <CameraContext.Provider value={api}>{children}</CameraContext.Provider>
+    <CameraContext.Provider value={api}>
+      <DwellContext.Provider value={dwell}>{children}</DwellContext.Provider>
+    </CameraContext.Provider>
   );
 }
 
@@ -185,7 +201,7 @@ export function CameraProvider({ children }: CameraProviderProps) {
  * flow under their own height.
  */
 export function CameraScrollTrack() {
-  const { _trackRef, _setCameraMode, _emit } = useCamera();
+  const { _trackRef, _setCameraMode, _emit, _dwellRef } = useCamera();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -223,7 +239,8 @@ export function CameraScrollTrack() {
         end: "bottom bottom",
         scrub: SCROLL_SCRUB,
         onUpdate: (self) => {
-          _emit(sampleCamera(self.progress));
+          const range = self.end - self.start;
+          _emit(sampleScroll(self.progress * range, range, _dwellRef.current));
         },
       });
       ScrollTrigger.refresh();
@@ -252,13 +269,14 @@ export function CameraScrollTrack() {
       reducedMq.removeEventListener("change", setup);
       teardown();
     };
-  }, [_trackRef, _setCameraMode, _emit]);
+  }, [_trackRef, _setCameraMode, _emit, _dwellRef]);
 
   // Total scroll range: one viewport per segment, plus a fractional buffer
   // so the final settle hold has scroll room. cameraMode flips height to 0
   // off-desktop, under prefers-reduced-motion, or before mount (avoids
   // hydration mismatch).
   const { cameraMode, mounted } = useCamera();
+  const dwell = useContext(DwellContext);
   const active = mounted && cameraMode;
   const totalVh = active ? SCROLL_VH_PER_ANCHOR * SEGMENT_COUNT * 100 : 0;
 
@@ -267,7 +285,7 @@ export function CameraScrollTrack() {
       ref={_trackRef}
       aria-hidden
       className="pointer-events-none w-full"
-      style={{ height: active ? `${totalVh}vh` : 0 }}
+      style={{ height: active ? `calc(${totalVh}vh + ${dwell}px)` : 0 }}
     />
   );
 }

@@ -7,7 +7,8 @@ import {
 
 export const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
-  weight: ["300", "400", "500"],
+  // 600 is used by the Gravity Wells well labels (How I build).
+  weight: ["300", "400", "500", "600"],
   variable: "--font-jetbrains-mono",
   display: "swap",
 });
