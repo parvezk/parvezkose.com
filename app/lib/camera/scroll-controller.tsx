@@ -20,6 +20,7 @@ import {
   SCROLL_SCRUB,
   SCROLL_VH_PER_ANCHOR,
   SEGMENT_COUNT,
+  dwellScrollCompensation,
   sampleScroll,
   scrollForAnchor,
   type CameraSample,
@@ -60,6 +61,12 @@ type CameraApi = Readonly<{
   setDwell: (px: number) => void;
   /** Internal: current dwell, read inside scroll callbacks. */
   _dwellRef: RefObject<number>;
+  /**
+   * Internal: stable GSAP target for anchor flights. Must be one object so
+   * overwrite/killTweensOf actually cancel the previous flight — a fresh
+   * `{ y }` per click leaves concurrent scrollTo writers fighting.
+   */
+  _flightRef: RefObject<{ y: number }>;
 }>;
 
 const CameraContext = createContext<CameraApi | null>(null);
@@ -122,6 +129,7 @@ export function CameraProvider({ children }: CameraProviderProps) {
   const [dwell, setDwellState] = useState(0);
   const dwellRef = useRef(0);
   dwellRef.current = dwell;
+  const flightRef = useRef({ y: 0 });
   const cameraModeRef = useRef(cameraMode);
   cameraModeRef.current = cameraMode;
 
@@ -159,14 +167,16 @@ export function CameraProvider({ children }: CameraProviderProps) {
         document.documentElement.scrollHeight - window.innerHeight;
       const targetY = scrollForAnchor(i, docHeight, dwellRef.current);
 
-      const startY = window.scrollY;
-      const obj = { y: startY };
-      gsap.to(obj, {
+      const flight = flightRef.current;
+      flight.y = window.scrollY;
+      // overwrite:true + stable target — a fresh `{ y }` per click left
+      // concurrent onUpdate scrollTo writers fighting for ~1.4s.
+      gsap.to(flight, {
         y: targetY,
         duration: FLIGHT_DURATION,
         ease: FLIGHT_EASE,
-        onUpdate: () => window.scrollTo(0, obj.y),
-        overwrite: "auto",
+        onUpdate: () => window.scrollTo(0, flight.y),
+        overwrite: true,
       });
     },
     cameraMode,
@@ -182,6 +192,7 @@ export function CameraProvider({ children }: CameraProviderProps) {
       setDwellState((prev) => (Math.abs(prev - next) < 2 ? prev : next));
     },
     _dwellRef: dwellRef,
+    _flightRef: flightRef,
   }), [cameraMode, mounted]);
 
   return (
@@ -201,7 +212,7 @@ export function CameraProvider({ children }: CameraProviderProps) {
  * flow under their own height.
  */
 export function CameraScrollTrack() {
-  const { _trackRef, _setCameraMode, _emit, _dwellRef } = useCamera();
+  const { _trackRef, _setCameraMode, _emit, _dwellRef, _flightRef } = useCamera();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -218,7 +229,7 @@ export function CameraScrollTrack() {
         trigger.kill();
         trigger = null;
       }
-      gsap.killTweensOf(window);
+      gsap.killTweensOf(_flightRef.current);
       _emit(HERO_SAMPLE);
     };
 
@@ -269,7 +280,7 @@ export function CameraScrollTrack() {
       reducedMq.removeEventListener("change", setup);
       teardown();
     };
-  }, [_trackRef, _setCameraMode, _emit, _dwellRef]);
+  }, [_trackRef, _setCameraMode, _emit, _dwellRef, _flightRef]);
 
   // Total scroll range: one viewport per segment, plus a fractional buffer
   // so the final settle hold has scroll room. cameraMode flips height to 0
@@ -279,6 +290,53 @@ export function CameraScrollTrack() {
   const dwell = useContext(DwellContext);
   const active = mounted && cameraMode;
   const totalVh = active ? SCROLL_VH_PER_ANCHOR * SEGMENT_COUNT * 100 : 0;
+  const prevDwellRef = useRef(dwell);
+
+  // Keep camera progress stable when How I build publishes / updates dwell
+  // after layout (graphs mount async and grow the track).
+  useLayoutEffect(() => {
+    const prev = prevDwellRef.current;
+    prevDwellRef.current = dwell;
+    if (!active || typeof window === "undefined") return;
+
+    const range =
+      document.documentElement.scrollHeight - window.innerHeight;
+    const shift = dwellScrollCompensation(
+      window.scrollY,
+      range,
+      prev,
+      dwell,
+    );
+    if (shift === 0) return;
+
+    const flight = _flightRef.current;
+    const tweens = gsap.getTweensOf(flight);
+    const nextY = window.scrollY + shift;
+
+    if (tweens.length > 0) {
+      // Mid-flight to a post-dwell anchor: retarget with remaining time so
+      // we still land on the intended progress after the insert.
+      const tween = tweens[0];
+      const end = Number(tween.vars.y) + shift;
+      const remaining = Math.max(
+        0.05,
+        tween.duration() * (1 - tween.progress()),
+      );
+      gsap.killTweensOf(flight);
+      flight.y = nextY;
+      window.scrollTo(0, nextY);
+      gsap.to(flight, {
+        y: end,
+        duration: remaining,
+        ease: FLIGHT_EASE,
+        onUpdate: () => window.scrollTo(0, flight.y),
+        overwrite: true,
+      });
+      return;
+    }
+
+    window.scrollTo(0, nextY);
+  }, [dwell, active, _flightRef]);
 
   return (
     <div
