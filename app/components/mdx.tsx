@@ -61,7 +61,10 @@ function RoundedImage(props) {
 }
 
 function Code({ children, ...props }) {
-  let codeHTML = highlight(children)
+  // Empty fenced blocks (``` ```) arrive as undefined from next-mdx-remote;
+  // sugar-high's highlight() reads .length and throws, aborting `next build`.
+  const source = typeof children === 'string' ? children : String(children ?? '')
+  let codeHTML = highlight(source)
   return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />
 }
 
