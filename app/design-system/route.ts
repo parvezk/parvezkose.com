@@ -30,7 +30,12 @@ export async function GET(request: NextRequest) {
       process.cwd(),
       "public/design-system/index.html",
     );
-    htmlCachePromise = fs.readFile(filePath, "utf8");
+    // Only keep a resolved read. Caching a rejected promise permanently
+    // 500s every later request on this worker even after the file is restored.
+    htmlCachePromise = fs.readFile(filePath, "utf8").catch((err) => {
+      htmlCachePromise = null;
+      throw err;
+    });
   }
   const html = await htmlCachePromise;
   return new NextResponse(html, {
