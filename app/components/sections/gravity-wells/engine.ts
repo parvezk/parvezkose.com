@@ -32,8 +32,9 @@ import {
  * differences are plumbing:
  *   - elements are looked up inside `root` by `data-gw` instead of by id,
  *   - SVG ids are prefixed with `gw-` so they can't clash with the page,
- *   - `setActive(false)` pauses the simulation and orbit timer while the
- *     section is off screen,
+ *   - `setActive(false)` pauses the simulation, orbit timer, and any in-flight
+ *     mode-morph timer while the section is off screen (morph ticks call
+ *     `sim.restart()`, so leaving them alive undoes pause),
  *   - `destroy()` stops every timer, observer and listener.
  */
 
@@ -583,19 +584,21 @@ export function mountGravityWells(root: HTMLElement): GravityWellsHandle {
     render();
     if (ui.active) sim.alpha(0.3).alphaTarget(ui.orbiting ? 0.12 : 0).restart();
 
-    // ---- Zoom: double-click a tool, or use the buttons. Drag the background to pan. Wheel scroll stays with the page. ----
+    // ---- Zoom: double-click a tool, or use the buttons. Drag the background to pan
+    // with a mouse. Wheel and single-finger touch stay with the page so a tall
+    // narrow graph cannot trap mobile scroll (zoom +/- buttons still work). ----
     const zoom = d3zoom<SVGSVGElement, unknown>()
       .scaleExtent([0.6, 4])
       .filter(
         (e: any) =>
-          (e.type === "mousedown" || e.type === "touchstart") &&
+          e.type === "mousedown" &&
           !e.button &&
           !e.target.closest(".tool, .ring-hit"),
       )
       .on("start", () => svg.classed("panning", true))
       .on("end", () => svg.classed("panning", false))
       .on("zoom", (e: any) => scene.attr("transform", e.transform));
-    svg.call(zoom).on("dblclick.zoom", null).on("wheel.zoom", null);
+    svg.call(zoom).on("dblclick.zoom", null).on("wheel.zoom", null).on("touchstart.zoom", null);
     // Home view (load and Reset). Wide starts one zoom-out step back, with the
     // top ring near the top edge, so the whole graph fits a laptop screen as you
     // scroll in. Whole-pixel offsets keep lines and text sharp.
@@ -709,12 +712,21 @@ export function mountGravityWells(root: HTMLElement): GravityWellsHandle {
       if (morph) morph.stop();
       const dur = reduceMotion ? 1 : 1200;
       morph = d3timer((el) => {
+        // setActive(false) stops the sim; do not restart it from a leftover morph tick.
+        if (!ui.active) {
+          morph.stop();
+          morph = null;
+          return;
+        }
         const p = easeCubicInOut(Math.min(1, el / dur));
         tools.forEach((t, i) => {
           t.pull = from[i].map((v: number, j: number) => v + (to[i][j] - v) * p);
         });
         sim.alpha(Math.max(sim.alpha(), 0.5)).restart();
-        if (p >= 1) morph.stop();
+        if (p >= 1) {
+          morph.stop();
+          morph = null;
+        }
       });
     }
     function scatter() {
@@ -731,6 +743,13 @@ export function mountGravityWells(root: HTMLElement): GravityWellsHandle {
       if (ui.active) sim.alpha(Math.max(sim.alpha(), 0.3)).restart();
     }
     function pause() {
+      // Morph ticks call sim.restart(); leaving them alive after pause undoes
+      // sim.stop() and, with orbit alphaTarget > 0, leaves the force sim
+      // running forever while the section is off-screen.
+      if (morph) {
+        morph.stop();
+        morph = null;
+      }
       sim.stop();
       timer.stop();
     }
