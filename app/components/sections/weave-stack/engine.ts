@@ -262,6 +262,7 @@ export function mountWeaveStack(root: HTMLElement): WeaveStackHandle {
     label.textContent = n.id;
     b.append(mark, label);
     listen(b, "pointerdown", (e) => down(n, e));
+    listen(b, "lostpointercapture", endDrag);
     listen(b, "click", () => select(n.id));
     listen(b, "mouseenter", () => {
       app.hover = n.id;
@@ -392,9 +393,29 @@ export function mountWeaveStack(root: HTMLElement): WeaveStackHandle {
     queue();
   }
 
+  /** End an in-flight drag and cool the sim. Safe to call repeatedly. */
+  function endDrag() {
+    const n = app.drag;
+    if (!n) return;
+    n.fx = n.kind !== "tool" ? n.sx : null;
+    n.fy = n.kind !== "tool" ? n.sy : null;
+    app.drag = null;
+    // Without this, alphaTarget(0.25) from pointerdown keeps the force sim
+    // (and its RAF render loop) heating forever after an abandoned gesture.
+    sim.alphaTarget(0);
+  }
   function down(n: WNode, e: PointerEvent) {
-    // Pointer capture is left to the window listeners below, as in the prototype.
     if (e.button) return;
+    // Capture so pointerup/cancel still arrive after the cursor leaves the
+    // window (Alt-Tab / release over the OS chrome would otherwise skip up).
+    const target = e.currentTarget as Element | null;
+    if (target?.setPointerCapture) {
+      try {
+        target.setPointerCapture(e.pointerId);
+      } catch {
+        /* setPointerCapture can throw if the pointer is already gone */
+      }
+    }
     app.drag = n;
     n.fx = n.x;
     n.fy = n.y;
@@ -410,16 +431,12 @@ export function mountWeaveStack(root: HTMLElement): WeaveStackHandle {
     n.fx = (e.clientX - rect.left) / s;
     n.fy = (e.clientY - rect.top) / s;
   });
-  const up = () => {
-    const n = app.drag;
-    if (!n) return;
-    n.fx = n.kind !== "tool" ? n.sx : null;
-    n.fy = n.kind !== "tool" ? n.sy : null;
-    app.drag = null;
-    sim.alphaTarget(0);
-  };
-  listen(window, "pointerup", up);
-  listen(window, "pointercancel", up);
+  listen(window, "pointerup", endDrag);
+  listen(window, "pointercancel", endDrag);
+  listen(window, "blur", endDrag);
+  listen(document, "visibilitychange", () => {
+    if (document.hidden) endDrag();
+  });
 
   /* ------------------------------ render ----------------------------------- */
   let queued = false;
@@ -694,11 +711,18 @@ export function mountWeaveStack(root: HTMLElement): WeaveStackHandle {
     setActive(on: boolean) {
       if (on === app.active) return;
       app.active = on;
-      if (!on) sim.stop();
-      else if (sim.alpha() > sim.alphaMin()) sim.restart();
+      if (!on) {
+        // Drop drag + alphaTarget before stop so a later setActive(true)
+        // cannot revive a stuck 0.25 heat after an abandoned pointerup.
+        endDrag();
+        sim.stop();
+      } else if (sim.alpha() > sim.alphaMin()) {
+        sim.restart();
+      }
     },
     destroy() {
       alive = false;
+      endDrag();
       ac.abort();
       ro.disconnect();
       sim.stop();
