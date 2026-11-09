@@ -40,7 +40,7 @@ export type Anchor = Readonly<{
  */
 export const ANCHORS: ReadonlyArray<Anchor> = [
   { id: 0, slug: "hero",  label: "Home",           href: null,              x:   0,   y:   0,   scale: 1.000 },
-  { id: 1, slug: "think", label: "How I think",    href: "/design-system/", x:  -7,   y:  -7,   scale: 1.020 },
+  { id: 1, slug: "think", label: "How I Design",   href: "/design-system/", x:  -7,   y:  -7,   scale: 1.020 },
   { id: 2, slug: "build", label: "How I build",    href: null,              x:   0,   y: -14,   scale: 1.040 },
   { id: 3, slug: "ahead", label: "Thinking Ahead", href: null,              x:  10,   y:  -4,   scale: 1.012 },
 ];
