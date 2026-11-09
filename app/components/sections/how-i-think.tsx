@@ -68,7 +68,7 @@ export function HowIThinkSection() {
     <SectionCard
       anchor={ANCHOR}
       ordinal="01"
-      title="How I think"
+      title="How I Design"
       customLayout={
         <div
           style={{
@@ -95,7 +95,7 @@ export function HowIThinkSection() {
                 lineHeight: 1.05,
               }}
             >
-              How I think
+              How I Design
             </h2>
             <p className="max-w-2xl text-[12px] leading-relaxed text-white/80">
               {`Craft rooted in culture and material honesty. Visual interpretability shapes how I build — the model's shape should be visible to the people working with it.`}
