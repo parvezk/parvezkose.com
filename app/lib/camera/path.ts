@@ -133,6 +133,30 @@ export function scrollForAnchor(index: number, range: number, dwell: number): nu
 }
 
 /**
+ * When the How I build dwell grows or shrinks, shift scrollY so camera
+ * progress past that dwell stays put. `range` must already include `nextDwell`.
+ *
+ * Concrete failure this prevents: flyTo(Thinking Ahead) while dwell is still 0
+ * lands at document end; graphs then publish dwell and grow the track — without
+ * this shift the same scrollY falls inside the dwell hold and snaps back to
+ * How I build.
+ */
+export function dwellScrollCompensation(
+  scrollY: number,
+  range: number,
+  prevDwell: number,
+  nextDwell: number,
+): number {
+  const delta = nextDwell - prevDwell;
+  if (delta === 0) return 0;
+  const base = Math.max(1, range - nextDwell);
+  const at = (DWELL_ANCHOR / SEGMENT_COUNT) * base;
+  // Only positions past the previous dwell zone need to move with the insert.
+  if (scrollY >= at + prevDwell) return delta;
+  return 0;
+}
+
+/**
  * Convert raw 0..1 scroll progress into a camera sample by:
  *   1. Mapping to a segment + in-segment t.
  *   2. Applying the settle hold at each end of the segment.
