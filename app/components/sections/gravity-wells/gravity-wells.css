@@ -90,7 +90,7 @@
 .gw-root .hint { margin: 0 0 2px; font: 12px/17px var(--mono); color: var(--faint); }
 
 .gw-root .stage { position: relative; margin: 0; border: 1px solid var(--border); border-radius: 6px; background: transparent; overflow: hidden; }
-.gw-root .graph { display: block; width: 100%; height: auto; margin: 0 auto; touch-action: none; cursor: default; }
+.gw-root .graph { display: block; width: 100%; height: auto; margin: 0 auto; touch-action: pan-y; cursor: default; }
 .gw-root .graph.panning { cursor: grabbing; }
 
 .gw-root .zoombar { position: absolute; top: 10px; right: 10px; display: flex; gap: 4px; z-index: 2; }
