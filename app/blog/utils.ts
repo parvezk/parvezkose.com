@@ -10,22 +10,41 @@ type Metadata = {
 
 /**
  * Parses the frontmatter and content from a Markdown file.
+ * Missing/unclosed `---` fences must not throw — that aborts `next build`
+ * for every route that calls `getBlogPosts()` (blog list, [slug] SSG, sitemap, RSS).
  */
 function parseFrontmatter(fileContent: string) {
   const frontmatterRegex = /---\s*([\s\S]*?)\s*---/
   const match = frontmatterRegex.exec(fileContent)
-  const frontMatterBlock = match![1]
+  if (!match) {
+    return {
+      metadata: { title: '', publishedAt: '', summary: '' } satisfies Metadata,
+      content: fileContent.trim(),
+    }
+  }
+  const frontMatterBlock = match[1]
   const content = fileContent.replace(frontmatterRegex, '').trim()
   const frontMatterLines = frontMatterBlock.trim().split('\n')
   const metadata: Partial<Metadata> = {}
 
   frontMatterLines.forEach((line) => {
+    if (!line.trim()) return
     const [key, ...valueArr] = line.split(': ')
     const value = valueArr.join(': ').trim().replace(/^['"](.*)['"]$/, '$1') // Remove quotes
-    metadata[key.trim() as keyof Metadata] = value
+    const trimmedKey = key.trim()
+    if (!trimmedKey) return
+    metadata[trimmedKey as keyof Metadata] = value
   })
 
-  return { metadata: metadata as Metadata, content }
+  return {
+    metadata: {
+      title: metadata.title ?? '',
+      publishedAt: metadata.publishedAt ?? '',
+      summary: metadata.summary ?? '',
+      ...(metadata.image ? { image: metadata.image } : {}),
+    } satisfies Metadata,
+    content,
+  }
 }
 
 /**
