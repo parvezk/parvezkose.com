@@ -8,6 +8,7 @@ import {
   type CSSProperties,
 } from "react";
 import { jetbrainsMono } from "../../../fonts";
+import { loadEngine } from "../load-engine";
 import type { WeaveStackHandle } from "./engine";
 import "./weave-stack.css";
 
@@ -34,9 +35,9 @@ export const WeaveStackGraph = forwardRef<HTMLDivElement, Props>(
       const root = rootRef.current;
       if (!root) return;
       let cancelled = false;
-      import("./engine").then(({ mountWeaveStack }) => {
-        if (cancelled) return;
-        const handle = mountWeaveStack(root);
+      loadEngine(() => import("./engine")).then((engine) => {
+        if (cancelled || !engine) return;
+        const handle = engine.mountWeaveStack(root);
         handle.setActive(runningRef.current);
         handleRef.current = handle;
       });
