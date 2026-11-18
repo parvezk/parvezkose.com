@@ -11,11 +11,8 @@ const RETRY_DELAY_MS = 1000;
  */
 export function loadEngine<T>(load: () => Promise<T>): Promise<T | null> {
   return load()
-    .catch(
-      () =>
-        new Promise<T>((resolve, reject) => {
-          setTimeout(() => load().then(resolve, reject), RETRY_DELAY_MS);
-        }),
+    .catch(() =>
+      new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS)).then(load),
     )
     .catch(() => null);
 }
