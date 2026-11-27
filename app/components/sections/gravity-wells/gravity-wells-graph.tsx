@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { jetbrainsMono, plexSans } from "../../../fonts";
+import { loadEngine } from "../load-engine";
 import type { GravityWellsHandle } from "./engine";
 import "./gravity-wells.css";
 
@@ -35,9 +36,9 @@ export function GravityWellsGraph({ titleId, active }: Props) {
     if (!root) return;
     let cancelled = false;
     // Load D3 and the engine on the client only, after first paint.
-    import("./engine").then(({ mountGravityWells }) => {
-      if (cancelled) return;
-      const handle = mountGravityWells(root);
+    loadEngine(() => import("./engine")).then((engine) => {
+      if (cancelled || !engine) return;
+      const handle = engine.mountGravityWells(root);
       handle.setActive(runningRef.current);
       handleRef.current = handle;
     });
